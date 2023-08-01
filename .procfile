@@ -1,0 +1,1 @@
+main: npm run start

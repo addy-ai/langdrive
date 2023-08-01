@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Chatbot</title>
+    <style>
+        /* Add some basic styles for the chat window */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #chat-window {
+            width: 400px;
+            height: 500px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: scroll;
+        }
+
+        #user-input {
+            width: 100%;
+            padding: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-window"></div>
+    <input type="text" id="user-input" placeholder="Type your message..." autofocus>
+    
+    <script>
+        // Function to append messages to the chat window
+        function appendMessage(sender, message) {
+            var chatWindow = document.getElementById("chat-window");
+            var messageElement = document.createElement("div");
+            messageElement.innerHTML = "<strong>" + sender + ":</strong> " + message;
+            chatWindow.appendChild(messageElement);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        // Function to handle user input and get the chatbot's response
+        function handleUserInput() {
+            var userInput = document.getElementById("user-input").value;
+            if (userInput.trim() !== "") {
+                // Append user message to the chat window
+                appendMessage("You", userInput);
+
+                // Send user message to the server (simulated here with a function)
+                var botResponse = getBotResponse(userInput);
+
+                // Append bot's response to the chat window
+                appendMessage("Bot", botResponse);
+
+                // Clear the input field
+                document.getElementById("user-input").value = "";
+            }
+        }
+
+        // Function to simulate server response
+        function getBotResponse(userInput) {
+            // Replace this function with actual server-side communication to get the bot's response
+            // For now, we'll just return a simple hardcoded response.
+            var responses = {
+                "hello": "Hello! How can I assist you?",
+                "how are you": "I'm just a bot, but thanks for asking!",
+                "default": "I'm sorry, I don't understand. Can you rephrase that?",
+            };
+
+            var lowercaseInput = userInput.toLowerCase();
+            if (responses[lowercaseInput]) {
+                return responses[lowercaseInput];
+            } else {
+                return responses["default"];
+            }
+        }
+
+        // Attach an event listener to the input field to handle user input
+        document.getElementById("user-input").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                handleUserInput();
+            }
+        });
+    </script>
+</body>
+</html>
