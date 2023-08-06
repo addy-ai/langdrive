@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "nodemon ./src/server/start_server.js",
+    "start": "nodemon ./src/start_server.js",
     "test": "node ./src/server/test_server.js",
     "deploy": "npm deploy"
   },
@@ -12,9 +12,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@xenova/transformers": "^2.5.0",
+    "connect-sqlite3": "^0.9.13",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "googleapis": "^123.0.0",
+    "langchain": "^0.0.121",
     "nodemon": "^3.0.1",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0"

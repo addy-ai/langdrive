@@ -1,11 +1,7 @@
-// Export the utility functions for external use
-require('dotenv').config(); // Load environment variables from .env file
+require("dotenv").config();
 
-const serverUtils = require('./src/server_utils');
+const DriveUtils = require("./src/drive_utils");
 
 module.exports = {
-    setupGoogleStrategy: serverUtils.setupGoogleStrategy,
-    handleGoogleCallback: serverUtils.handleGoogleCallback,
-    createFileInFolder: serverUtils.createFileInFolder,
-    getFolderId: serverUtils.getFolderId
-  };
+  DriveUtils: DriveUtils,
+};
