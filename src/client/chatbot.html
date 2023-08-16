@@ -1,33 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <title>Customer Inquiry Bot by Addy AI</title>
     <link rel="stylesheet" href="chatbot.css" />
-  </head>
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+</head>
 
-  <body>
+<body>
     <div class="main-container">
-      <div class="header-container"></div>
-      <div class="chat-container">
-        <div id="chat-history"></div>
-        <div class="input-container">
-          <input
-            type="text"
-            id="message-input"
-            maxlength="1000"
-            placeholder="ask me anything..."
-          />
-          <button id="send-btn">Send</button>
+        <div class="header-container"></div>
+        <div class="chat-container">
+            <div id="chat-history"></div>
+
+
+
+            <div class="input-container">
+                <div class="input-parent">
+
+                    <input type="text" id="message-input" maxlength="1000" placeholder="ask me anything..." />
+                    <div class="add-content-button">
+                        <img src="https://i.imgur.com/GMWLL1s.png" width="15" height="15" />
+                        <p id="open-upload-modal" class="no-margin">Upload File</p>
+                    </div>
+                </div>
+
+                <button id="send-btn">Send</button>
+            </div>
+
         </div>
-      </div>
     </div>
+
+    <div id="upload-modal">
+        <div class="horizontal-flex space-between">
+            <h3>Add context to your conversation</h3>
+            <div id="modal-close-btn">
+                <img src="https://i.imgur.com/RWLar5E.png" width="15" height="15"/>
+            </div>
+            
+        </div>
+        
+        <br/>
+        <div id="dropzone" onclick="document.getElementById('fileInput').click();">
+            Drag & Drop files here or click to upload
+            <input type="file" id="fileInput" multiple accept=".pdf,.txt" style="display: none;"
+                onchange="handleFiles(this.files)">
+        </div>
+        <br/>
+        <ul id="fileList"></ul>
+    </div>
+    
+    
+    
 
     <div class="loading-view loading-overlay">
-      <div class="spinner"></div>
-      <p>Loading...</p>
+        <div class="spinner"></div>
+        <p>Loading...</p>
     </div>
 
+
+
     <script type="text/javascript" src="chatbot.js"></script>
-  </body>
+    <script type="text/javascript" src="local_file_reader.js"></script>
+</body>
+
 </html>

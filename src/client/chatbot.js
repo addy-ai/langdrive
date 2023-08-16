@@ -31,7 +31,8 @@ window.onload = async function () {
   if (localStorage.getItem("authCode")) {
     initializeBot(); // jumpstart this bot
   }*/
-  initializeBot();
+
+//   initializeBot();
 };
 
 function initializeBot() {
