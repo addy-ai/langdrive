@@ -1,0 +1,143 @@
+const https = require("https");
+const passport = require("passport");
+const express = require("express");
+const session = require("express-session");
+var SQLiteStore = require("connect-sqlite3")(session);
+// https://stackoverflow.com/questions/69253707/cookies-not-storing-in-browser-when-using-passport-with-express
+// If secure is set true, and your request to the server is sent over HTTP, the cookie will not be saved in the browser.
+// Secure attribute must be set to true secure: true when the SameSite attribute has been set to 'none'
+const app = express();
+// We store the conversational chains memory in local storage so it can be retrieved fast.
+
+let bot_local_memory = {};
+
+/*
+(async () => { 
+})();*/
+
+app.use(
+  session({
+    secret: "session-secret-key-addy-ai",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false },
+    store: new SQLiteStore({ db: "sessions.db", table: "sessions", dir: "." })
+  })
+);
+
+passport.serializeUser((user, cb) => process.nextTick(() => cb(null, user)));
+passport.deserializeUser((user, cb) => process.nextTick(() => cb(null, user)));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+const cors = require("cors");
+app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
+
+// Serve static files for client
+const publicDirectoryPath = __dirname + "/client";
+app.use(express.static(publicDirectoryPath));
+
+app.listen(3000, () => console.log(`Server running on http://localhost:3000`));
+
+require("dotenv").config();
+const Chatbot = require("./server/drive_chatbot.js");
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+app.use(express.json());
+
+app.get("/", async (req, res) => {
+  res.send(`<h1>Welcome</h1><br> \ 
+  <a href='./client_side_auth'>client_side_auth</a><br> \
+  <a href='./chat'>chat</a><br> \
+  <a href='./user'>user check</a><br> \ 
+  `);
+});
+
+let scope = ["profile", "email", "https://www.googleapis.com/auth/drive.file"];
+app.get(
+  "/chat",
+  (req, res, next) => {
+    if (req.isAuthenticated()) return next();
+    passport.authenticate("google", { scope })(req, res, next);
+  },
+  (req, res) => res.sendFile(__dirname + "/client/chatbot.html")
+);
+
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: CLIENT_ID,
+      clientSecret: CLIENT_SECRET,
+      callbackURL: "/chat",
+      passReqToCallback: true,
+      accessType: "offline",
+      approvalPrompt: "force"
+    },
+    (req, accessToken, refreshToken, profile, done) => {
+      profile.accessToken = accessToken;
+      return done(null, profile);
+    }
+  )
+);
+
+//
+// Initialize the bot, load up it's data or create the associated files
+//
+app.get("/bot_init", async (req, res) => {
+  ACCESS_TOKEN = req.user.accessToken;
+  let chatbot = new Chatbot({
+    CLIENT_ID,
+    CLIENT_SECRET,
+    ACCESS_TOKEN,
+    memory_length: 2,
+    vector_length: 2,
+    model: "chatOpenAi",
+    model_config: {
+      modelName: "gpt-3.5-turbo", // default = "text-davinci-003"
+      // maxTokens: 256, // default = 256
+      openAIApiKey: OPENAI_API_KEY,
+      temperature: 0.9
+    },
+    agent: "chat-conversational-react-description",
+    agent_config: {},
+    agent_verbose: true
+  });
+  bot_local_memory[req.user.id] = bot_local_memory[req.user.id] || { chatbot };
+  await chatbot.init();
+  res.send(
+    req.isAuthenticated()
+      ? { status: 200, name: "LangDrive", avatarURL: "https://i.imgur.com/vphoLPW.png" }
+      : { status: 400, message: "User not Authenticated" }
+  );
+});
+
+//
+// Load up the bot and have it give a welcome message based on the history.
+//
+app.get("/bot_welcome*", async (req, res) => {
+  let prompt = `The user ${req.user._json.name} has entered the chat. Greet the user.`;
+  res.send({
+    avatarURL: "https://i.imgur.com/vphoLPW.png",
+    response: await bot_local_memory[req.user.id].chatbot.sendMessage(prompt)
+  });
+});
+
+//
+// Continue the chat once a user responds to the bot_welcome
+//
+app.get("/qa*", async (req, res) =>
+  res.send({ response: await bot_local_memory[req.user.id].chatbot.sendMessage(req.query.user_query) })
+);
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+// example
+app.get("/client_side_auth", (req, res) => res.sendFile(__dirname + "/client/client_side_auth.html"));
+
+// passport check
+app.get("/user", (req, res) =>
+  res.send(req.isAuthenticated() ? { session: req.session, user: req.user } : "User not Authenticated")
+);

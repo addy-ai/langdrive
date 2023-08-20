@@ -3,44 +3,20 @@ const passport = require("passport");
 const express = require("express");
 const session = require("express-session");
 var SQLiteStore = require("connect-sqlite3")(session);
-// https://stackoverflow.com/questions/69253707/cookies-not-storing-in-browser-when-using-passport-with-express
-// If secure is set true, and your request to the server is sent over HTTP, the cookie will not be saved in the browser.
-// Secure attribute must be set to true secure: true when the SameSite attribute has been set to 'none'
+
+const axios = require("axios");
+const querystring = require("querystring");
+
+// The first sign is you go through the full authorization process
+// To see it again, you have to revoke the app from your google account:
+// https://myaccount.google.com/connections?filters=3,4&hl=en
+
+// The OAuth2 playground helps:
+// https://developers.google.com/oauthplayground/
+// Access Tokens Need refreshing every hour.
 const app = express();
-// We store the conversational chains memory in local storage so it can be retrieved fast.
-// { userid: {chainid: memory}}
+
 let bot_local_memory = {};
-
-/*
-// create an annonymous function and run it. 
-import("@xenova/transformers").then(
-  async ({ AutoTokenizer, AutoModelForSeq2SeqLM, env }) => {
-    env.localModelPath = `.`; // Set to current directory
-    env.allowRemoteModels = false; // Disable pulling from HF
-    let tokenizer = await AutoTokenizer.from_pretrained("t5-small");
-    let model = await AutoModelForSeq2SeqLM.from_pretrained("t5-small"); // Xenova/t5-small
-
-    let { input_ids } = await tokenizer(
-      "translate English to German: I love transformers!"
-    );
-    let outputs = await model.generate(input_ids);
-    let decoded = tokenizer.decode(outputs[0], { skip_special_tokens: true });
-    // console.log({ outputs });
-    console.log({ decoded }); // 'Ich liebe Transformatoren!'
-
-    pipeline = pipeline(
-      "text2text-generation",
-      (model = model),
-      (tokenizer = tokenizer),
-      (max_length = 128)
-    );
-    hf_llm = HuggingFacePipeline((pipeline = pipeline));
-  }
-); 
-*/
-/*
-(async () => { 
-})();*/
 
 app.use(
   session({
@@ -48,203 +24,188 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false },
-    store: new SQLiteStore({
-      db: "sessions.db",
-      table: "sessions",
-      dir: ".",
-    }),
+    store: new SQLiteStore({ db: "sessions.db", table: "sessions", dir: "." })
   })
 );
-
-passport.serializeUser(function (user, cb) {
-  process.nextTick(function () {
-    cb(null, user);
-  });
-});
-
-passport.deserializeUser(function (user, cb) {
-  process.nextTick(function () {
-    return cb(null, user);
-  });
-});
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 const cors = require("cors");
-app.use(
-  cors({
-    origin: ["http://localhost:3000"],
-    credentials: true,
-  })
-);
+app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
 
 // Serve static files for client
 const publicDirectoryPath = __dirname + "/client";
 app.use(express.static(publicDirectoryPath));
 
-app.listen(3000, () => {
-  console.log(`Server running on http://localhost:3000`);
-});
+app.listen(3000, () => console.log(`Server running on http://localhost:3000`));
 
 require("dotenv").config();
-const DriveUtils = require("./server/drive_utils");
 const Chatbot = require("./server/drive_chatbot.js");
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const driveUtils = new DriveUtils(CLIENT_ID, CLIENT_SECRET);
-
-console.log("STARTING CHATBOT");
-let test_bot = new Chatbot({});
-console.log("TESTBOT CREATED");
-(async () => {
-  console.log("TESTBOT CREATED");
-})();
+app.use(express.json());
 
 app.get("/", async (req, res) => {
-  const response = await test_bot.sendMessage(
-    "System Prompt: You are a conversational chatbot that integrates with google chatbot. A user has either just started or re-entered a conversation with you. Say hello using whatever context available:"
-  );
-  console.log(
-    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-  );
-  console.log(response);
   res.send(`<h1>Welcome</h1><br> \ 
   <a href='./client_side_auth'>client_side_auth</a><br> \
-  <a href='./chat'>chat</a><br> \
-  <a href='./user'>user check</a><br> \ 
+  <a href='./chat'>Chat</a><br> \
+  <a href='./user'>User Check</a><br> \ 
+  <a href='./auth/google'>Auth Google</a><br> \ 
   `);
 });
 
-let scope = ["profile", "email", "https://www.googleapis.com/auth/drive.file"];
-app.get(
-  "/chat",
-  (req, res, next) => {
-    if (req.isAuthenticated()) return next();
-    passport.authenticate("google", { scope })(req, res, next);
-  },
-  (req, res) => res.sendFile(__dirname + "/client/chatbot.html")
-);
+app.get("/auth/google", (req, res) => {
+  const authQuery = querystring.stringify({
+    redirect_uri: "http://localhost:3000/auth/google/callback",
+    prompt: "consent",
+    response_type: "code",
+    client_id: CLIENT_ID,
+    scope: "https://www.googleapis.com/auth/drive",
+    access_type: "offline"
+  });
 
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: CLIENT_ID,
-      clientSecret: CLIENT_SECRET,
-      callbackURL: "/chat",
-      passReqToCallback: true,
-      accessType: "offline",
-      approvalPrompt: "force",
-    },
-    (req, accessToken, refreshToken, profile, done) => {
-      profile.accessToken = accessToken;
-      // req.session.save();
-      return done(null, profile);
-    }
-  )
-);
-
-app.get("/bot_init", async (req, res) => {
-  console.log("~~~~~~~~~~~~ START bot_init."); // is authed?", req.isAuthenticated());
-  // Check and create. return id
-  let response = await driveUtils.createFileInDrive(
-    req,
-    "chatbot.json",
-    "application/json", // "text/plain",
-    `{"message":"Hello, this is the content of the file."}`
-  );
-  // if (response.status == 400) console.log("FILE ALREADY EXISTS");
-
-  let file = await driveUtils.getFileInDrive(req, response.data.id);
-  // console.log({ file });
-  // console.log({ message: file.message });
-  bot_local_memory[req.user.id] = bot_local_memory[req.user.id] || {
-    chatbot_file_id: response.data.id,
-    chatbot_message_history: file,
-  };
-  let user = bot_local_memory[req.user.id];
-  console.log("~~~~~~~~~~~~ END bot_init OVERWRITE ? ", Object.keys(user));
-
-  //
-  res.send(
-    req.isAuthenticated()
-      ? {
-          status: 200,
-          name: req.user._json.name + "'s Assistant",
-          avatarURL: "https://i.imgur.com/vphoLPW.png",
-        }
-      : { status: 400, message: "User not Authenticated" }
-  );
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${authQuery}`;
+  res.redirect(authUrl);
 });
 
-// Load up the bot and have it give a welcome message based on the history.
-app.get("/bot_welcome*", async (req, res) => {
-  console.log("~~~~~~~~~~~~~~~~ START bot_welcome");
-  let user = bot_local_memory[req.user.id];
-  console.log("OVERWRITE ? ", Object.keys(user));
-  let chatbot = user.chatbot || new Chatbot({ OPENAI_API_KEY });
-  bot_local_memory[req.user.id].chatbot = chatbot;
+app.get("/auth/google/callback", async (req, res) => {
+  const { code } = req.query;
 
-  const response = await chatbot.sendMessage(
-    "System Prompt: You are a conversational chatbot that integrates with google chatbot. A user has either just started or re-entered a conversation with you. Say hello using whatever context available:"
-  );
-  // in no particular order
-  // TODO: CREATE A LLAMA NOT OPEN AI CHATBOT.
-  // TODO: USE THE FILE AS THE CONVERSATIONAL MEMORY.
-  // TODO: CREATE AN EMBEDDINGS FILE AND DO SOMETHING WITH IT.
-  // TODO: CREATE A SPECIAL WELCOME MESSAGE LANGCHAIN PROMPT
+  try {
+    const { data } = await axios.post(
+      "https://oauth2.googleapis.com/token",
+      querystring.stringify({
+        code: code,
+        redirect_uri: "http://localhost:3000/auth/google/callback",
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+        grant_type: "authorization_code"
+      }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      }
+    );
+    req.session.access_token = data.access_token;
+    req.session.refresh_token = data.refresh_token;
+    req.session.timestamp = new Date().toISOString();
+    res.redirect("/chat");
+  } catch (error) {
+    console.error("Error fetching tokens", error);
+    res.status(500).send("Error during authentication");
+  }
+});
+async function refreshToken(refresh_token) {
+  try {
+    const { data } = await axios.post(
+      "https://oauth2.googleapis.com/token",
+      querystring.stringify({
+        client_secret: CLIENT_SECRET,
+        grant_type: "refresh_token",
+        refresh_token: refresh_token,
+        client_id: CLIENT_ID
+      }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      }
+    );
 
-  // 1. CREATE A LANGHCAIN CONVERSATIONAL BOT W MESSAGE MEMORY
-  // 2. DOWNLOAD THEN SERIALIZE/ DESERIALIZE BACK AND FORTH TO JSON.
-  // GRAB LOCAL MEMORY USING USER ID.
-  // UPLOAD IT TO CHAIN. GET RESPONSE.
-  // STORE LANGCHAIN MESSAGE MEMORY TO LOCAL MEMORY.
-  // UPLOAD TO DRIVE.
+    return data.access_token;
+  } catch (error) {
+    console.error("Error refreshing token", error);
+    throw error;
+  }
+}
 
+async function checkAccessToken(req, res, next) {
+  if (!req.session.access_token) {
+    return res.redirect("/auth/google");
+    // return res.status(401).send("No access token found. Please authenticate.");
+  }
+
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 10); // 60 minutes * 60 seconds * 1000 milliseconds = 1 hour
+  const sessionTimestamp = new Date(req.session.timestamp);
+
+  if (sessionTimestamp < oneHourAgo) {
+    try {
+      // If the token is expired, try to refresh it
+      const newAccessToken = await refreshToken(req.session.refresh_token);
+      req.session.access_token = newAccessToken;
+      req.session.timestamp = new Date();
+    } catch (error) {
+      req.session.access_token = null;
+      return res.redirect("/auth/google");
+      // return res.status(401).send("Error refreshing access token. Please re-authenticate.");
+    }
+  }
+  next();
+}
+
+// let scope = ["profile", "email", "https://www.googleapis.com/auth/drive.file"];
+app.get("/chat", checkAccessToken, (req, res, next) => {
+  // console.log("/auth/google/callback sessionId: ", req.sessionID);
+  res.sendFile(__dirname + "/client/chatbot.html");
+});
+
+//
+// Initialize the bot, load up it's data or create the associated files
+//
+app.get("/bot_init", checkAccessToken, async (req, res) => {
+  ACCESS_TOKEN = req.session.access_token;
+  let chatbot = new Chatbot({
+    CLIENT_ID,
+    CLIENT_SECRET,
+    ACCESS_TOKEN,
+    memory_length: 2,
+    vector_length: 2,
+    model: "chatOpenAi",
+    model_config: {
+      modelName: "gpt-3.5-turbo", // default = "text-davinci-003"
+      // maxTokens: 256, // default = 256
+      openAIApiKey: OPENAI_API_KEY,
+      temperature: 0.9
+    },
+    agent: "chat-conversational-react-description",
+    agent_config: {},
+    agent_verbose: false,
+    tools: []
+  });
+  bot_local_memory[req.session.id] = bot_local_memory[req.session.id] || { chatbot };
+  let success = await chatbot.init();
   res.send({
-    response,
+    status: 200,
+    name: "LangDrive",
     avatarURL: "https://i.imgur.com/vphoLPW.png",
+    status: success ? success : ""
   });
 });
 
-// Continue the chat
-app.get("/qa*", async (req, res) => {
-  console.log("~~~~~~~~~~~~~~~~ START qa");
-  let user = bot_local_memory[req.user.id];
-  console.log("OVERWRITE 123 ? ", Object.keys(user));
-  const chatbot = user.chatbot;
-  const response = await chatbot.sendMessage(req.query.user_query);
-  console.log("Chatbot's response:", response);
-  res.send({ response: response });
+//
+// Load up the bot and have it give a welcome message based on the history.
+//
+app.get("/bot_welcome*", async (req, res) => {
+  let prompt = `The user has entered the chat. Greet the user.`;
+  res.send({
+    avatarURL: "https://i.imgur.com/vphoLPW.png",
+    response: await bot_local_memory[req.session.id].chatbot.sendMessage(prompt)
+  });
 });
+
+//
+// Continue the chat once a user responds to the bot_welcome
+//
+app.get("/qa*", async (req, res) =>
+  res.send({ response: await bot_local_memory[req.session.id].chatbot.sendMessage(req.query.user_query) })
+);
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // example
-app.get("/client_side_auth", (req, res) => {
-  res.sendFile(__dirname + "/client/client_side_auth.html");
-});
+app.get("/client_side_auth", (req, res) => res.sendFile(__dirname + "/client/client_side_auth.html"));
 
 // passport check
-app.get("/user", (req, res) => {
-  console.log("~~~~~~~~~~~~~~~~ START user"); //, req.isAuthenticated());
-  res.send(
-    req.isAuthenticated()
-      ? { session: req.session, user: req.user }
-      : "User not Authenticated"
-  );
+app.get("/user", checkAccessToken, (req, res) => {
+  return { session: req.session, user: req.user };
 });
-
-// passport check
-app.get("/create", (req, res, CLIENT_ID, CLIENT_SECRET) => {
-  passport.authenticate("google", { failureRedirect: "/" }),
-    (req, res) => {
-      res.send(
-        req.isAuthenticated() ? { user: req.user, query: req.query } : "log in"
-      );
-      driveUtils.createFile(req, res, CLIENT_ID, CLIENT_SECRET, GOOGLE_API_KEY);
-    };
-});
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,5 +1,5 @@
 {
-  "name": "drive",
+  "name": "langdrive",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -12,16 +12,20 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@xenova/transformers": "^2.5.0",
+    "@huggingface/inference": "^1.8.0",
+    "axios": "^1.4.0",
     "connect-sqlite3": "^0.9.13",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "googleapis": "^123.0.0",
-    "langchain": "^0.0.121",
+    "langchain": "^0.0.124",
     "nodemon": "^3.0.1",
     "passport": "^0.6.0",
-    "passport-google-oauth20": "^2.0.0"
+    "passport-google-oauth20": "^2.0.0",
+    "passport-oauth2-refresh": "^2.2.0",
+    "querystring": "^0.2.1",
+    "zod": "^3.22.1"
   }
 }
