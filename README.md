@@ -8,7 +8,7 @@ This repo comes with a built-in Chatbot UI for easy 1-click [deployment](#1-clic
 
 Get a chatbot up and running _NOW_!
 
-1. Click here to [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://github.com/addy-ai/langdrive)
+1. Click here to [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/addy-ai/langdrive)
 
 2. Set Heroku Secret Variables `CLIENT_ID` and `CLIENT_SECRET` with corresponding Google OAuth2 Keys [instructions](https://console.cloud.google.com/apis/dashboard).
 
