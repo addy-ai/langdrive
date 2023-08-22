@@ -1,11 +1,12 @@
 const { google } = require("googleapis");
 
 class DriveUtils {
-  constructor(CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN) {
+  constructor(CLIENT_ID, CLIENT_SECRET, OBJ) {
     this.CLIENT_ID = CLIENT_ID;
     this.CLIENT_SECRET = CLIENT_SECRET;
-    this.access_token = ACCESS_TOKEN;
+    this.access_token = OBJ.ACCESS_TOKEN;
     this.oauth2Client = new google.auth.OAuth2(this.CLIENT_ID, this.CLIENT_SECRET);
+    this.verbose = OBJ.verbose;
   }
 
   async getDrive() {
@@ -23,66 +24,88 @@ class DriveUtils {
   }
 
   async listFiles(mimeType) {
+    /*
+    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    console.log("~~~~~~~~~~~~~~ LIST DRIVE FILES ~~~~~~~~~~~~~~~~~~~~");
+    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", {mimeType});
+    */
     let type = `mimeType='${mimeType}'`;
-    const drive = await this.getDrive();
-    const textFiles = [];
-    const response = await drive.files.list({
-      // q: "mimeType='text/plain'",
-      q: mimeType ? type : "",
-      fields: "nextPageToken, files(id, name)",
-      spaces: "drive"
-    });
-    //let filenames = textFiles.push(...response.data.files);
-    //filenames =  textFiles.map(file => file.name);
-    //console.log("Found all these JSON files : ", filenames);
-    return { status: 200, message: "Found Files.", data: response.data };
+    try {
+      const drive = await this.getDrive();
+      const textFiles = [];
+      const response = await drive.files.list({
+        // q: "mimeType='text/plain'",
+        q: mimeType ? type : "",
+        fields: "nextPageToken, files(id, name)",
+        spaces: "drive"
+      });
+      return { status: 200, message: "Found Files.", data: response.data };
+    } catch {
+      console.log("ERROR", error);
+      return { status: 400, message: "Unable to List Files for" + mimeType, data: false };
+    }
   }
 
   async getFileInfo(filename, mimeType) {
-    try {
-      /*
+    /*
       console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
       console.log("~~~~~~~~~ Get json File In Drive ~~~~~~~~~~~~~~~~~~~~~~");
-      console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", mimeType);
-      */
-      const drive = await this.getDrive();
+      console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", { filename, mimeType });
+    */
+    let error = {
+      status: 400,
+      data: false,
+      message: "Unable to getFileInfo for: " + filename + " Of Type: " + mimeType
+    };
+    try {
       const textFiles = [];
       const response = await this.listFiles(mimeType);
+      if (response.status == 400) return error;
       textFiles.push(...response.data.files);
-      return textFiles.find(file => file.name === filename);
-    } catch (error) {
-      console.error(error);
-      return false;
+      return { status: 200, message: "Found Files.", data: textFiles.find(file => file.name === filename) };
+    } catch {
+      console.log("ERROR", error);
+      return error;
     }
   }
 
   async getFileById(fileId) {
+    /*
+    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    console.log("~~~~~~~~~~~~~~ Get Files By ID ~~~~~~~~~~~~~~~~~~~~");
+    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", {fileId});
+    */
+    let error = { status: 400, data: false, message: "Unable to getFileById: " + fileId };
     try {
       const drive = await this.getDrive();
-      const response = await drive.files.get({
-        fileId,
-        alt: "media"
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error getting the file:", error);
-      return null;
+      const response = await drive.files.get({ fileId, alt: "media" });
+      return { status: 200, message: "Got File by ID.", data: response.data };
+    } catch {
+      console.log("ERROR getFileById:", error);
+      return error;
     }
   }
 
   async getFileByName(filename, mimeType = false) {
+    /*
+    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    console.log("~~~~~~~~~~~~~~ Get File by Name ~~~~~~~~~~~~~~~~~~~~");
+    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", {fileId, mimeType});
+    */
+    let error = { status: 400, data: false, message: "Unable to getFileById: " + fileId };
     try {
       let type = mimeType && `mimeType='${mimeType}'`;
 
       console.log("getFileByName", filename, mimeType);
       // console.log("getFileByName", filename, mimeType);
-      const exists = await this.getFileInfo(filename, type);
-      if (!exists) return { status: 400, message: "File does not exist.", data: false };
-      console.log("exists", exists);
-      return this.getFileById(exists.id);
-    } catch (error) {
-      console.error(error);
-      return false;
+      let response = await this.getFileInfo(filename, type).data;
+      if (response.status == 400) return error;
+      response = this.getFileById(exists.id);
+      if (response.status == 400) return error;
+      return { status: 200, message: "Got File by ID.", data: file.data };
+    } catch {
+      console.log("ERROR getFileByName:", error);
+      return error;
     }
   }
 
@@ -90,16 +113,20 @@ class DriveUtils {
     /*
     console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     console.log("~~~~~~~~~~~~~~ create File In Drive ~~~~~~~~~~~~~~~~~~~");
-    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", {filename, mimeType, message});
     */
-    //console.log("CREATEing file");
-    const drive = await this.getDrive();
-    const response = await drive.files.create({
-      resource: { name: filename },
-      media: { mimeType, body: message },
-      fields: "id"
-    });
-    return { status: 200, message: "File created.", data: response.data };
+    try {
+      const drive = await this.getDrive();
+      const response = await drive.files.create({
+        resource: { name: filename },
+        media: { mimeType, body: message },
+        fields: "id"
+      });
+      return { status: 200, message: "Got File by ID.", data: file.data };
+    } catch {
+      console.log("ERROR createFile:", error);
+      return { status: 400, data: false, message: "Unable to createFile: " + filename };
+    }
   }
 
   async createAndOrGetFile(filename, mimeType, message) {
@@ -108,14 +135,24 @@ class DriveUtils {
     console.log("~~~~~~~~~~~ Create and or Get File In Drive ~~~~~~~~~~~");
     console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     */
-    const exists = await this.getFileInfo(filename, mimeType); // returns: {id, name}
-    let metaData = exists
-      ? { status: 400, message: "File already exists.", data: exists }
-      : await this.createFile(filename, mimeType, message);
-    // console.log("~~~ Chat History File: ", metaData);
-    let file = await this.getFileById(metaData.data.id);
-    // console.log("~~~ Chat History: ", file);
-    return { content: file, metaData };
+    let error = { status: 400, data: false, message: "Unable to createFile: " + filename };
+    try {
+      let response = await this.getFileInfo(filename, mimeType);
+
+      let metaData =
+        response.status == 200
+          ? { status: 200, message: "File already exists.", data: response.data }
+          : await this.createFile(filename, mimeType, message);
+      if (metaData.status == 400) return error;
+
+      let file = await this.getFileById(metaData.data.id);
+      if (file.status == 400) return error;
+
+      return { status: 200, message: "Got File by ID.", data: { file: file.data, metadata: metaData.data } };
+    } catch {
+      console.log("ERROR createAndOrGetFile:", error);
+      return error;
+    }
   }
 
   async updateFile(fileId, mimeType, message) {
@@ -131,11 +168,21 @@ class DriveUtils {
         media: { mimeType, body: message },
         fields: "id"
       });
-      return response.data;
-    } catch (error) {
-      console.error("Error updating the file:", error);
-      return null;
+      return { status: 200, message: "Success", data: response.data };
+    } catch {
+      return { status: 400, data: false, message: "Unable to updateFile: " + fileId };
     }
   }
 }
 module.exports = DriveUtils;
+
+/*
+  - getDrive
+  - getDrive <- listFiles
+  - getDrive <- listFiles <- getFileInfo
+  - getDrive <- getFileById
+  - getDrive <- getFileById <= getDrive <- listFiles <- getFileInfo <= getFileByName
+  - getDrive <- createFile
+  - getDrive <- getFileById <= getDrive <- createFile <- getFileInfo <= createAndOrGetFile
+  - getDrive <- updateFile
+*/

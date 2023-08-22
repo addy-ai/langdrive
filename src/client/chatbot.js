@@ -3,8 +3,7 @@ let chatbotName = undefined;
 let chatbotAvatarURL = undefined;
 let customerAvatarURL = "https://i.imgur.com/vphoLPW.png";
 let customerName = "You";
-let chatbotAPI =
-  "https://us-central1-hey-addy-chatgpt.cloudfunctions.net/businessInference/infer";
+let chatbotAPI = "https://us-central1-hey-addy-chatgpt.cloudfunctions.net/businessInference/infer";
 chatbotAPI = "http://localhost:3000";
 
 const currentUrl = window.location.href;
@@ -21,18 +20,7 @@ const header = document.querySelector(".header-container");
 sendBtn.disabled = true;
 
 window.onload = async function () {
-  /*
-  const urlParams = new URLSearchParams(window.location.search);
-  let code = urlParams.get("code");
-  console.log("code", code);
-  if (code) {
-    localStorage.setItem("authCode", code);
-  }
-  if (localStorage.getItem("authCode")) {
-    initializeBot(); // jumpstart this bot
-  }*/
-
-//   initializeBot();
+  initializeBot();
 };
 
 function initializeBot() {
@@ -45,8 +33,8 @@ function initializeBot() {
   // Get the bot information.
   console.log("fetching");
   fetch(`${chatbotAPI}/bot_init`)
-    .then((response) => response.json())
-    .then((botInfo) => {
+    .then(response => response.json())
+    .then(botInfo => {
       // Handle the response from the server
       if (botInfo.status == 400) {
         window.location.href = "./auth/google";
@@ -63,7 +51,7 @@ function initializeBot() {
       onSendButtonClick(publicId, botInfo); // Activate send button
       showBotWelcomeMessage(publicId, botInfo);
     })
-    .catch((err) => {
+    .catch(err => {
       console.error("Addy AI Error: ", err);
       // Handle errors
     });
@@ -71,8 +59,8 @@ function initializeBot() {
 
 function showBotWelcomeMessage(botPublicId, botInfo) {
   fetch(`${chatbotAPI}/bot_welcome?publicId=${botPublicId}`)
-    .then((response) => response.json())
-    .then((data) => {
+    .then(response => response.json())
+    .then(data => {
       if (data.response) {
         createBotMessageElement(data.response, botInfo);
       }
@@ -108,14 +96,12 @@ function createBotMessageElement(message, botInfo) {
   return messageId;
 }
 
-document
-  .getElementById("message-input")
-  .addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-      event.preventDefault(); // Prevents the default action (form submission, line break, etc.)
-      document.getElementById("send-btn").click();
-    }
-  });
+document.getElementById("message-input").addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault(); // Prevents the default action (form submission, line break, etc.)
+    document.getElementById("send-btn").click();
+  }
+});
 
 function updateHeader(botInfo) {
   if (header) {
@@ -143,14 +129,8 @@ function onSendButtonClick(publicId, botInfo) {
       const thinkingElem = document.createElement("div");
       thinkingElem.setAttribute("class", "message-chatbot-parent");
       let thinkingInnerHTML = chatbotThinking;
-      thinkingInnerHTML = thinkingInnerHTML.replaceAll(
-        "{{chatbotAvatarURL}}",
-        botInfo.avatarURL
-      );
-      thinkingInnerHTML = thinkingInnerHTML.replaceAll(
-        "{{chatbotName}}",
-        botInfo.name
-      );
+      thinkingInnerHTML = thinkingInnerHTML.replaceAll("{{chatbotAvatarURL}}", botInfo.avatarURL);
+      thinkingInnerHTML = thinkingInnerHTML.replaceAll("{{chatbotName}}", botInfo.name);
 
       setTimeout(() => {
         thinkingElem.innerHTML = thinkingInnerHTML;
@@ -160,27 +140,21 @@ function onSendButtonClick(publicId, botInfo) {
 
       // There's an element to fetch message in
       fetch(`${chatbotAPI}/qa?user_query=${message}&publicId=${publicId}`)
-        .then((response) => response.json())
-        .then((data) => {
+        .then(response => response.json())
+        .then(data => {
           console.log(data);
           // remove thinking
           thinkingElem.style.display = "none";
           if (data.response) {
             createBotMessageElement(data.response, botInfo);
           } else {
-            createBotMessageElement(
-              "Sorry I could not understand your question",
-              botInfo
-            );
+            createBotMessageElement("Sorry I could not understand your question", botInfo);
           }
           chatHistory.scrollTop = chatHistory.scrollHeight;
         })
-        .catch((error) => {
+        .catch(error => {
           thinkingElem.style.display = "none";
-          createBotMessageElement(
-            "Oops... I had a glitch :( My engineers are working on it",
-            botInfo
-          );
+          createBotMessageElement("Oops... I had a glitch :( My engineers are working on it", botInfo);
         });
     }
   });

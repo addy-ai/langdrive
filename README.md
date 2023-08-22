@@ -2,7 +2,7 @@
 
 Create a chatbot using Google Drive.
 
-This repo comes with a built-in Chatbot UI for easy 1-click [deployment](#1-click-deploy). Developers can install this repo via NPM to handle only backend functions. It provides code to both handle backend requests and the accompanying chatbot UI to issue the requests. Individuals may use a free instance of this service by vising addy-ai.com. Individual contributors can fork a copy, or contribute a PR, by following the instructions (and documentation) below. Google [OAuth2](https://developers.google.com/identity/protocols/oauth2) keys are required to run your own instance (create credentials for a web app oAuth). Read our tutorial on OAuth2 on our [blog](https://addy.beehiiv.com/).
+This repo comes with a built-in Chatbot UI for easy 1-click [deployment](#1-click-deploy). Developers can install this repo via NPM for use in node. Individuals may use a free deployed instance of this service by vising addy-ai.com. ChatGPT, HuggingFace, or more LLM Google [OAuth2](https://developers.google.com/identity/protocols/oauth2) keys are required to run your own instance (create credentials for a web app oAuth). Read our tutorial on OAuth2 on our [blog](https://addy.beehiiv.com/).
 
 ## 1 CLICK DEPLOY
 
@@ -10,38 +10,95 @@ Get a chatbot up and running _NOW_!
 
 1. Click here to [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/addy-ai/langdrive)
 
-2. Set Heroku Secret Variables `CLIENT_ID` and `CLIENT_SECRET` with corresponding Google OAuth2 Keys [instructions](https://console.cloud.google.com/apis/dashboard).
+2. Set Heroku Secret Variables to gain access to their Service
 
-## Components
+- `CLIENT_ID` and `CLIENT_SECRET` with Google OAuth2 Keys [instructions](https://console.cloud.google.com/apis/dashboard) if you want to connect Google Drive to your chatbot.
+- `OPENAI_API_KEY` for ChatGPT4.
+- `HUGGINGFACE_API_KEY` to use a HuggingFace LLM.
 
-For developers who would like to explore the full breadth of this repo's functionality.
+## NPM: Langdrive: Getting Started
 
-| Root
-|
-| - package
-| - .env.example
-| - main.js -> Entrypoint for `import drive`
-|
-| - Src/
-|
-| - - Server/
-| - - - start_server.js
-| - - - drive_utils.js
-| - - - test_server.js
-|  
-| - - Client/
-| - - - chatbot.html
-| - - - chatbot_utils.js
+LangDrive was built for Node.js.
 
-### Server
+- `npm install langdrive` exposes `DriveChatbot` and it's underlying utility class `DriveUtils`.
+- `DriveChatbot` - Uses an agent conditionally integrated with drive_utils.
+- `DriveUtils` - Syncs data to a users google drive folder if the drive_chatbot is initialized with a OAuth2 access token. The extent of the data sync is conditioned on Auth scope.
 
-`start_server` is used in heroku. It serves `client/chatbot.html` and handles it's request's by using `drive_utils`.
+## NPM: Langdrive: DriveChatbot Class
 
-- The app starts on the '/chat' endpoint.
+The Chatbot returns Async Promises.
 
-- The npm import `langdrive` exposes `DriveChatbot` and it's underlying utility class `DriveUtils`.
+Chatbot at minimum requires being initalized like so:
+`Chatbot({model_config:{HuggingFaceAPIKey:<KEY>}})`
+or like so:
+`Chatbot({model_config:{openAIApiKey:<KEY>}})`
 
-- drive_chatbot can be constructed with the following properties:
+### Example Script
+
+Get started with a sample script by created the following files then running:
+
+```
+npm install langdrive dotenv
+node test.js
+```
+
+`.env` File:
+
+```
+OPENAI_API_KEY=<YOUR_KEY_HERE>
+GOOGLE_CLIENT_ID=<YOUR_KEY_HERE>
+GOOGLE_CLIENT_SECRET=<YOUR_KEY_HERE>
+```
+
+`test.js` File:
+
+```
+require("dotenv").config();
+const langdrive = require("langdrive");
+// LangDrive returns promises
+(async()=>{
+  // To initialize Langdrive, give it a model to use and any associated config information.
+  // Here we select openAi and pass it an API key (hidden behind .env)
+  const chatbot = await new langdrive.DriveChatbot({
+    model_config: {
+      openAIApiKey: process.env.OPENAI_API_KEY,
+    }
+  });
+
+  let prompt = "My name is Michael, What can you do for me.";
+  console.log("> " , await chatbot.sendMessage(prompt));
+
+  prompt = "What can you do for me in google drive?";
+  console.log("> " , await chatbot.sendMessage(prompt));
+
+  prompt = "What is my name?";
+  console.log("> " , await chatbot.sendMessage(prompt));
+})()
+
+```
+
+```
+  const chatbot = await new langdrive.DriveChatbot({
+    model: "openAi", // Also Available: ['openAi', 'huggingFace', 'Endpoint']
+    model_config: {
+      // huggingFaceApiKey: process.env.HUGGINGFACE_API_KEY,
+      openAIApiKey: process.env.OPENAI_API_KEY,
+      modelName: "gpt-3.5-turbo", // Example: ["meta-llama/Llama-2-7b", "google/flan-t5-large", etc..]
+      maxTokens: 256,
+      temperature: 0.9
+    }
+  });
+```
+
+// OpenAI Documentation has full list
+https://huggingface.co/models?pipeline_tag=text2text-generation&sort=trending
+https://platform.openai.com/docs/models/gpt-3-5
+
+where `props` is a an js object used to configure your chatbot. Available settings and their default values are shown below.
+
+of the available settings, the following are mandatory:
+how to choose model names
+model name is required
 
 ```
   this.driveUtils =  new DriveUtils(props.CLIENT_ID, props.CLIENT_SECRET, props.ACCESS_TOKEN)

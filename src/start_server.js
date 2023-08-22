@@ -40,17 +40,19 @@ app.listen(3000, () => console.log(`Server running on http://localhost:3000`));
 require("dotenv").config();
 const Chatbot = require("./server/drive_chatbot.js");
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const HUGGINGFACE_API_KEY = process.env.HUGGINGFACE_API_KEY;
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 app.use(express.json());
 
 app.get("/", async (req, res) => {
+  res.redirect("/chat"); /*
   res.send(`<h1>Welcome</h1><br> \ 
   <a href='./client_side_auth'>client_side_auth</a><br> \
   <a href='./chat'>Chat</a><br> \
   <a href='./user'>User Check</a><br> \ 
   <a href='./auth/google'>Auth Google</a><br> \ 
-  `);
+  `);*/
 });
 
 app.get("/auth/google", (req, res) => {
@@ -145,7 +147,6 @@ async function checkAccessToken(req, res, next) {
 
 // let scope = ["profile", "email", "https://www.googleapis.com/auth/drive.file"];
 app.get("/chat", checkAccessToken, (req, res, next) => {
-  // console.log("/auth/google/callback sessionId: ", req.sessionID);
   res.sendFile(__dirname + "/client/chatbot.html");
 });
 
@@ -153,32 +154,33 @@ app.get("/chat", checkAccessToken, (req, res, next) => {
 // Initialize the bot, load up it's data or create the associated files
 //
 app.get("/bot_init", checkAccessToken, async (req, res) => {
+  // console.log("INIT CHATBOT");
   ACCESS_TOKEN = req.session.access_token;
   let chatbot = new Chatbot({
+    model_config: {
+      // modelName: "gpt-3.5-turbo", // default = "text-davinci-003"
+      // maxTokens: 256, // default = 256
+      openAIApiKey: OPENAI_API_KEY,
+      huggingFaceApiKey: HUGGINGFACE_API_KEY
+      // temperature: 0.9
+    },
     CLIENT_ID,
     CLIENT_SECRET,
     ACCESS_TOKEN,
     memory_length: 2,
     vector_length: 2,
-    model: "chatOpenAi",
-    model_config: {
-      modelName: "gpt-3.5-turbo", // default = "text-davinci-003"
-      // maxTokens: 256, // default = 256
-      openAIApiKey: OPENAI_API_KEY,
-      temperature: 0.9
-    },
     agent: "chat-conversational-react-description",
     agent_config: {},
+    verbose: true,
     agent_verbose: false,
     tools: []
   });
   bot_local_memory[req.session.id] = bot_local_memory[req.session.id] || { chatbot };
-  let success = await chatbot.init();
+
   res.send({
     status: 200,
     name: "LangDrive",
-    avatarURL: "https://i.imgur.com/vphoLPW.png",
-    status: success ? success : ""
+    avatarURL: "https://i.imgur.com/vphoLPW.png"
   });
 });
 
@@ -196,9 +198,9 @@ app.get("/bot_welcome*", async (req, res) => {
 //
 // Continue the chat once a user responds to the bot_welcome
 //
-app.get("/qa*", async (req, res) =>
-  res.send({ response: await bot_local_memory[req.session.id].chatbot.sendMessage(req.query.user_query) })
-);
+app.get("/qa*", async (req, res) => {
+  res.send({ response: await bot_local_memory[req.session.id].chatbot.sendMessage(req.query.user_query) });
+});
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
