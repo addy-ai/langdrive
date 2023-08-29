@@ -2,7 +2,7 @@
 
 Create a chatbot using Google Drive. Make it smart and store data by connecting it to you or your visitors' google drive account.
 
-This repo comes with a built-in Chatbot UI for easy 1-click [deployment](#1-click-deploy). Developers can install this repo via NPM for use in node. Individuals may use a free deployed instance of this service by vising addy-ai.com. ChatGPT, HuggingFace, or more LLM Google [OAuth2](https://developers.google.com/identity/protocols/oauth2) keys are required to run your own instance (create credentials for a web app oAuth). Read our tutorial on OAuth2 on our [blog](https://addy.beehiiv.com/).
+Select your AI Model and optionally connect you and/or your users' google drive. Node developers can `npm install langDrive` to access our `DriveUtils` and `DriveChatbot` classes. Individuals may use a free deployed instance of this service by vising addy-ai.com. ChatGPT, HuggingFace, or more LLM Google [OAuth2](https://developers.google.com/identity/protocols/oauth2) keys are required to run your own instance (create credentials for a web app oAuth). Read our tutorial on OAuth2 on our [blog](https://addy.beehiiv.com/).
 
 ## 1 CLICK DEPLOY
 
@@ -15,6 +15,7 @@ Get a chatbot up and running _NOW_!
 - `GOOGLE_WEB_CLIENT_ID` and `GOOGLE_WEB_CLIENT_SECRET` with Google OAuth2 Keys [instructions](https://console.cloud.google.com/apis/dashboard) are needed for user login and to connect Google Drive to their chatbot.
 - `OPENAI_API_KEY` for ChatGPT4.
 - `HUGGINGFACE_API_KEY` to use a HuggingFace LLM.
+- ``
 
 ## NPM: Langdrive: Getting Started
 
@@ -54,33 +55,62 @@ GOOGLE_DESKTOP_CLIENT_KEYFILE_PATH=<YOUR_KEY_HERE>
 ```
 require("dotenv").config();
 const langdrive = require("langdrive");
+
 // LangDrive returns promises
 (async()=>{
   // To initialize Langdrive, give it a model to use and any associated config information.
   // Here we select openAi and pass it an API key (hidden behind .env)
-  let chatbot = new Chatbot({
+  let chatbot = await new langdrive.DriveChatbot({
     verbose: true,
     drive: {
       verbose: false,
-      server: { // We want to use our drive not the visitors drive
-        embed_from_folder: "chatbot",
-        embed_to_folder: "chatbot/embeddings",
-        scopes: ["https://www.googleapis.com/auth/drive"],
-        desktopKeyFile: __dirname + process.env.GOOGLE_DESKTOP_CLIENT_KEYFILE_PATH
-      }
+      ...(!GOOGLE_DESKTOP_KEYFILE_PATH
+        ? {}
+        : {
+            server: {
+              embed_from_folder: "chatbot",
+              embed_to_folder: "chatbot/embeddings",
+              scopes: ["https://www.googleapis.com/auth/drive"],
+              // serviceKeyFile: __dirname + "/../" + GOOGLE_SERVICE_KEYFILE_PATH
+              // OR
+              desktopKeyFile: __dirname + GOOGLE_DESKTOP_KEYFILE_PATH
+              // ( Alternately:) desktopKeyFileContents: GOOGLE_DESKTOP_CLIENT_KEYFILE_CONTENTS
+              // OR
+              // desktopTokenFile: GOOGLE_DESKTOP_CLIENT_TOKEN_PATH:
+              // ( Alternately:) desktopTokenFileContents: GOOGLE_DESKTOP_CLIENT_TOKEN_CONTENTS
+              // OR
+              //client_id: GOOGLE_DESKTOP_CLIENT_ID, // and
+              //client_secret: GOOGLE_SERVICE_CLIENT_SECRET //and
+              //client_redirect_uri: xyz
+            }
+          })
     },
     model: {
-      model_config: {
-        openAIApiKey: process.env.OPENAI_API_KEY
-      }
+      service: !!HUGGINGFACE_API_KEY ? "huggingFace" : "chatOpenAi",
+      model_config: !!HUGGINGFACE_API_KEY
+        ? {
+            model_id: "meta-llama/Llama-2-30b",
+            huggingFaceApiKey: HUGGINGFACE_API_KEY
+          }
+        : {
+            modelName: "gpt-3.5-turbo", // default = "text-davinci-003"
+            // maxTokens: 256, // default = 256
+            openAIApiKey: OPENAI_API_KEY,
+            temperature: 0.9
+          }
     },
     agent: {
-      verbose: false,
+      type: "chat-conversational-react-description",
       memory_length: 2,
       vector_length: 2,
+      verbose: false,
+      tools: [],
+      agent_config: {}
+      // prefix
+      // suffix
     }
   });
-
+  // LangDrive returns a promise, so let's await those.
   let prompt = "My name is Michael, What can you do for me.";
   console.log("> " , await chatbot.sendMessage(prompt));
 
@@ -90,7 +120,6 @@ const langdrive = require("langdrive");
   prompt = "What is my name?";
   console.log("> " , await chatbot.sendMessage(prompt));
 })()
-
 ```
 
 You can also clone the repo and get started with our demo chatbot

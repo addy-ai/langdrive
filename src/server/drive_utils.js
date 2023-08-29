@@ -49,7 +49,7 @@ class DriveUtils {
             }
             // Otherwise create and save it for future use.
             if (!client && this.desktopKeyFile) {
-              console.log("this.desktopKeyFile", this.scopes, this.desktopKeyFile);
+              // console.log("this.desktopKeyFile", this.scopes, this.desktopKeyFile);
               try {
                 client = await authenticate({
                   scopes: this.scopes,
@@ -227,23 +227,29 @@ class DriveUtils {
 
   async getFileById(props) {
     await this.getDrive();
-    // console.log("GET FILE BY ID", props);
     let { id, fileId } = props;
+    id = id || fileId;
+    // console.log("GET FILE BY ID", props);
     /*
     console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     console.log("~~~~~~~~~~~~~~ Get Files By ID ~~~~~~~~~~~~~~~~~~~~");
     console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", {id});
     */
-    let error = { status: 400, data: false, message: "Unable to getFileById: " + id || fileId };
+    let error = { status: 400, data: false, message: "Unable to getFileById: " + id };
+    if (!!!id) {
+      error.message = "Unable to getFileById: No id: " + id + " nor fileId: " + fileId;
+      console.log("Drive_utils: getFILEBYIID: NO ID PROVIDED");
+      return error;
+    }
     try {
       const drive = await this.drive;
-      const response = await drive.files.get({ fileId: id || fileId, alt: "media" });
+      const response = await drive.files.get({ fileId: id, alt: "media" });
       return { status: 200, message: "Got File by ID.", data: response.data };
     } catch (err) {
       this.verbose &&
         console.log(
           "\n\n ERROR: DriveUtils: getFileByName: RECIEVED: ",
-          { fileId },
+          { id },
           ", RETURNING: ",
           error,
           ", ERROR: ",
@@ -404,13 +410,20 @@ class DriveUtils {
 
   async updateFile(props) {
     await this.getDrive();
-    let { fileId, mimeType, message } = props;
+    let { fileId, mimeType, message, id } = props;
+    fileId = fileId || id;
+
     /*
     console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     console.log("~~~~~~~~~~~ Update File In Drive by ID ~~~~~~~~~~~");
     console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     */
     let error = { status: 400, data: false, message: "Unable to updateFile: " + fileId };
+    if (!!!fileId) {
+      error.message = "Unable to updateFile: No fileId: " + fileId + " nor id: " + id;
+      console.log("Drive_utils: updateFile: NO ID PROVIDED");
+      return error;
+    }
     try {
       const response = await this.drive.files.update({
         fileId,

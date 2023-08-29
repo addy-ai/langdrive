@@ -120,45 +120,50 @@ app.get("/bot_init", checkAccessToken, async (req, res) => {
     verbose: true,
     drive: {
       verbose: false,
-      /*
-      web: {
-        scopes: ["https://www.googleapis.com/auth/drive"],
-        client_id: GOOGLE_WEB_CLIENT_ID,
-        client_secret: GOOGLE_WEB_CLIENT_SECRET,
-        access_token: req.session.access_token
-      },
-      */
-      server: {
-        embed_from_folder: "chatbot",
-        embed_to_folder: "chatbot/embeddings",
-        scopes: ["https://www.googleapis.com/auth/drive"],
-        // serviceKeyFile: __dirname + "/../" + GOOGLE_SERVICE_KEYFILE_PATH
-        // OR
-        desktopKeyFile: __dirname + GOOGLE_DESKTOP_KEYFILE_PATH
-        // ( Alternately:) desktopKeyFileContents: GOOGLE_DESKTOP_CLIENT_KEYFILE_CONTENTS
-        // OR
-        // desktopTokenFile: GOOGLE_DESKTOP_CLIENT_TOKEN_PATH:
-        // ( Alternately:) desktopTokenFileContents: GOOGLE_DESKTOP_CLIENT_TOKEN_CONTENTS
-        // OR
-        //client_id: GOOGLE_DESKTOP_CLIENT_ID, // and
-        //client_secret: GOOGLE_SERVICE_CLIENT_SECRET //and
-        //client_redirect_uri: xyz
-      }
+      ...(!GOOGLE_WEB_CLIENT_ID
+        ? {}
+        : {
+            web: {
+              scopes: ["https://www.googleapis.com/auth/drive"],
+              client_id: GOOGLE_WEB_CLIENT_ID,
+              client_secret: GOOGLE_WEB_CLIENT_SECRET,
+              access_token: req.session.access_token
+            }
+          }),
+      ...(!GOOGLE_DESKTOP_KEYFILE_PATH
+        ? {}
+        : {
+            server: {
+              embed_from_folder: "chatbot",
+              embed_to_folder: "chatbot/embeddings",
+              scopes: ["https://www.googleapis.com/auth/drive"],
+              // serviceKeyFile: __dirname + "/../" + GOOGLE_SERVICE_KEYFILE_PATH
+              // OR
+              desktopKeyFile: __dirname + GOOGLE_DESKTOP_KEYFILE_PATH
+              // ( Alternately:) desktopKeyFileContents: GOOGLE_DESKTOP_CLIENT_KEYFILE_CONTENTS
+              // OR
+              // desktopTokenFile: GOOGLE_DESKTOP_CLIENT_TOKEN_PATH:
+              // ( Alternately:) desktopTokenFileContents: GOOGLE_DESKTOP_CLIENT_TOKEN_CONTENTS
+              // OR
+              //client_id: GOOGLE_DESKTOP_CLIENT_ID, // and
+              //client_secret: GOOGLE_SERVICE_CLIENT_SECRET //and
+              //client_redirect_uri: xyz
+            }
+          })
     },
     model: {
-      service: "chatOpenAi",
-      model_config: {
-        // modelName: "gpt-3.5-turbo", // default = "text-davinci-003"
-        // maxTokens: 256, // default = 256
-        openAIApiKey: OPENAI_API_KEY
-        // temperature: 0.9
-      }
-      /*
-      model_config: {
-        model_id: "meta-llama/Llama-2-30b" 
-        huggingFaceApiKey: HUGGINGFACE_API_KEY
-      }
-      */
+      service: !!HUGGINGFACE_API_KEY ? "huggingFace" : "chatOpenAi",
+      model_config: !!HUGGINGFACE_API_KEY
+        ? {
+            model_id: "meta-llama/Llama-2-30b",
+            huggingFaceApiKey: HUGGINGFACE_API_KEY
+          }
+        : {
+            modelName: "gpt-3.5-turbo", // default = "text-davinci-003"
+            // maxTokens: 256, // default = 256
+            openAIApiKey: OPENAI_API_KEY,
+            temperature: 0.9
+          }
     },
     agent: {
       type: "chat-conversational-react-description",
