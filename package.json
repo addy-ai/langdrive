@@ -1,6 +1,6 @@
 {
   "name": "langdrive",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/local-auth": "^3.0.0",
     "@huggingface/inference": "^1.8.0",
     "axios": "^1.4.0",
     "connect-sqlite3": "^0.9.13",
@@ -19,6 +20,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
+    "faiss-node": "^0.2.3",
     "googleapis": "^123.0.0",
     "langchain": "^0.0.124",
     "nodemon": "^3.0.1",

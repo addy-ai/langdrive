@@ -1,14 +1,9 @@
 const { OpenAI } = require("langchain/llms/openai");
 const { ChatOpenAI } = require("langchain/chat_models/openai");
-const {
-  BufferMemory,
-  BufferWindowMemory,
-  CombinedMemory,
-  ConversationSummaryMemory,
-  ChatMessageHistory
-} = require("langchain/memory");
+const { BufferWindowMemory, CombinedMemory, ChatMessageHistory } = require("langchain/memory");
 const { MemoryVectorStore } = require("langchain/vectorstores/memory");
 const { OpenAIEmbeddings } = require("langchain/embeddings/openai");
+const { TextLoader } = require("langchain/document_loaders/fs/text");
 const { Ollama } = require("langchain/llms/ollama");
 const { HumanMessage, AIMessage, SystemMessage } = require("langchain/schema");
 const DriveUtils = require("./drive_utils");
@@ -16,14 +11,12 @@ const { HuggingFaceInference } = require("langchain/llms/hf");
 const { Calculator } = require("langchain/tools/calculator");
 const { initializeAgentExecutorWithOptions } = require("langchain/agents");
 const { DynamicTool } = require("langchain/tools");
-const { EntityMemory, ENTITY_MEMORY_CONVERSATION_TEMPLATE, VectorStoreRetrieverMemory } = require("langchain/memory");
-const {
-  DEFAULT_PREFIX,
-  DEFAULT_SUFFIX,
-  PREFIX_END,
-  TEMPLATE_TOOL_RESPONSE,
-  FORMAT_INSTRUCTIONS
-} = require("./prompts");
+const { VectorStoreRetrieverMemory } = require("langchain/memory");
+const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
+//const { HNSWLib } = require("langchain/vectorstores/hnswlib");
+const { FaissStore } = require("langchain/vectorstores/faiss");
+const { DEFAULT_PREFIX, DEFAULT_SUFFIX } = require("./prompts");
+const fs = require("fs");
 
 const { ChatPromptTemplate, MessagesPlaceholder, StringPromptValue } = require("langchain/prompts");
 
@@ -44,28 +37,17 @@ const { spawn } = require("child_process");
 class Chatbot {
   constructor(props) {
     this.verbose = props.verbose || false;
-    this.driveUtils = props.CLIENT_ID
-      ? new DriveUtils(props.CLIENT_ID, props.CLIENT_SECRET, {
-          ACCESS_TOKEN: props.ACCESS_TOKEN,
-          verbose: this.verbose
-        })
-      : false;
-    this.drive_chat_history_filename = props.drive_chat_history_filename || "chatbot_chat_history.json";
-    this.drive_chat_history_filepath = props.drive_chat_history_filepath || "./";
-    this.drive_embeddings_filename = props.drive_embeddings_filename || "chatbot_embeddings.json";
-    this.drive_embeddings_filepath = props.drive_embeddings_filepath || "./";
-    this.drive_document_directory_filename = props.drive_documents_filename || "chatbot_documents.json";
-    this.drive_document_directory_filepath = props.drive_document_directory_filepath || "./";
 
-    this.model = props.model;
-    this.model_config = props.model_config;
+    this.model = props.model || false;
+    this.model_service = props.model.service;
+    this.model_config = this.model.model_config;
     const useOpenAiModel = !!this.model_config.openAIApiKey;
     const useHfAiModel = !!this.model_config.huggingFaceApiKey;
-    if (!this.model && useOpenAiModel) this.model = "chatOpenAi";
-    if (!this.model && useHfAiModel) this.model = "huggingFace";
-    if (!this.model && !openAiModel && !useOpenAiModel) {
+    if (!this.model_service && useOpenAiModel) this.model_service = "chatOpenAi";
+    if (!this.model_service && useHfAiModel) this.model_service = "huggingFace";
+    if (!this.model_service && !openAiModel && !useOpenAiModel) {
       // Install the huggingface Flant t5 small model and spin up a local endpoint for that.
-      this.model = "Endpoint";
+      this.model_service = "Endpoint";
       this.model_config = { baseUrl: "http://localhost:8912/", model: "meta-llama/Llama-2-7b" };
       const model_server = spawn("node", [__dirname + "/ollama_server.js", "--model", "meta-llama/Llama-2-7b"]);
       model_server.stdout.on("data", data => console.log(`stdout: ${data}`));
@@ -87,9 +69,10 @@ class Chatbot {
             temperature: 0.9 })"
       );
     }
-    if (this.model.includes("openAi")) this.model = new OpenAI(this.model_config);
-    else if (this.model.includes("chatOpenAi") || useOpenAiModel) this.model = new ChatOpenAI(this.model_config);
-    else if (this.model.includes("huggingFace") || useHfAiModel) {
+    if (this.model_service.includes("openAi")) this.model = new OpenAI(this.model_config);
+    else if (this.model_service.includes("chatOpenAi") || useOpenAiModel)
+      this.model = new ChatOpenAI(this.model_config);
+    else if (this.model_service.includes("huggingFace") || useHfAiModel) {
       this.model_config.model_id = this.model_config.model_id || this.model_config.modelName || "meta-llama/Llama-2-7b";
       this.model = new HuggingFaceInference(this.model_config);
     } else if (this.model === "Endpoint") this.model = new Ollama(this.model_config);
@@ -105,99 +88,115 @@ class Chatbot {
     this.vector_length = props.vector_length || 2;
 
     this.chat_embeddings_id = null;
+    this.chat_embeddings_data = [];
+    this.embeddings_id = null;
     this.embeddings_data = [];
 
-    this.memory = false;
-    this.agent = props.agent || "chat-conversational-react-description";
-    this.agent_config = props.agent_config || {};
-    this.agent_verbose = props.agent_verbose || this.verbose;
+    this.bufferMemory = [];
+    this.memory = [];
+    this.agent = props.agent.type || "chat-conversational-react-description";
+    this.agent_config = props.agent.agent_config || {};
+    this.agent_verbose = props.agent.verbose || false;
+    this.DEFAULT_PREFIX = props.agent.prefix || DEFAULT_PREFIX;
+    this.DEFAULT_SUFFIX = props.agent.suffix || DEFAULT_SUFFIX;
     this.tools = [
       new Calculator(),
-      new DynamicTool({
-        name: "Drive Util: List Files",
-        description: "Call this to get a list of all files of a mimeType in a users drive. Inputs: mimeType",
-        func: async () => {
-          this.verbose && console.log("Drive Util: List Files");
-          try {
-            let response = await this.driveUtils.listFiles();
-            let filenames = response.data.files.map(file => file.name).slice(0, 10);
-            return filenames;
-          } catch (error) {
-            let msg = "Error Connecting to Drive.";
-            this.verbose && console.log(error);
-            return msg;
-          }
-        },
-        ...(props.tools || [])
-      }),
-      new DynamicTool({
-        name: "Drive Util: Read Contents",
-        description: "Call this to get a single file in a users drive. Inputs: filename.ext",
-        func: async (filename = "test.txt") => {
-          try {
-            this.verbose && console.log("Drive Util: Read Contents");
-            let response = await this.driveUtils.getFileByName(filename);
-            let innerContent = response.data;
-            return innerContent;
-          } catch (error) {
-            let msg = "Error Connecting to Drive.";
-            console.log(error);
-            return msg;
-          }
-        }
-      })
+      ...(this.driveClient
+        ? [
+            new DynamicTool({
+              name: "Drive Util: List Files",
+              description: "Call this to get a list of all files of a mimeType in a users drive. Inputs: mimeType",
+              func: async () => {
+                this.verbose && console.log("Drive Util: List Files");
+                try {
+                  let response = await this.driveClient.listFiles({});
+                  let filenames = response.data.files.map(file => file.name).slice(0, 10);
+                  return filenames;
+                } catch (error) {
+                  let msg = "Error Connecting to Drive.";
+                  this.verbose && console.log(error);
+                  return msg;
+                }
+              }
+            }),
+            new DynamicTool({
+              name: "Drive Util: Read Contents",
+              description: "Call this to get a single file in a users drive. Inputs: filename.ext",
+              func: async (filename = "test.txt") => {
+                try {
+                  this.verbose && console.log("Drive Util: Read Contents");
+                  let response = await this.driveClient.getFileByName(filename);
+                  let innerContent = response.data;
+                  fs.writeFileSync(filename, innerContent, "utf8");
+                  const loader = new TextLoader(filename);
+                  const docs = await loader.load();
+                  fs.unlinkSync(filename);
+                  return "The File has been read.";
+                } catch (error) {
+                  let msg = "Error Connecting to Drive.";
+                  this.verbose && console.log(error);
+                  return msg;
+                }
+              }
+            }),
+            new DynamicTool({
+              name: "Fetch From Knowledge Base",
+              description: "Call this to fetch a file from a single file in a users drive. Inputs: filename.ext",
+              func: async (filename = "test.txt") => {
+                try {
+                  this.verbose && console.log("Drive Util: Read Contents");
+                  let response = await this.driveClient.getFileByName(filename);
+                  let innerContent = response.data;
+                  fs.writeFileSync(filename, innerContent, "utf8");
+                  const loader = new TextLoader(filename);
+                  const docs = await loader.load();
+                  fs.unlinkSync(filename);
+                  return "The File has been read.";
+                } catch (error) {
+                  let msg = "Error Connecting to Drive.";
+                  this.verbose && console.log(error);
+                  return msg;
+                }
+              }
+            })
+          ]
+        : []),
+      ...(props.agent.tools || [])
     ];
 
-    this.DEFAULT_PREFIX = props.default_prefix || DEFAULT_PREFIX;
-    this.DEFAULT_SUFFIX = props.default_suffix || DEFAULT_SUFFIX;
-    this.bufferMemory = [];
+    this.driveClient = props.drive.web
+      ? new DriveUtils({ ...props.drive.web, verbose: props.drive.verbose || this.verbose })
+      : false;
+    this.drive_chat_history_filename = props?.drive?.web?.chat_history_filename || "chatbot_chat_history.json";
+    this.drive_chat_history_filepath = props?.drive?.web?.chat_history_filepath || "";
+    this.drive_chat_embeddings_filename = props?.drive?.web?.chat_embeddings_filename || "chatbot_chat_embeddings.json";
+    this.drive_chat_embeddings_filepath = props?.drive?.web?.chat_embeddings_filepath || "";
+    this.drive_document_directory_filename = props?.drive?.web?.documents_filename || "chatbot_documents.json";
+    this.drive_document_directory_filepath = props?.drive?.web?.document_directory_filepath || "";
     this.vectorStore = new MemoryVectorStore(new OpenAIEmbeddings());
-    this.vectorStoreMemory = new VectorStoreRetrieverMemory({
+    this.vectorStoreRetrieverMemory = new VectorStoreRetrieverMemory({
       vectorStoreRetriever: this.vectorStore.asRetriever(this.vector_length), // Return top n docs
       memoryKey: "chat_vector",
       inputKey: "input"
     });
-    this.memory = [];
+
+    this.driveServer = props.drive.server
+      ? new DriveUtils({ ...props.drive.server, verbose: props.drive.verbose || this.verbose })
+      : false;
+    this.drive_embed_from_folder = props.drive.server.embed_from_folder || "";
+    this.drive_embed_to_folder = props.drive.server.embed_to_folder || "";
+    this.drive_embeddings_filename = props.drive.server.embeddings_filename || "embeddings.json";
+
+    this.kBVectorStore = new MemoryVectorStore(new OpenAIEmbeddings());
+    this.kBVectorStoreRetrieverMemory = new VectorStoreRetrieverMemory({
+      vectorStoreRetriever: this.kBVectorStore.asRetriever(this.vector_length), // Return top n docs
+      memoryKey: "server_vector",
+      inputKey: "input"
+    });
+    // this.kbClone = this.kBVectorStoreRetrieverMemory;
+
     // Fetch data from drive and initialize the chatbot using user-given props
     this.init();
-  }
-
-  async getMemory() {
-    if (this.driveUtils) {
-      try {
-        let response = await this.driveUtils.createAndOrGetFile(
-          this.drive_chat_history_filename,
-          "application/json",
-          `[]`
-        );
-        this.chat_history_id = response.data.metadata.id;
-        this.pastMessages = this.mapMessages(response.data.file);
-        // console.log({ past_msgs: this.pastMessages });
-      } catch (error) {
-        this.verbose && console.error("ERROR: Failed to get message history:", error);
-      }
-      try {
-        let response = await this.driveUtils.createAndOrGetFile(
-          this.drive_embeddings_filename,
-          "application/json",
-          `[]`
-        );
-        this.chat_embeddings_id = response.data.metaData.id;
-        this.embeddings_data = response.data.file;
-        // this.embeddings_data.map( input => {
-        //     await this.vectorStoreMemory.saveContext({ input: "I don't the Celtics" }, { output: "ok" });
-        // })
-        let memoryVectors = this.vectorStoreMemory.vectorStoreRetriever.vectorStore.memoryVectors;
-        memoryVectors = this.embeddings_data;
-      } catch (error) {
-        this.verbose && console.error("ERROR: Failed to get embeddings data:", error);
-      }
-    } else {
-      this.verbose &&
-        console.log(
-          "Google Drive Not Configured. For data persistance, please provide: CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN*"
-        );
-    }
   }
 
   // Fetch data from drive and initialize the chatbot using user-given props
@@ -211,7 +210,7 @@ class Chatbot {
       inputKey: "input"
     });
     this.memory = new CombinedMemory({
-      memories: [this.bufferMemory, this.vectorStoreMemory]
+      memories: [this.bufferMemory, this.vectorStoreRetrieverMemory, this.kBVectorStoreRetrieverMemory]
     });
 
     //
@@ -232,7 +231,13 @@ class Chatbot {
     let prompt_messages = chain.prompt.promptMessages;
 
     // This will insert our chat_vector memory into the model
-    prompt_messages = [new MessagesPlaceholder("chat_vector"), ...prompt_messages];
+    prompt_messages = [
+      new MessagesPlaceholder("chat_vector"),
+      new MessagesPlaceholder("server_vector"),
+      ...prompt_messages
+    ];
+
+    // const response = await this.knowledgeBaseVectorStore.similaritySearch(prompt, 1);
 
     let memory = this.agentExecutor.memory;
     // uses the originals result but then modifies it to work w the agent.
@@ -240,9 +245,15 @@ class Chatbot {
     memory.loadMemoryVariables_original = memory.loadMemoryVariables;
     memory.loadMemoryVariables = async values => {
       let returnThis = await memory.loadMemoryVariables_original(values);
+      returnThis.server_vector = [
+        new SystemMessage(
+          "## Document Excerpts: \n\n The following is a random text extract you may use to help you:  \n" +
+            returnThis.server_vector
+        )
+      ];
       returnThis.chat_vector = [
         new SystemMessage(
-          "## Past Conversations \n\n The following is an text extract from past conversations that LangDrive can use:  \n" +
+          "## Past Conversations: \n\n The following is an text extract from past conversations that LangDrive can use:  \n" +
             returnThis.chat_vector
         )
       ];
@@ -258,60 +269,161 @@ class Chatbot {
     this.agentExecutor.agent.llmChain.prompt = template;
     return true;
   }
+
   async sendMessage(message) {
-    //const response = await (await this.model).predict(message);
-    // console.log("CALLING agentExecutor ");
-    // executes from chains/base.cjs
-
-    //
     let response = await this.agentExecutor.call({ input: message });
-    // console.log("chatbot_reply: ", response);
-
     this.saveMemory();
     return response.output;
   }
 
-  saveMemory() {
-    if (this.driveUtils) {
+  async getMemory() {
+    if (this.driveClient) {
+      try {
+        let response = await this.driveClient.createAndOrGetFile(
+          this.drive_chat_history_filename,
+          "application/json",
+          `[]`
+        );
+        this.chat_history_id = response.data.metadata.id;
+        this.pastMessages = this.mapMessages(response.data.file);
+        // this.verbose && console.log({ past_msgs: this.pastMessages });
+      } catch (error) {
+        this.verbose && console.error("ERROR: Failed to get message history:", error);
+      }
+      try {
+        let response = await this.driveClient.createAndOrGetFile(
+          this.drive_chat_embeddings_filename,
+          "application/json",
+          `[]`
+        );
+        let data = response.data;
+        this.chat_embeddings_id = data.metadata && data.metadata.id;
+        this.chat_embeddings_data = response.data.file;
+        // this.embeddings_data.map( input => {
+        //     await this.vectorStoreRetrieverMemory.saveContext({ input: "I don't the Celtics" }, { output: "ok" });
+        // })
+        let memoryVectors = this.vectorStoreRetrieverMemory.vectorStoreRetriever.vectorStore.memoryVectors;
+        memoryVectors = this.embeddings_data;
+      } catch (error) {
+        this.verbose && console.error("ERROR: Failed to get chat embeddings data:", error);
+      }
+    } else {
+      this.verbose &&
+        console.log(
+          "Google Drive - driveClient - Not Configured. For data persistance, please provide: CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN*"
+        );
+    }
+    if (this.driveServer) {
+      try {
+        // first make sure embeddings path is ok
+        let p = await this.embeddings_filepath;
+        if (typeof embedPath === "string") {
+          embedPath =
+            embedPath.indexOf("./") === 0
+              ? embedPath.substring(2)
+              : embedPath.indexOf("/") === 0
+              ? embedPath.substring(1)
+              : embedPath;
+        }
+        let embeddingsFile = await this.driveServer.createAndOrGetContent({
+          path: this.drive_embed_to_folder + "/" + this.drive_embeddings_filename,
+          mimeType: "application/json",
+          message: `[]`
+        });
+
+        let fromDirectory = await this.driveServer.createAndOrGetContent({
+          path: this.drive_embed_from_folder,
+          mimeType: "folder"
+        });
+        // For each file in folder, get file contents
+        let files = fromDirectory.data.files;
+        const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 });
+        let docText = (await files)
+          .filter(file => file.name.endsWith(".txt"))
+          .map(async file => {
+            let fileContents = await this.driveServer.getFileById({ id: file.id });
+            if (fileContents.status == 400) return error;
+            return fileContents.data;
+            return { ...fileContents, ...file };
+          });
+        docText = await Promise.all(docText);
+        const ids = docText.map((doc, index) => ({ id: index + 1 }));
+        let uploadThis = { texts: docText, ids };
+
+        this.driveServer.updateFile({
+          fileId: embeddingsFile.data.metadata.id,
+          mimeType: "application/json",
+          message: uploadThis
+        });
+
+        // Update our Agent
+        this.kBVectorStore = await FaissStore.fromTexts(docText, ids, new OpenAIEmbeddings());
+        this.kBVectorStoreRetrieverMemory = new VectorStoreRetrieverMemory({
+          vectorStoreRetriever: this.kBVectorStore.asRetriever(this.vector_length), // Return top n docs
+          memoryKey: "server_vector",
+          inputKey: "input"
+        });
+        // this.kbClone = Object.assign({}, this.kBVectorStoreRetrieverMemory);
+        this.agentExecutor.memory.memories[2] = this.kBVectorStoreRetrieverMemory;
+        /*
+        let memory = this.agentExecutor.memory.memories[2];
+        console.log(
+          "\n\n CHECK THIS OUT - vectorStore: ",
+          Object.keys(memory.vectorStoreRetriever.vectorStore.docstore._docs),
+          memory.vectorStoreRetriever.vectorStore.docstore._docs
+        );
+        */
+        /*  
+        let vectors = memory.vectorStoreRetriever.vectorStore.memoryVectors;
+
+        console.log("CHECK THIS OUT - VECTORS: ", vectors);
+
+        // console.log("KNOWLEDGE BASE VECTOR STORE: ", v.docstore._docs);
+        */
+        console.log("SUCCESSFULLY LOADED SERVER VECTOR STORE");
+      } catch (error) {
+        this.verbose && console.error("ERROR: Failed to get embeddings data:", error);
+      }
+    } else {
+      this.verbose &&
+        console.log(
+          "Google Drive - driveServer - Not Configured. For data persistance, please provide: CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN*"
+        );
+    }
+  }
+
+  async saveMemory() {
+    // Update the drive each time.
+    if (this.driveClient) {
       // Update the drive each time.
       let memories = this.agentExecutor.memory.memories;
       try {
         let bufferMemory = this.agentExecutor.memory.memories[0];
-        /*
-          console.log(
-            "\n\n\n SAVING this.agent.memory bufferMemory: ",
-            { memory: bufferMemory.chatHistory.messages },
-            "\n\n\n"
-          );
-        */
-        let status = this.driveUtils.updateFile(
+        let status = this.driveClient.updateFile(
           this.chat_history_id,
           "application/json",
           bufferMemory.chatHistory.messages
         );
+        this.verbose && console.log("Save bufferMemory Status: ", { status });
       } catch (error) {
-        console.log("ERROR: Could not Save Chat History: ", error);
+        this.verbose && console.log("ERROR: Could not Save Chat History: ", error);
       }
-      // Update the drive each time.
       try {
-        let vectorMemory = this.agentExecutor.memory.memories[1];
-        let vectors = vectorMemory.vectorStoreRetriever.vectorStore.memoryVectors;
-        // console.log("\n\n\n SAVING this.agent.memory vectorMemory: ", { vectors }, "\n\n\n");
-        // console.log(this.chat_embeddings_id);
-        let status = this.driveUtils.updateFile(this.chat_embeddings_id, "application/json", vectors);
-        // console.log({ status });
+        let memory = this.agentExecutor.memory.memories[1];
+        let vectors = memory.vectorStoreRetriever.vectorStore.memoryVectors;
+        let status = await this.driveClient.updateFile(this.chat_embeddings_id, "application/json", vectors);
+        this.verbose && console.log("Save memory Status: ", { status });
       } catch (error) {
-        console.log("ERROR: Could not Save Chat Embeddings: ", error);
+        this.verbose && console.log("ERROR: Could not Save Chat Embeddings: ", error);
       }
     }
+    if (this.driveServer) {
+      // We need to overwrite this memory vector store to prevent the chat appending.
+      console.log("SAVING", this.kBVectorStoreRetrieverMemory); //.vectorStoreRetriever.vectorStore);
+      this.agentExecutor.memory.memories[2] = this.kBVectorStoreRetrieverMemory;
+    }
   }
-  //
-  // Chatbot non-drive Helper Functions
-  //
-
-  // De-serialize the chat history. Used in init()
   mapMessages(content) {
-    // console.log("Mapping Messages...", content);
     return (
       content.map(msg => {
         const content = msg.kwargs.content;
