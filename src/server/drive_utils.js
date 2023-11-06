@@ -1,94 +1,100 @@
 const { google } = require("googleapis");
-const querystring = require("querystring");
-const axios = require("axios");
 const { authenticate } = require("@google-cloud/local-auth");
+const querystring = require("querystring");
+const axios = require("axios"); 
 
 const fs = require("fs").promises;
 const path = require("path");
 const process = require("process");
+/*
+else if(this.appType === "web") {
+  client = new google.auth.OAuth2(
+    this.client_id,
+    this.client_secret,
+    this.redirect_uri
+  );
+  client.setCredentials({ access_token: this.access_token });
+}
+*/
+// google.auth.fromJSON(credentials);
+// await authenticate({ scopes: this.scopes, keyfilePath: this.keyFilePath }); -> We need this one.
 
 class DriveUtils {
   constructor(props) {
     this.verbose = props.verbose;
+    this.appType = props.appType || 'false';
     this.client_id = props.client_id;
     this.client_secret = props.client_secret;
     this.redirect_uri = this.scopes = props.scopes;
-    this.serviceKeyFile = props.serviceKeyFile;
-    this.desktopKeyFile = props.desktopKeyFile;
-    this.access_token = props.access_token || false;
-    // const entryScriptPath = require.main.filename;
-    // console.log(entryScriptPath);
-    // __dirname + "/google_desktop_token.json";
-    this.desktopTokenFile =
-      props.desktopTokenFile || require.main.filename.replace(/[^\\\/]+$/, "") + "/google_desktop_token.json";
+    this.keyFilePath = props.keyFilePath || path.resolve() + `/google_${this.appType}_credentials.json` 
+    this.keyFileContents = props.keyFileContents
+    this.tokenFilePath = props.tokenFilePath || path.resolve() + `/google_${this.appType}_token.json`
+    this.access_token = props.access_token; 
     this.oauth2Client = (async () => {
-      let errormsg = "ERROR: DriveUtils: Unable to Authetnicate Drive. ";
+      let errormsg = `Drive: ${this.appType} ERROR: DriveUtils: Unable to Authetnicate Drive. `;
       let client = false;
-      try {
-        if (this.serviceKeyFile) {
-          // For Service Accounts
-          this.verbose && console.log("Given A service Account", props);
-          const auth = new google.auth.GoogleAuth({ keyFile: this.serviceKeyFile, scopes: this.scopes });
-          client = await auth.getClient();
-          let drive = google.drive({ version: "v3", auth: client });
-          await this.listFilez(drive);
-        }
-        if (this.desktopKeyFile) {
-          // For Desktop Accounts
-          // this.verbose && console.log("\n Given A Desktop Account", props);
-          client = await (async () => {
-            // Try retrieving token information from a file
-            // AND OR USE this.desktopTokenFileContents
-            // console.log("this.desktopTokenFile", this.desktopTokenFile);
-            try {
-              const content = await fs.readFile(this.desktopTokenFile);
-              const credentials = JSON.parse(content);
-              client = google.auth.fromJSON(credentials);
-            } catch (err) {
-              this.verbose && console.log("desktopTokenFile ERROR: ", err);
+      let auth;
+      try { 
+        this.verbose && console.log(`Drive: ${this.appType}: Auth: START`);
+        if (this.appType === "server") {
+          if (this.keyFile) { auth = new google.auth.GoogleAuth({ keyFile: this.keyFile, scopes: this.scopes });} 
+          else if (this.keyFileContents) { auth = new google.auth.GoogleAuth({ credentials: JSON.parse(this.keyFileContents), scopes: this.scopes });  } 
+          else { throw new Error('Drive: Either keyFile or keyFileContents must be provided');}
+          // credentials = require(this.keyFile) 
+          // auth = google.auth.fromJSON(credentials) 
+        }   
+        if (this.appType === "desktop") {
+          // When using a keyfile or keyFileContents, 
+          // We actually need to perfrom the auth and save the resulting token to a file
+          // First we check if the token file exists 
+          let tokenExists = await fs.access(this.tokenFilePath).then(() => true).catch(() => false);
+          if(tokenExists){
+            // If the token exists, use it!
+            this.verbose && console.log(`Drive: ${this.appType}: Auth: TokenFile EXISTS`)
+            const content = await fs.readFile(this.tokenFilePath);
+            const credentials = JSON.parse(content);
+            client =  google.auth.fromJSON(credentials);
+          }
+          else {   
+            // If the token does not exist, we need to authenticate and save the token to a file
+            this.verbose && console.log(`Drive: ${this.appType}: Auth: NO TokenFile`)
+            let keyFileExists = await fs.access(this.keyFilePath).then(() => true).catch(() => false);
+            if( this.keyFileContents && !keyFileExists ){
+              await fs.writeFile(this.keyFilePath, this.keyFileContents);
             }
-            // Otherwise create and save it for future use.
-            if (!client && this.desktopKeyFile) {
-              // console.log("this.desktopKeyFile", this.scopes, this.desktopKeyFile);
-              try {
-                client = await authenticate({
-                  scopes: this.scopes,
-                  keyfilePath: this.desktopKeyFile
-                });
-              } catch (err) {
-                this.verbose && console.log("desktopKeyFile ERROR: ", err);
-              }
-              if (client.credentials) {
-                const content = await fs.readFile(this.desktopKeyFile);
-                const keys = JSON.parse(content);
-                const key = keys.installed || keys.web;
-                const payload = JSON.stringify({
-                  type: "authorized_user",
-                  client_id: key.client_id,
-                  client_secret: key.client_secret,
-                  refresh_token: client.credentials.refresh_token
-                });
-                await fs.writeFile(this.desktopTokenFile, payload);
-              }
+            client = await authenticate({
+              scopes: this.scopes,
+              keyfilePath: this.keyFilePath
+            }); 
+            if (client.credentials) { 
+              this.verbose && console.log(`Drive: ${this.appType}: Auth: START`)
+              // Save the file as a token file.
+              const content = await fs.readFile(this.keyFilePath);
+              const keys = JSON.parse(content);
+              const key = keys.installed || keys.web;
+              const payload = JSON.stringify({
+                type: "authorized_user",
+                client_id: key.client_id,
+                client_secret: key.client_secret,
+                refresh_token: client.credentials.refresh_token
+              });
+              this.verbose && console.log(`Drive: ${this.appType}: Auth: SAVING TokenFile`) 
+              await fs.writeFile( this.tokenFilePath , payload);
             }
-            return client;
-          })();
-          // console.log("FOUND", client);
-          // let drive = google.drive({ version: "v3", auth: client });
-          // await this.listFilez(drive);
-          return client;
-        } else if (this.client_id) {
-          // For Web Applications
-          this.verbose && console.log("Given A Web or Desktop", props);
-          const client = new google.auth.OAuth2(this.client_id, this.client_secret);
+          }  
+        } 
+        else if(this.appType === "web") {
+          client = new google.auth.OAuth2(
+            this.client_id,
+            this.client_secret,
+            this.redirect_uri
+          );
           client.setCredentials({ access_token: this.access_token });
-          return client;
-        } else {
-          this.verbose && console.log(errormsg);
         }
-      } catch (error) {
-        this.verbose && console.log(errormsg, ": ", error);
-      }
+        else { this.verbose && console.log(`Drive: ${this.appType}: MISSING INFO: `, errormsg); } 
+        this.verbose && console.log(`Drive: ${this.appType}: Auth: SUCCESS`);
+        return client;
+      } catch (error) { this.verbose && console.log(`Drive: ${this.appType}: TECHNICAL: `, errormsg, ": ", error); }
     })();
   }
 
@@ -109,10 +115,10 @@ class DriveUtils {
           console.log(`${file.name} (${file.id})`);
         });
       } else {
-        console.log("No files found.");
+        console.log(`Drive: ${this.appType}: listFilez: No files found.`);
       }
     } catch (error) {
-      console.error("Error listing files:", error);
+      console.error(`Drive: ${this.appType}: listFilez: Error listing files:`, error);
     }
   }
 
@@ -133,7 +139,7 @@ class DriveUtils {
 
     // Filter Search By Directory Id/ Name
     if (!directoryId && directory) {
-      this.verbose && console.log("LIST FILES IS CALLING LIST DIRECTORIES WITH NO PARAMS");
+      this.verbose && console.log(`${this.appType} LIST FILES IS CALLING LIST DIRECTORIES WITH NO PARAMS`);
       let dirs = (await this.listDirectories({})).data.files;
       let matchedDir = dirs.find(dir => dir.name === props.directory);
       if (matchedDir) directoryId = matchedDir.id;
@@ -163,7 +169,7 @@ class DriveUtils {
     } catch (err) {
       this.verbose &&
         console.log(
-          "\n\n ERROR: listFiles CALLING GOOGLEAPI: \n PROPS: ",
+          `\n\n ${this.appType} ERROR: listFiles CALLING GOOGLEAPI: \n PROPS: `,
           props,
           ", \n RETURNING: ",
           error,
@@ -192,7 +198,7 @@ class DriveUtils {
       if (response.status == 400) return error;
       return { status: 200, message: "Found Directories.", data: response.data };
     } catch (err) {
-      this.verbose && console.log("DriveUtils: listDirectories: ", props, ", RETURNING: ", error, ", ERROR: ", err);
+      this.verbose && console.log(`${this.appType} DriveUtils: listDirectories: `, props, ", RETURNING: ", error, ", ERROR: ", err);
       return error;
     }
   }
@@ -215,12 +221,12 @@ class DriveUtils {
       const response = await this.listFiles(props);
       if (response.status == 400) return error;
       let data = response.data.files.find(file => file.name === filename);
-      // console.log("\n driveUtils.getFileInfo.listFiles:", data);
+      // console.log(\n\n ${this.appType} driveUtils.getFileInfo.listFiles:`, data);
       if (!data) return error;
       return { status: 200, message: "Found File.", data };
     } catch (err) {
       this.verbose &&
-        console.log("\n\n ERROR: DriveUtils: getFileInfo: RECIEVED: ", props, ", RETURNING: ", error, ", ERROR: ", err);
+        console.log(`\n\n ${this.appType} ERROR: DriveUtils: getFileInfo: RECIEVED: `, props, ", RETURNING: ", error, ", ERROR: ", err);
       return error;
     }
   }
@@ -248,7 +254,7 @@ class DriveUtils {
     } catch (err) {
       this.verbose &&
         console.log(
-          "\n\n ERROR: DriveUtils: getFileByName: RECIEVED: ",
+          `\n\n ${this.appType} ERROR: DriveUtils: getFileByName: RECIEVED: `,
           { id },
           ", RETURNING: ",
           error,
@@ -278,7 +284,7 @@ class DriveUtils {
     } catch (err) {
       this.verbose &&
         console.log(
-          "n\n ERROR: DriveUtils: getFileByName: RECIEVED: ",
+          `\n\n ${this.appType} ERROR: DriveUtils: getFileByName: RECIEVED: `,
           { filename, mimeType },
           ", RETURNING: ",
           error,
@@ -313,7 +319,7 @@ class DriveUtils {
     } catch (err) {
       this.verbose &&
         console.log(
-          "\n\n ERROR: DriveUtils: createFile: RECIEVED: ",
+          `\n\n ${this.appType} ERROR: DriveUtils: createFile: RECIEVED: `,
           { filename, mimeType, message },
           ", RETURNING: ",
           error,
@@ -397,7 +403,7 @@ class DriveUtils {
     } catch (err) {
       this.verbose &&
         console.log(
-          "DriveUtils: createAndOrGetFile: RECIEVED: ",
+          `\n\n ${this.appType} DriveUtils: createAndOrGetFile: RECIEVED: `,
           { path, mimeType, message },
           ", RETURNING:",
           error,
@@ -434,7 +440,7 @@ class DriveUtils {
     } catch (err) {
       this.verbose &&
         console.log(
-          "DriveUtils: updateFile: RECIEVED: ",
+          `\n\n ${this.appType} DriveUtils: updateFile: RECIEVED: `,
           { fileId, mimeType, message },
           ", RETURNING: ",
           error,
@@ -461,50 +467,7 @@ class DriveUtils {
     return authUrl;
   };
 
-  static checkAndRefresh = async config => {
-    let { access_token, timestamp, refresh_token, client_id, client_secret } = config;
-    if (!access_token || !timestamp) return false;
-    const oneHourAgo = new Date(Date.now() - 60 * 60 * 10); // 60 minutes * 60 seconds * 1000 milliseconds = 1 hour
-    const sessionTimestamp = new Date(timestamp);
-    this.verbose && console.log(sessionTimestamp < oneHourAgo, sessionTimestamp, oneHourAgo);
-    if (sessionTimestamp < oneHourAgo) {
-      try {
-        if (!refresh_token || !client_id || !client_secret) return false;
-        // If the token is expired, try to refresh it
-        access_token = await this.refreshToken({ refresh_token, client_id, client_secret });
-      } catch (error) {
-        this.verbose && console.log("ERROR: ", error);
-      }
-    }
-
-    config.verbose && console.log("CHECK AND REFRESH RETURNING", access_token);
-    return access_token;
-  };
-
-  static refreshToken = async config => {
-    try {
-      const { data } = await axios.post(
-        "https://oauth2.googleapis.com/token",
-        querystring.stringify({
-          client_secret: config.client_secret,
-          grant_type: "refresh_token",
-          refresh_token: config.refresh_token,
-          client_id: config.client_id
-        }),
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          }
-        }
-      );
-
-      return data.access_token;
-    } catch (error) {
-      config.verbose && console.error("Error refreshing token", error);
-      throw error;
-    }
-  };
-
+  // Handle the auth callback from Google to get the access token
   static handleAuthCallback = async config => {
     try {
       const { data } = await axios.post(
@@ -531,9 +494,60 @@ class DriveUtils {
       return false;
     }
   };
+
+  // Check if the access token is expired. If so, try to refresh it
+  static checkAndRefresh = async config => {
+    let { access_token, timestamp, refresh_token, client_id, client_secret } = config;
+    if (!access_token || !timestamp) return false;
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 10); // 60 minutes * 60 seconds * 1000 milliseconds = 1 hour
+    const sessionTimestamp = new Date(timestamp);
+    this.verbose && console.log(sessionTimestamp < oneHourAgo, sessionTimestamp, oneHourAgo);
+    if (sessionTimestamp < oneHourAgo) {
+      try {
+        if (!refresh_token || !client_id || !client_secret) return false;
+        // If the token is expired, try to refresh it
+        access_token = await this.refreshToken({ refresh_token, client_id, client_secret });
+      } catch (error) {
+        this.verbose && console.log("checkAndRefresh ERROR: ", error);
+      }
+    }
+
+    config.verbose && console.log("CHECK AND REFRESH RETURNING", access_token);
+    return access_token;
+  };
+
+  // Refresh the access token and return back the new access token
+  static refreshToken = async config => {
+    try {
+      const { data } = await axios.post(
+        "https://oauth2.googleapis.com/token",
+        querystring.stringify({
+          client_secret: config.client_secret,
+          grant_type: "refresh_token",
+          refresh_token: config.refresh_token,
+          client_id: config.client_id
+        }),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+
+      return data.access_token;
+    } catch (error) {
+      config.verbose && console.error("Error refreshing token", error);
+      throw error;
+    }
+  };
 }
 module.exports = DriveUtils;
-
+// Frontend: 
+// Getting the auth tokens is separate from the DriveUtils class. our needs for them are also different.
+// retrieving the service.json to create the access token for our users
+// Backend : 
+// storage and retrieval and refreshing of user access token 
+// 
 /*
   - getAuthUrl
   - handleAuthCallback

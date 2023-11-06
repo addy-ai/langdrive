@@ -1,0 +1,9 @@
+firebase: 
+  client_json: "google_desktop_client.json"
+
+huggingface:
+  models: 
+    - name: "google/flan-t5-small"
+      endpoint: "https://api-inference.huggingface.co/models/your-fine-tune-model-name"
+    - name: "google/flan-t5-base"
+      endpoint: "https://api-inference.huggingface.co/models/your-fine-tune-model-name"

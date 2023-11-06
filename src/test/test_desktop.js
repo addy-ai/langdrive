@@ -10,8 +10,8 @@ const SCOPES = ["https://www.googleapis.com/auth/drive.metadata.readonly"];
 // created automatically when the authorization flow completes for the first
 // time.
 const TOKEN_PATH = path.join(process.cwd(), "token.json");
-console.log({ TOKEN_PATH });
-const CREDENTIALS_PATH = path.join(process.cwd(), "google_desktop_credentials.json");
+console.log({ cwd:process.cwd(), TOKEN_PATH });
+const CREDENTIALS_PATH = path.join(process.cwd(), "google_desktop_client.json");
 
 async function loadSavedCredentialsIfExist() {
   try {

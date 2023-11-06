@@ -1,11 +1,14 @@
 {
   "name": "langdrive",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "",
   "main": "main.js",
+  "bin": {
+    "langdrive": "./main.js"
+  },
   "scripts": {
     "start": "nodemon ./src/start_server.js",
-    "test": "node ./src/server/test_server.js",
+    "test": "node ./src/server/test.mjs",
     "deploy": "npm deploy"
   },
   "keywords": [],
@@ -20,8 +23,8 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
-    "faiss-node": "^0.2.3",
     "googleapis": "^123.0.0",
+    "js-yaml": "^4.1.0",
     "langchain": "^0.0.124",
     "nodemon": "^3.0.1",
     "passport": "^0.6.0",
@@ -29,5 +32,8 @@
     "passport-oauth2-refresh": "^2.2.0",
     "querystring": "^0.2.1",
     "zod": "^3.22.1"
+  },
+  "devDependencies": {
+    "faiss-node": "^0.2.3"
   }
 }

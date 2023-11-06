@@ -13,7 +13,7 @@ const { initializeAgentExecutorWithOptions } = require("langchain/agents");
 const { DynamicTool } = require("langchain/tools");
 const { VectorStoreRetrieverMemory } = require("langchain/memory");
 const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
-//const { HNSWLib } = require("langchain/vectorstores/hnswlib");
+//const { HNSWLib } = require("langchain/vectorstores/hnswlib");  
 const { FaissStore } = require("langchain/vectorstores/faiss");
 const { DEFAULT_PREFIX, DEFAULT_SUFFIX } = require("./prompts");
 const fs = require("fs");
@@ -165,8 +165,8 @@ class Chatbot {
     ];
 
     this.driveClient = props.drive.web
-      ? new DriveUtils({ ...props.drive.web, verbose: props.drive.verbose || this.verbose })
-      : false;
+    ? new DriveUtils({ ...props.drive.web, verbose: props.drive?.web?.verbose !== undefined ? props.drive.web.verbose : props.drive?.verbose !== undefined ? props.drive.verbose : this.verbose })
+    : false;
     this.drive_chat_history_filename = props?.drive?.web?.chat_history_filename || "chatbot_chat_history.json";
     this.drive_chat_history_filepath = props?.drive?.web?.chat_history_filepath || "chatbot/memory";
     this.drive_chat_embeddings_filename = props?.drive?.web?.chat_embeddings_filename || "chatbot_chat_embeddings.json";
@@ -181,7 +181,7 @@ class Chatbot {
     });
 
     this.driveServer = props.drive.server
-      ? new DriveUtils({ ...props.drive.server, verbose: props.drive.verbose || this.verbose })
+      ? new DriveUtils({ ...props.drive.server, verbose: props.drive?.server?.verbose !== undefined ? props.drive.server.verbose : props.drive?.verbose !== undefined ? props.drive.verbose : this.verbose })
       : false;
     this.drive_embed_from_folder = props.drive?.server?.embed_from_folder || "chatbot";
     this.drive_embed_to_folder = props.drive?.server?.embed_to_folder || "chatbot";
@@ -192,8 +192,7 @@ class Chatbot {
       vectorStoreRetriever: this.kBVectorStore.asRetriever(this.vector_length), // Return top n docs
       memoryKey: "server_vector",
       inputKey: "input"
-    });
-    // this.kbClone = this.kBVectorStoreRetrieverMemory;
+    }); 
 
     // Fetch data from drive and initialize the chatbot using user-given props
     this.init();
@@ -217,7 +216,7 @@ class Chatbot {
     // Initialize the agent. ConversationChain is used as the default agent w a BufferMemory.
     // Always use this one for now.
     //
-    this.agentExecutor = await initializeAgentExecutorWithOptions(this.tools, this.model, {
+    let config = {
       agentType: this.agent,
       memory: this.memory,
       verbose: this.agent_verbose,
@@ -226,7 +225,9 @@ class Chatbot {
         systemMessage: this.DEFAULT_PREFIX,
         humanMessage: this.DEFAULT_SUFFIX
       }
-    });
+    }
+    this.verbose && console.log("Chatbot: Initializing Agent Executor with config: ");
+    this.agentExecutor = await initializeAgentExecutorWithOptions(this.tools, this.model, config);
     let chain = this.agentExecutor.agent.llmChain;
     let prompt_messages = chain.prompt.promptMessages;
 
@@ -271,22 +272,26 @@ class Chatbot {
   }
 
   async sendMessage(message) {
+    this.verbose && console.log('Chatbot: Message: ', message, '\n');
     let response = await this.agentExecutor.call({ input: message });
+    this.verbose && console.log('\nChatbot: Response: \n', response.output, '\n');
     this.saveMemory();
     return response.output;
   }
 
-  async getMemory() {
+  async getMemory() { 
     if (this.driveClient) {
       try {
+        console.log('this.drive', this.driveClient)
         let chatpath = this.drive_chat_history_filepath + "/" + this.drive_chat_history_filename;
-        //console.log("\n\n RETRIEVING MEMORY chat history", chatpath);
+        this.verbose && this.driveClient.verbose && console.log("Chatbot: getMemory: chat history: START");
         let response = await this.driveClient.createAndOrGetContent({
           path: chatpath,
           mimeType: "application/json",
           message: `[]`
-        });
-        //console.log("\n\n RETRIVED Chat MEMORY", response);
+        }); 
+
+        // Update our Agent
         this.chat_history_id = response.data.metadata.id;
         this.pastMessages = this.mapMessages(response.data.file);
         this.agentExecutor.memory.memories[0] = new BufferWindowMemory({
@@ -296,25 +301,52 @@ class Chatbot {
           memoryKey: "chat_history",
           inputKey: "input"
         });
-        // this.verbose && console.log("\n\n DRIVE CHATBOT PAST MESSAGES:  \n  ", { past_msgs: this.pastMessages });
-        // console.log('this.agent', !!this.agent, this.agent);
+        this.verbose && this.driveClient.verbose && console.log("Chatbot: getMemory: chat history: SUCCESS"); // { past_msgs: this.pastMessages }); 
       } catch (error) {
-        this.verbose && console.error("ERROR: Failed to get message history:", error);
+        this.verbose && this.driveClient.verbose && console.error("Chatbot: getMemory: chat history: ERROR: Failed to get message history:", error);
       }
       try {
+        this.verbose && this.driveClient.verbose && console.log("Chatbot: getMemory: Embed history: START");
         let embedPath = this.drive_chat_embeddings_filepath + "/" + this.drive_chat_embeddings_filename;
         // console.log("\n\n RETRIEVING MEMORY chat embeddings", embedPath);
         let response = await this.driveClient.createAndOrGetContent({
           path: embedPath,
           mimeType: "application/json",
           message: `[]`
-        });
-        // console.log("\n\n RETRIVED embeddings MEMORY", response);
+        }); 
+
+        // Update our Agent
         let data = response.data;
         this.chat_embeddings_id = data.metadata && data.metadata.id;
-        this.chat_embeddings_data = response.data.file;
+        this.chat_embeddings_data = data.file; 
+        // console.log(this.chat_embeddings_data)
+        let docText = [data]; 
+        this.verbose && this.driveClient.verbose && console.log("Chatbot: getMemory: Embed history: SUCCESS"); 
+        let ids = docText.map((doc, index) => ({ id: index + 1 })); 
+        this.verbose && this.driveClient.verbose && console.log("Chatbot: getMemory: Embed history: FaissStore.fromTexts: START");
+        console.log('WEB', { docText, ids })
+        /*
+        this.vectorStore = await FaissStore.fromTexts(
+          ["Hello world", "Bye bye", "hello nice world"],
+          [{ id: 2 }, { id: 1 }, { id: 3 }],
+          new OpenAIEmbeddings()
+        );
+        this.verbose && this.driveClient.verbose && console.log("Chatbot: getMemory: Embed history: FaissStore.fromTexts: SUCCESS");
+        this.verbose && this.driveClient.verbose && console.log("Chatbot: getMemory: Embed history: CREATING vectorStoreRetrieverMemory");
+        this.vectorStoreRetrieverMemory = new VectorStoreRetrieverMemory({
+          vectorStoreRetriever: this.kBVectorStore.asRetriever(this.vector_length), // Return top n docs
+          memoryKey: "chat_vector",
+          inputKey: "input"
+        });
+        this.verbose && this.driveClient.verbose && console.log("Chatbot: getMemory: Embed history: ASSIGNING TO AGENTEXECUTOR");
+        this.agentExecutor.memory.memories[1] = this.VectorStoreRetrieverMemory;
+        this.verbose && this.driveClient.verbosev && console.log("Chatbot: getMemory: Embed history: SUCCESS");
+        */
+        //
+        //
+        //
       } catch (error) {
-        this.verbose && console.error("ERROR: Failed to get chat embeddings data:", error);
+        this.verbose && this.driveClient.verbose && console.error("Chatbot: getMemory: Client Embed history: ERROR: Failed to get chat embeddings data:", error);
       }
     } else {
       this.verbose &&
@@ -324,8 +356,8 @@ class Chatbot {
     }
     if (this.driveServer) {
       try {
-        // first make sure embeddings path is ok
-        let p = await this.embeddings_filepath;
+        this.verbose && this.driveServer.verbose && console.error("Chatbot: getMemory: Server Embeddings: START");
+        // first make sure embeddings path is ok 
         if (typeof embedPath === "string") {
           embedPath =
             embedPath.indexOf("./") === 0
@@ -346,36 +378,47 @@ class Chatbot {
         });
         // For each file in folder, get file contents
         let files = fromDirectory.data.files;
-        const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 });
+
+        this.verbose && this.driveServer.verbose && console.error("Chatbot: getMemory: Server Embeddings: GETTING FILES FROM DIRECTORY", this.drive_embed_from_folder, files); 
         let docText = (await files)
           .filter(file => file.name.endsWith(".txt"))
           .map(async file => {
             let fileContents = await this.driveServer.getFileById({ id: file.id });
             if (fileContents.status == 400) return error;
-            return fileContents.data;
-            return { ...fileContents, ...file };
+            return fileContents.data; 
           });
         docText = await Promise.all(docText);
         const ids = docText.map((doc, index) => ({ id: index + 1 }));
-        let uploadThis = { texts: docText, ids };
-
-        // console.log("DRIVE CHATBOT: UPDATING EMBED FILE", uploadThis);
+        let uploadThis = { texts: docText, ids };   
+        this.verbose && this.driveServer.verbose && console.error("Chatbot: getMemory: Server Embeddings: UPDATING EMBED FILE", uploadThis);
         this.driveServer.updateFile({
           fileId: embeddingsFile.data.metadata.id,
           mimeType: "application/json",
           message: uploadThis
         });
 
-        // Update our Agent
-        this.kBVectorStore = await FaissStore.fromTexts(docText, ids, new OpenAIEmbeddings());
+        // Update our Agent 
+        this.verbose && this.driveServer.verbose && console.error("Chatbot: getMemory: Server Embeddings: FaissStore.fromTexts: START");
+        console.log('SERVER ',{ docText, ids })
+        this.kBVectorStore = await FaissStore.fromTexts(docText, ids,
+          new OpenAIEmbeddings()
+        );
+        this.verbose && this.driveServer.verbose && console.error("Chatbot: getMemory: Server Embeddings: FaissStore.fromTexts: SUCCESS");
+        this.verbose && this.driveServer.verbose && console.error("Chatbot: getMemory: Server Embeddings: kBVectorStoreRetrieverMemory: START");
         this.kBVectorStoreRetrieverMemory = new VectorStoreRetrieverMemory({
           vectorStoreRetriever: this.kBVectorStore.asRetriever(this.vector_length), // Return top n docs
           memoryKey: "server_vector",
           inputKey: "input"
         });
+        this.verbose && this.driveServer.verbose && console.error("Chatbot: getMemory: Server Embeddings: kBVectorStoreRetrieverMemory: SUCCESS");
+        this.verbose && this.driveServer.verbose && console.error("Chatbot: getMemory: Server Embeddings: memories[2]: START");
         this.agentExecutor.memory.memories[2] = this.kBVectorStoreRetrieverMemory;
+        this.verbose && this.driveServer.verbose && console.error("Chatbot: getMemory: Server Embeddings: memories[2]: SUCCESS");
+        //
+        //
+        //
       } catch (error) {
-        this.verbose && console.error("ERROR: Failed to get embeddings data:", error);
+        this.verbose && console.error("Chatbot: getMemory: Server Embeddings: ERROR: Failed to get embeddings data:", error);
       }
     } else {
       this.verbose &&
@@ -385,40 +428,38 @@ class Chatbot {
     }
   }
 
-  // called after every message
+  // called after every message to Update the google drive(s) each time.
   async saveMemory() {
-    // Update the drive each time.
-    if (this.driveClient) {
-      // Update the drive each time.
-      try {
+    if (this.driveClient) { 
+      // for the page-visitors drive.
+      try { 
+        this.verbose && console.log("ChatBot: saveMemory: Client Chat Buffer: START");
         let bufferMemory = this.agentExecutor.memory.memories[0];
         let status = await this.driveClient.updateFile({
           fileId: this.chat_history_id,
           mimeType: "application/json",
           message: bufferMemory.chatHistory.messages
         });
-        this.verbose && console.log("Save buffer Memory Status: ", { status });
-      } catch (error) {
-        this.verbose && console.log("ERROR: Could not Save Chat History: ", error);
-      }
-      try {
+        this.verbose && console.log("ChatBot: saveMemory: Client Chat Buffer: SUCCESS")
+      } catch (error) { this.verbose && console.log("ERROR: Could not Save Chat History: ", error); }
+      try {  
+        this.verbose && console.log("ChatBot: saveMemory: Client Embeddings: START");
         let memory = this.agentExecutor.memory.memories[1];
-        let vectors = memory.vectorStoreRetriever.vectorStore.memoryVectors;
-        console.log("DRIVE CHATBOT: UPDATING EMBED FILE");
+        let vectors = memory.vectorStoreRetriever.vectorStore.memoryVectors; 
         let status = await this.driveClient.updateFile({
           fileId: this.chat_embeddings_id,
           mimeType: "application/json",
           message: vectors
         });
-        this.verbose && console.log("Save EMBED memory Status: ", { status });
-      } catch (error) {
-        this.verbose && console.log("ERROR: Could not Save Chat Embeddings: ", error);
-      }
+        this.verbose && console.log("ChatBot: saveMemory: Client Embeddings: SUCCESS") 
+      } catch (error) { this.verbose && console.log("ERROR: Could not Save Chat Embeddings: ", error); }
     }
     if (this.driveServer) {
-      // We need to overwrite this memory vector store to prevent the chat appending.
-      // this.verbose && console.log("SAVING", this.kBVectorStoreRetrieverMemory); //.vectorStoreRetriever.vectorStore);
+      this.verbose && console.log("ChatBot: saveMemory: Server Embeddings: Status: START");
+      // No need to upload anything to the server.. but.
+      // We need to overwrite this memory vector store to prevent the chat appending. 
       this.agentExecutor.memory.memories[2] = this.kBVectorStoreRetrieverMemory;
+      this.verbose && console.log("ChatBot: saveMemory: Server Embeddings: Status: Success");
     }
   }
   mapMessages(content) {

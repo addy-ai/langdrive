@@ -2,7 +2,9 @@ const https = require("https");
 const passport = require("passport");
 const express = require("express");
 const session = require("express-session");
+const path = require("path");
 var SQLiteStore = require("connect-sqlite3")(session);
+require("dotenv").config();
 
 const axios = require("axios");
 const querystring = require("querystring");
@@ -20,7 +22,7 @@ let bot_local_memory = {};
 
 app.use(
   session({
-    secret: "session-secret-key-addy-ai",
+    secret: process.env.EXPRESS_SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false },
@@ -41,13 +43,24 @@ require("dotenv").config();
 const Chatbot = require("./server/drive_chatbot.js");
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const HUGGINGFACE_API_KEY = process.env.HUGGINGFACE_API_KEY;
+
+const redirect_uri = process.env.REDIRECT_URI
+
+// For normal oAuth2
 const GOOGLE_WEB_CLIENT_ID = process.env.GOOGLE_WEB_CLIENT_ID;
 const GOOGLE_WEB_CLIENT_SECRET = process.env.GOOGLE_WEB_CLIENT_SECRET;
+
 const GOOGLE_DESKTOP_CLIENT_ID = process.env.GOOGLE_DESKTOP_CLIENT_ID;
 const GOOGLE_DESKTOP_CLIENT_SECRET = process.env.GOOGLE_DESKTOP_CLIENT_SECRET;
-const GOOGLE_CLIENT_KEYFILE_CONTENTS = process.env.GOOGLE_CLIENT_KEYFILE_CONTENTS;
-const GOOGLE_DESKTOP_KEYFILE_PATH = process.env.GOOGLE_DESKTOP_CLIENT_KEYFILE_PATH; // google_service_credentials.json
-const GOOGLE_SERVICE_KEYFILE_PATH = process.env.GOOGLE_SERVICE_CLIENT_KEYFILE_PATH; // google_service_credentials.json
+
+// If you have a service account you can use either the keyfile contents or the keyfile's path:
+const GOOGLE_WEB_CLIENT_KEYFILE_CONTENTS = process.env.GOOGLE_WEB_CLIENT_KEYFILE_CONTENTS; 
+const GOOGLE_DESKTOP_CLIENT_KEYFILE_CONTENTS = process.env.GOOGLE_DESKTOP_CLIENT_KEYFILE_CONTENTS; 
+const GOOGLE_SERVICE_CLIENT_KEYFILE_CONTENTS = process.env.GOOGLE_SERVICE_CLIENT_KEYFILE_CONTENTS; // google_service_credentials.json
+
+const GOOGLE_WEB_CLIENT_KEYFILE_PATH = path.resolve() + '/' + process.env.GOOGLE_WEB_CLIENT_KEYFILE_PATH;  
+const GOOGLE_DESKTOP_CLIENT_KEYFILE_PATH = path.resolve() + '/' + process.env.GOOGLE_DESKTOP_CLIENT_KEYFILE_PATH;
+const GOOGLE_SERVICE_CLIENT_KEYFILE_PATH = path.resolve() + '/' + process.env.GOOGLE_SERVICE_CLIENT_KEYFILE_PATH; // google_service_credentials.json
 app.use(express.json());
 
 app.get("/", async (req, res) => {
@@ -63,7 +76,7 @@ app.get("/", async (req, res) => {
 const DriveUtils = require("./server/drive_utils.js");
 app.get("/auth/google", (req, res) => {
   let authUrl = DriveUtils.getAuthUrl({
-    redirect_uri: "http://localhost:3000/auth/google/callback",
+    redirect_uri, 
     scope: "https://www.googleapis.com/auth/drive",
     client_id: GOOGLE_WEB_CLIENT_ID
   });
@@ -76,7 +89,7 @@ app.get("/auth/google/callback", async (req, res) => {
     code,
     client_id: GOOGLE_WEB_CLIENT_ID,
     client_secret: GOOGLE_WEB_CLIENT_SECRET,
-    redirect_uri: "http://localhost:3000/auth/google/callback"
+    redirect_uri
   });
   // console.log("auth/google/callback", { callback });
   req.session.access_token = callback.access_token;
@@ -115,41 +128,67 @@ app.get("/chat", checkAccessToken, (req, res, next) => {
 // Initialize the bot, load up it's data or create the associated files
 //
 app.get("/bot_init", checkAccessToken, async (req, res) => {
-  // console.log("INIT CHATBOT");
+  console.log("\n INIT CHATBOT \n");
   let chatbot = new Chatbot({
     verbose: true,
     drive: {
-      verbose: false,
-      ...(!GOOGLE_WEB_CLIENT_ID
+      verbose: true,
+      ...( !GOOGLE_WEB_CLIENT_ID && !GOOGLE_WEB_CLIENT_KEYFILE_CONTENTS && !GOOGLE_WEB_CLIENT_KEYFILE_PATH
         ? {}
         : {
-            web: {
-              scopes: ["https://www.googleapis.com/auth/drive"],
-              client_id: GOOGLE_WEB_CLIENT_ID,
-              client_secret: GOOGLE_WEB_CLIENT_SECRET,
-              access_token: req.session.access_token
-            }
-          }),
-      ...(!GOOGLE_DESKTOP_KEYFILE_PATH
+          web: {
+            verbose: true,
+            scopes: ["https://www.googleapis.com/auth/drive"],
+            appType:'web', 
+            ...(
+                GOOGLE_WEB_CLIENT_ID
+                ? {
+                    client_id: GOOGLE_WEB_CLIENT_ID,
+                    client_secret: GOOGLE_WEB_CLIENT_SECRET,
+                    access_token: req.session.access_token
+                  }
+                : {}
+            ),
+            ...(GOOGLE_WEB_CLIENT_KEYFILE_CONTENTS
+                ? { appType:'web', keyFileContents: GOOGLE_WEB_CLIENT_KEYFILE_CONTENTS }
+                : {}
+            ),
+            ...(GOOGLE_WEB_CLIENT_KEYFILE_PATH
+                ? { appType:'web', keyFilePath: __dirname + GOOGLE_WEB_CLIENT_KEYFILE_PATH }
+                : {}
+            ),
+          }
+        }
+      ),
+      ...( !GOOGLE_DESKTOP_CLIENT_ID && !GOOGLE_DESKTOP_CLIENT_KEYFILE_CONTENTS && !GOOGLE_DESKTOP_CLIENT_KEYFILE_PATH
         ? {}
         : {
-            server: {
-              embed_from_folder: "chatbot",
-              embed_to_folder: "chatbot/embeddings",
-              scopes: ["https://www.googleapis.com/auth/drive"],
-              // serviceKeyFile: __dirname + "/../" + GOOGLE_SERVICE_KEYFILE_PATH
-              // OR
-              desktopKeyFile: __dirname + GOOGLE_DESKTOP_KEYFILE_PATH
-              // ( Alternately:) desktopKeyFileContents: GOOGLE_DESKTOP_CLIENT_KEYFILE_CONTENTS
-              // OR
-              // desktopTokenFile: GOOGLE_DESKTOP_CLIENT_TOKEN_PATH:
-              // ( Alternately:) desktopTokenFileContents: GOOGLE_DESKTOP_CLIENT_TOKEN_CONTENTS
-              // OR
-              //client_id: GOOGLE_DESKTOP_CLIENT_ID, // and
-              //client_secret: GOOGLE_SERVICE_CLIENT_SECRET //and
-              //client_redirect_uri: xyz
-            }
-          })
+          server: {
+            verbose: false,
+            embed_from_folder: "chatbot",
+            embed_to_folder: "chatbot/embeddings",
+            scopes: ["https://www.googleapis.com/auth/drive"],
+            ...(
+                GOOGLE_DESKTOP_CLIENT_ID
+                ? {
+                    appType:'desktop', 
+                    client_id: GOOGLE_DESKTOP_CLIENT_ID,
+                    client_secret: GOOGLE_DESKTOP_CLIENT_SECRET,
+                    client_redirect_uri: redirect_uri
+                  }
+                : {}
+            ),
+            ...(GOOGLE_DESKTOP_CLIENT_KEYFILE_CONTENTS
+                ? { appType:'desktop', keyFileContents: GOOGLE_DESKTOP_CLIENT_KEYFILE_CONTENTS }
+                : {}
+            ),
+            ...(GOOGLE_DESKTOP_CLIENT_KEYFILE_PATH
+                ? { appType:'desktop', keyFilePath:  GOOGLE_DESKTOP_CLIENT_KEYFILE_PATH }
+                : {}
+            )
+          }
+        }
+      )
     },
     model: {
       service: !!HUGGINGFACE_API_KEY ? "huggingFace" : "chatOpenAi",
@@ -166,7 +205,7 @@ app.get("/bot_init", checkAccessToken, async (req, res) => {
           }
     },
     agent: {
-      type: "chat-conversational-react-description",
+      type: "chat-conversational-react-description", 
       memory_length: 2,
       vector_length: 2,
       verbose: false,
@@ -191,7 +230,8 @@ app.get("/bot_init", checkAccessToken, async (req, res) => {
 //
 app.get("/bot_welcome*", async (req, res) => {
   let sess = bot_local_memory[req.session.id];
-  let prompt = `The user has entered the chat. Greet the user.`;
+  let prompt = `\n The user has entered the chat. Greet the user.\n`;
+  console.log('\nSending Welcome Message to Chatbot...\n')
   res.send({
     avatarURL: "https://i.imgur.com/vphoLPW.png",
     response: await sess.chatbot.sendMessage(prompt)
@@ -202,6 +242,7 @@ app.get("/bot_welcome*", async (req, res) => {
 // Continue the chat once a user responds to the bot_welcome
 //
 app.get("/qa*", async (req, res) => {
+  console.log(`\nSending QA Message to Chatbot...\n`)
   res.send({ response: await bot_local_memory[req.session.id].chatbot.sendMessage(req.query.user_query) });
 });
 
