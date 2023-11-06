@@ -41,8 +41,13 @@ require("dotenv").config();
 const Chatbot = require("./server/drive_chatbot.js");
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const HUGGINGFACE_API_KEY = process.env.HUGGINGFACE_API_KEY;
-const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const GOOGLE_WEB_CLIENT_ID = process.env.GOOGLE_WEB_CLIENT_ID;
+const GOOGLE_WEB_CLIENT_SECRET = process.env.GOOGLE_WEB_CLIENT_SECRET;
+const GOOGLE_DESKTOP_CLIENT_ID = process.env.GOOGLE_DESKTOP_CLIENT_ID;
+const GOOGLE_DESKTOP_CLIENT_SECRET = process.env.GOOGLE_DESKTOP_CLIENT_SECRET;
+const GOOGLE_CLIENT_KEYFILE_CONTENTS = process.env.GOOGLE_CLIENT_KEYFILE_CONTENTS;
+const GOOGLE_DESKTOP_KEYFILE_PATH = process.env.GOOGLE_DESKTOP_CLIENT_KEYFILE_PATH; // google_service_credentials.json
+const GOOGLE_SERVICE_KEYFILE_PATH = process.env.GOOGLE_SERVICE_CLIENT_KEYFILE_PATH; // google_service_credentials.json
 app.use(express.json());
 
 app.get("/", async (req, res) => {
@@ -55,93 +60,49 @@ app.get("/", async (req, res) => {
   `);*/
 });
 
+const DriveUtils = require("./server/drive_utils.js");
 app.get("/auth/google", (req, res) => {
-  const authQuery = querystring.stringify({
+  let authUrl = DriveUtils.getAuthUrl({
     redirect_uri: "http://localhost:3000/auth/google/callback",
-    prompt: "consent",
-    response_type: "code",
-    client_id: CLIENT_ID,
     scope: "https://www.googleapis.com/auth/drive",
-    access_type: "offline"
+    client_id: GOOGLE_WEB_CLIENT_ID
   });
-
-  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${authQuery}`;
   res.redirect(authUrl);
 });
 
 app.get("/auth/google/callback", async (req, res) => {
   const { code } = req.query;
-
-  try {
-    const { data } = await axios.post(
-      "https://oauth2.googleapis.com/token",
-      querystring.stringify({
-        code: code,
-        redirect_uri: "http://localhost:3000/auth/google/callback",
-        client_id: CLIENT_ID,
-        client_secret: CLIENT_SECRET,
-        grant_type: "authorization_code"
-      }),
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
-      }
-    );
-    req.session.access_token = data.access_token;
-    req.session.refresh_token = data.refresh_token;
-    req.session.timestamp = new Date().toISOString();
-    res.redirect("/chat");
-  } catch (error) {
-    console.error("Error fetching tokens", error);
-    res.status(500).send("Error during authentication");
-  }
+  let callback = await DriveUtils.handleAuthCallback({
+    code,
+    client_id: GOOGLE_WEB_CLIENT_ID,
+    client_secret: GOOGLE_WEB_CLIENT_SECRET,
+    redirect_uri: "http://localhost:3000/auth/google/callback"
+  });
+  // console.log("auth/google/callback", { callback });
+  req.session.access_token = callback.access_token;
+  req.session.refresh_token = callback.refresh_token;
+  req.session.timestamp = new Date().toISOString();
+  // console.log("SAVING access_token: ", req.session.access_token);
+  callback.access_token ? res.redirect("/chat") : res.status(500).send("Error during authentication");
 });
-async function refreshToken(refresh_token) {
-  try {
-    const { data } = await axios.post(
-      "https://oauth2.googleapis.com/token",
-      querystring.stringify({
-        client_secret: CLIENT_SECRET,
-        grant_type: "refresh_token",
-        refresh_token: refresh_token,
-        client_id: CLIENT_ID
-      }),
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
-      }
-    );
-
-    return data.access_token;
-  } catch (error) {
-    console.error("Error refreshing token", error);
-    throw error;
-  }
-}
 
 async function checkAccessToken(req, res, next) {
-  if (!req.session.access_token) {
+  let access_token = req.session.access_token;
+  if (access_token) {
+    access_token = await DriveUtils.checkAndRefresh({
+      access_token,
+      timestamp: req.session.timestamp,
+      refresh_token: req.session.refresh_token,
+      client_id: GOOGLE_WEB_CLIENT_ID,
+      client_secret: GOOGLE_WEB_CLIENT_SECRET
+    });
+    req.session.timestamp = new Date().toISOString();
+  }
+  if (!access_token) {
+    // console.log("NO ACCESS TOKEN ");
     return res.redirect("/auth/google");
-    // return res.status(401).send("No access token found. Please authenticate.");
   }
-
-  const oneHourAgo = new Date(Date.now() - 60 * 60 * 10); // 60 minutes * 60 seconds * 1000 milliseconds = 1 hour
-  const sessionTimestamp = new Date(req.session.timestamp);
-
-  if (sessionTimestamp < oneHourAgo) {
-    try {
-      // If the token is expired, try to refresh it
-      const newAccessToken = await refreshToken(req.session.refresh_token);
-      req.session.access_token = newAccessToken;
-      req.session.timestamp = new Date();
-    } catch (error) {
-      req.session.access_token = null;
-      return res.redirect("/auth/google");
-      // return res.status(401).send("Error refreshing access token. Please re-authenticate.");
-    }
-  }
+  req.session.access_token = access_token;
   next();
 }
 
@@ -155,27 +116,68 @@ app.get("/chat", checkAccessToken, (req, res, next) => {
 //
 app.get("/bot_init", checkAccessToken, async (req, res) => {
   // console.log("INIT CHATBOT");
-  ACCESS_TOKEN = req.session.access_token;
   let chatbot = new Chatbot({
-    model_config: {
-      // modelName: "gpt-3.5-turbo", // default = "text-davinci-003"
-      // maxTokens: 256, // default = 256
-      openAIApiKey: OPENAI_API_KEY,
-      huggingFaceApiKey: HUGGINGFACE_API_KEY
-      // temperature: 0.9
-    },
-    CLIENT_ID,
-    CLIENT_SECRET,
-    ACCESS_TOKEN,
-    memory_length: 2,
-    vector_length: 2,
-    agent: "chat-conversational-react-description",
-    agent_config: {},
     verbose: true,
-    agent_verbose: false,
-    tools: []
+    drive: {
+      verbose: false,
+      ...(!GOOGLE_WEB_CLIENT_ID
+        ? {}
+        : {
+            web: {
+              scopes: ["https://www.googleapis.com/auth/drive"],
+              client_id: GOOGLE_WEB_CLIENT_ID,
+              client_secret: GOOGLE_WEB_CLIENT_SECRET,
+              access_token: req.session.access_token
+            }
+          }),
+      ...(!GOOGLE_DESKTOP_KEYFILE_PATH
+        ? {}
+        : {
+            server: {
+              embed_from_folder: "chatbot",
+              embed_to_folder: "chatbot/embeddings",
+              scopes: ["https://www.googleapis.com/auth/drive"],
+              // serviceKeyFile: __dirname + "/../" + GOOGLE_SERVICE_KEYFILE_PATH
+              // OR
+              desktopKeyFile: __dirname + GOOGLE_DESKTOP_KEYFILE_PATH
+              // ( Alternately:) desktopKeyFileContents: GOOGLE_DESKTOP_CLIENT_KEYFILE_CONTENTS
+              // OR
+              // desktopTokenFile: GOOGLE_DESKTOP_CLIENT_TOKEN_PATH:
+              // ( Alternately:) desktopTokenFileContents: GOOGLE_DESKTOP_CLIENT_TOKEN_CONTENTS
+              // OR
+              //client_id: GOOGLE_DESKTOP_CLIENT_ID, // and
+              //client_secret: GOOGLE_SERVICE_CLIENT_SECRET //and
+              //client_redirect_uri: xyz
+            }
+          })
+    },
+    model: {
+      service: !!HUGGINGFACE_API_KEY ? "huggingFace" : "chatOpenAi",
+      model_config: !!HUGGINGFACE_API_KEY
+        ? {
+            model_id: "meta-llama/Llama-2-30b",
+            huggingFaceApiKey: HUGGINGFACE_API_KEY
+          }
+        : {
+            modelName: "gpt-3.5-turbo", // default = "text-davinci-003"
+            // maxTokens: 256, // default = 256
+            openAIApiKey: OPENAI_API_KEY,
+            temperature: 0.9
+          }
+    },
+    agent: {
+      type: "chat-conversational-react-description",
+      memory_length: 2,
+      vector_length: 2,
+      verbose: false,
+      tools: [],
+      agent_config: {}
+      // prefix
+      // suffix
+    }
   });
-  bot_local_memory[req.session.id] = bot_local_memory[req.session.id] || { chatbot };
+  let setTo = bot_local_memory[req.session.id] ?? { chatbot };
+  bot_local_memory[req.session.id] = setTo;
 
   res.send({
     status: 200,
@@ -188,10 +190,11 @@ app.get("/bot_init", checkAccessToken, async (req, res) => {
 // Load up the bot and have it give a welcome message based on the history.
 //
 app.get("/bot_welcome*", async (req, res) => {
+  let sess = bot_local_memory[req.session.id];
   let prompt = `The user has entered the chat. Greet the user.`;
   res.send({
     avatarURL: "https://i.imgur.com/vphoLPW.png",
-    response: await bot_local_memory[req.session.id].chatbot.sendMessage(prompt)
+    response: await sess.chatbot.sendMessage(prompt)
   });
 });
 
