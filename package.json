@@ -16,6 +16,8 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/local-auth": "^3.0.0",
+    "@huggingface/agents": "^0.0.5",
+    "@huggingface/hub": "^0.11.4",
     "@huggingface/inference": "^1.8.0",
     "axios": "^1.4.0",
     "connect-sqlite3": "^0.9.13",
