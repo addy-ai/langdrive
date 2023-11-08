@@ -2,7 +2,7 @@
 
 Create a chatbot using Google Drive. Make it smart and store data by connecting it to you or your visitors' google drive account.
 
-Select your AI Model and optionally connect you and/or your users' google drive. Node developers can `npm install langDrive` to access our `DriveUtils` and `DriveChatbot` classes. Individuals may use a free deployed instance of this service by vising addy-ai.com. ChatGPT, HuggingFace, or more LLM Google [OAuth2](https://developers.google.com/identity/protocols/oauth2) keys are required to run your own instance (create credentials for a web app oAuth). Read our tutorial on OAuth2 on our [blog](https://addy.beehiiv.com/).
+Select your AI Model and optionally connect you and/or your users' google drive. Node developers can `npm install langDrive` to access our `DriveUtils` and `DriveChatbot` classes. Individuals may use a free deployed instance of this service by visting addy-ai.com. ChatGPT, HuggingFace, or more LLM Google [OAuth2](https://developers.google.com/identity/protocols/oauth2) keys are required to run your own instance (create credentials for a web app oAuth). Read our tutorial on OAuth2 on our [blog](https://addy.beehiiv.com/).
 
 ## 1 CLICK DEPLOY
 
