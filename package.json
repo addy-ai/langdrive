@@ -9,7 +9,8 @@
   "scripts": {
     "start": "nodemon ./src/start_server.js",
     "test": "node ./src/server/test.mjs",
-    "deploy": "npm deploy"
+    "deploy": "npm deploy",
+    "make-pages": "nodemon --exec \"make pages\""
   },
   "keywords": [],
   "author": "",
@@ -40,5 +41,12 @@
   },
   "devDependencies": {
     "faiss-node": "^0.2.3"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src/"
+    ],
+    "ext": "js,jsx,ts,tsx,html,css",
+    "exec": "make pages"
   }
 }
