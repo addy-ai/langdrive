@@ -6,15 +6,14 @@ require("dotenv").config();
 
 function deploy(args) { 
   console.log(`~~~~ Start handleDeploy:${JSON.stringify(args)}:`);
-  const config = getConfig(args);
-  console.log(JSON.stringify(config))
+  const config = getConfig(args); 
+  // console.log(JSON.stringify(config))
   if(!config){return} 
-  if(config.firebase){ firestore.handleFirebase(config.firebase); }
+  if(config.firebase){ firestore.handleFirebase(config); }
 }
 
 // Retrieves YAML using args.path, default: to langdrive.yaml
-function getConfig(args){   
-    // require(path.resolve(__dirname, args.clientJson)) 
+function getConfig(args){ 
 
     // Relative path to YAML
     // Note: process.cwd() is Directory where the CLI Executed From
@@ -54,7 +53,10 @@ function getConfig(args){
       }
       return node;
     }
-    return replaceEnvValues(config); 
+
+    config = replaceEnvValues(config);   
+    config.firebase.clientJsonData = config?.firebase?.clientJson && JSON.parse(fs.readFileSync(path.resolve(process.cwd(), config.firebase.clientJson), 'utf8'));
+    return config
 }
 
 module.exports = {deploy, getConfig};

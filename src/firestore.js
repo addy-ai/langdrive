@@ -1050,19 +1050,20 @@ class Firestore {
         }
     }
 
-    static async handleFirebase(args) {
+    static async handleFirebase(config) {
         console.log('~~~~ Start handleFirebase\n');
+        console.log(JSON.stringify(config))
     
-        const admin = require("firebase-admin");
+        const admin = require("firebase-admin", config.firebase);
         // TODO: Fix where config is at and service account location 
-        let serviceAccount = args.firebaseCredentials; 
+        let clientJson = config.firebase.clientJson; 
     
         console.log(admin.apps)
         if (!admin.apps.length) {
             console.log('CLI:Firebase')
             admin.initializeApp({
-                credential: admin.credential.cert(serviceAccount),
-                databaseURL: args.databaseURL,
+                credential: admin.credential.cert(clientJson),
+                databaseURL: config.firebase.databaseURL,
             });
             console.log(admin.apps)
         }
