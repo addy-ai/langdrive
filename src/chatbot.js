@@ -6,7 +6,7 @@ const { OpenAIEmbeddings } = require("langchain/embeddings/openai");
 const { TextLoader } = require("langchain/document_loaders/fs/text");
 const { Ollama } = require("langchain/llms/ollama");
 const { HumanMessage, AIMessage, SystemMessage } = require("langchain/schema");
-const DriveUtils = require("./drive_utils");
+const DriveUtils = require("./gdrive");
 const { HuggingFaceInference } = require("langchain/llms/hf");
 const { Calculator } = require("langchain/tools/calculator");
 const { initializeAgentExecutorWithOptions } = require("langchain/agents");
@@ -15,7 +15,7 @@ const { VectorStoreRetrieverMemory } = require("langchain/memory");
 const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
 //const { HNSWLib } = require("langchain/vectorstores/hnswlib");  
 const { FaissStore } = require("langchain/vectorstores/faiss");
-const { DEFAULT_PREFIX, DEFAULT_SUFFIX } = require("./prompts");
+const { DEFAULT_PREFIX, DEFAULT_SUFFIX } = require("../example/server/prompts");
 const fs = require("fs");
 
 const { ChatPromptTemplate, MessagesPlaceholder, StringPromptValue } = require("langchain/prompts");

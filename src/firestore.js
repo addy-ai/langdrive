@@ -1,22 +1,12 @@
-const admin = require("firebase-admin");
-// TODO: Fix where config is at and service account location
-const firebaseConfig = require("../config/config");
-const serviceAccount = require("../config/firebaseServiceAcc.json");
 // Below recommended for cloud functions to format console logs
 require("firebase-functions/logger/compat");
-
-if (!admin.apps.length) {
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        databaseURL: firebaseConfig.FIREBASE_DATABASE_URL,
-    });
-}
-
-const db = admin.firestore();
-db.settings({ignoreUndefinedProperties: true});
+// const functions = require("firebase-functions");
+// const {firebaseDatabaseURL} = functions.config().fbase.database.url;
 
 class Firestore {
-    constructor() {}
+    constructor(props) {
+        this.db = props.db
+    }
 
     /**
      * @desc Filters a collection using where clause and returns the results
@@ -34,7 +24,7 @@ class Firestore {
         filterData,
         operation,
     ) {
-        return await db
+        return await this.db
             .collection(collection)
             .where(filterKey, operation, filterData)
             .get()
@@ -65,7 +55,7 @@ class Firestore {
         filterData,
         operation,
     ) {
-        return await db
+        return await this.db
             .collection(collection)
             .where(filterKey, operation, filterData)
             .get()
@@ -100,7 +90,7 @@ class Firestore {
         filterData,
         operation,
     ) {
-        return await db
+        return await this.db
             .collection(collection)
             .where(filterKey, operation, filterData)
             .get()
@@ -123,7 +113,7 @@ class Firestore {
      * sucess(true or false), docID(The string ID of the document added)
      */
     async addDocumentToCollection(document, collection) {
-        return await db
+        return await this.db
             .collection(collection)
             .add(document)
             .then((data) => {
@@ -148,13 +138,13 @@ class Firestore {
      * @return {Object | Boolean} - Object if created true if exists
      */
     async createDocIfNotExist(document, collection) {
-        return await db
+        return await this.db
             .collection(collection)
             .doc(document)
             .get()
             .then(async (doc) => {
                 if (!doc.exists) {
-                    await db.collection(collection).doc(document).create({});
+                    await this.db.collection(collection).doc(document).create({});
                     return true;
                 } else {
                     return true;
@@ -178,7 +168,7 @@ class Firestore {
      * sucess(true or false), docID(The string ID of the document added)
      */
     async updateDocument(documentId, collection, infoToUpdate) {
-        return await db
+        return await this.db
             .collection(collection)
             .doc(documentId)
             .update(infoToUpdate)
@@ -208,7 +198,7 @@ class Firestore {
      */
     async updateDocumentInSubcollection(documentId, collection, documentId2,
         collection2, infoToUpdate) {
-        return await db
+        return await this.db
             .collection(collection)
             .doc(documentId)
             .collection(collection2)
@@ -229,14 +219,14 @@ class Firestore {
     }
 
     /**
-     * @desc Delete document from db
+     * @desc Delete document from this.db
      * @param {Object} documentId - The document object
      * @param {String} collection - The collection name
      * @return {Object} Object containing the following attributes:
      * sucess(true or false), docID(The string ID of the document added)
      */
     async deleteDocumentFromCollection(documentId, collection) {
-        return await db
+        return await this.db
             .collection(collection)
             .doc(documentId)
             .delete()
@@ -271,7 +261,7 @@ class Firestore {
         filterData,
         operation,
     ) {
-        let col = await db.collection(collection);
+        let col = await this.db.collection(collection);
         for (let i = 0; i < filterKey.length; i++) {
             col = col.where(filterKey[i], operation[i], filterData[i]);
         }
@@ -306,7 +296,7 @@ class Firestore {
         operation,
         limit,
     ) {
-        let col = await db.collection(collection);
+        let col = await this.db.collection(collection);
         for (let i = 0; i < filterKey.length; i++) {
             col = col.where(filterKey[i], operation[i], filterData[i]);
         }
@@ -342,7 +332,7 @@ class Firestore {
         filterData,
         operation,
     ) {
-        let col = await db.collection(collection);
+        let col = await this.db.collection(collection);
         for (let i = 0; i < filterKey.length; i++) {
             col = col.where(filterKey[i], operation[i], filterData[i]);
         }
@@ -385,7 +375,7 @@ class Firestore {
         filterData,
         operation,
     ) {
-        let col = await db.collection(collection1).doc(doc1)
+        let col = await this.db.collection(collection1).doc(doc1)
             .collection(collection2);
         for (let i = 0; i < filterKey.length; i++) {
             col = col.where(filterKey[i], operation[i], filterData[i]);
@@ -416,8 +406,8 @@ class Firestore {
      * @return {Boolean} True or false if successful
      */
     async runTransactionUpdate(collection, docId, object) {
-        const ref = db.collection(collection).doc(docId);
-        return await db
+        const ref = this.db.collection(collection).doc(docId);
+        return await this.db
             .runTransaction((transaction) => {
                 // Using transaction to prevent conflicts
                 return transaction.get(ref).then((doc) => {
@@ -455,7 +445,7 @@ class Firestore {
         collection2,
         document,
     ) {
-        return await db
+        return await this.db
             .collection(collection1)
             .doc(documentId)
             .collection(collection2)
@@ -485,7 +475,7 @@ class Firestore {
      */
     async addDocumentToSubCollectionWithCustomId(collection, docId, collection2,
         doc2, data) {
-        return await db
+        return await this.db
             .collection(collection)
             .doc(docId)
             .collection(collection2)
@@ -507,7 +497,7 @@ class Firestore {
     }
 
     async getDocInCollection(collection, docId) {
-        const docRef = await db.collection(collection).doc(docId);
+        const docRef = await this.db.collection(collection).doc(docId);
         const result = await docRef
             .get()
             .then((doc) => {
@@ -537,7 +527,7 @@ class Firestore {
      * @param {Object} data the data to add
      */
     async addDocumentToCollectionWithCustomId(collection, docId, data) {
-        return await db
+        return await this.db
             .collection(collection)
             .doc(docId)
             .set(data)
@@ -563,8 +553,8 @@ class Firestore {
      * @param {Number} increment the increment value to add by
      */
     async incrementCountByTransaction(collection, document, increment) {
-        const ref = await db.collection(collection).doc(document);
-        return await db.runTransaction((transaction) => {
+        const ref = await this.db.collection(collection).doc(document);
+        return await this.db.runTransaction((transaction) => {
             return transaction
                 .get(ref)
                 .then(async (doc) => {
@@ -608,9 +598,9 @@ class Firestore {
      * @param {String} field the increment field/attribute
      * @param {Number} increment the increment value to add by
      */
-    async incrementIntFieldByTransaction(collection, document, field, increment) {
-        const ref = await db.collection(collection).doc(document);
-        return await db.runTransaction(async (transaction) => {
+    async incrementIntFieldbyTransaction(collection, document, field, increment) {
+        const ref = await this.db.collection(collection).doc(document);
+        return await this.db.runTransaction(async (transaction) => {
             return await transaction
                 .get(ref)
                 .then(async (doc) => {
@@ -636,7 +626,7 @@ class Firestore {
                 })
                 .catch((error) => {
                     console.error(
-                        "Error: Fn: incrementIntFieldByTransaction: Failed" +
+                        "Error: Fn: incrementIntFieldbyTransaction: Failed" +
                             " to update",
                         JSON.stringify(error),
                     );
@@ -661,12 +651,12 @@ class Firestore {
         document2,
         increment,
     ) {
-        const ref = await db
+        const ref = await this.db
             .collection(collection)
             .doc(document)
             .collection(collection2)
             .doc(document2);
-        return await db.runTransaction((transaction) => {
+        return await this.db.runTransaction((transaction) => {
             return transaction
                 .get(ref)
                 .then(async (doc) => {
@@ -712,19 +702,19 @@ class Firestore {
      * @param {Object} updateDoc
      * @return {Boolean} True or false if update successful
      */
-    async updateFieldByTransactionSubCollection(
+    async updateFieldbyTransactionSubCollection(
         collection,
         collection2,
         document,
         document2,
         updateDoc,
     ) {
-        const ref = await db
+        const ref = await this.db
             .collection(collection)
             .doc(document)
             .collection(collection2)
             .doc(document2);
-        return await db.runTransaction((transaction) => {
+        return await this.db.runTransaction((transaction) => {
             return transaction
                 .get(ref)
                 .then(async (doc) => {
@@ -742,7 +732,7 @@ class Firestore {
                 })
                 .catch((error) => {
                     console.error(
-                        "Error: Fn: updateFieldByTransaction: Failed" +
+                        "Error: Fn: updateFielthis.dbyTransaction: Failed" +
                             " to update",
                         JSON.stringify(error),
                     );
@@ -758,7 +748,7 @@ class Firestore {
      */
     async getAllDocumentsInCollection(collection) {
         const documents = [];
-        await db
+        await this.db
             .collection(collection)
             .get()
             .then(async (querySnapshot) => {
@@ -785,7 +775,7 @@ class Firestore {
      * @param {String} collection the collection name
      */
     async getTotalNumDocumentsInCollection(collection) {
-        return await db
+        return await this.db
             .collection(collection)
             .get()
             .then(async (querySnapshot) => {
@@ -804,13 +794,13 @@ class Firestore {
      * @param {String} collection2 - Name of collection in doc1 1 (subcollection)
      */
     async getNumberOfDocumentsInSubCollection(collection1, doc1, collection2) {
-        return await db
+        return await this.db
             .collection(collection1)
             .doc(doc1)
             .get()
             .then(async (doc) => {
                 if (doc.exists) {
-                    return await db
+                    return await this.db
                         .collection(collection1)
                         .doc(doc1)
                         .collection(collection2)
@@ -837,7 +827,7 @@ class Firestore {
      * @param {String} field - The field to extract
      */
     async getFieldInSubCollection(collection1, doc1, collection2, doc2, field) {
-        return await db
+        return await this.db
             .collection(collection1)
             .doc(doc1)
             .get()
@@ -847,7 +837,7 @@ class Firestore {
                     return 0;
                 }
                 // First doc exists
-                return await db
+                return await this.db
                     .collection(collection1)
                     .doc(doc1)
                     .collection(collection2)
@@ -883,7 +873,7 @@ class Firestore {
      * @param {String} field - The field to extract
      */
     async getDocInSubCollection(collection1, doc1, collection2, doc2) {
-        return await db
+        return await this.db
             .collection(collection1)
             .doc(doc1)
             .get()
@@ -893,7 +883,7 @@ class Firestore {
                     return undefined;
                 }
                 // First doc exists
-                return await db
+                return await this.db
                     .collection(collection1)
                     .doc(doc1)
                     .collection(collection2)
@@ -930,7 +920,7 @@ class Firestore {
         docToAdd,
         listenAttr,
     ) {
-        const newDocRef = await db
+        const newDocRef = await this.db
             .collection(collection1)
             .doc(doc1ID)
             .collection(collection2)
@@ -979,7 +969,7 @@ class Firestore {
         operation,
         limit,
     ) {
-        let col = await db.collection(collection);
+        let col = await this.db.collection(collection);
         for (let i = 0; i < filterKey.length; i++) {
             col = col.where(filterKey[i], operation[i], filterData[i]);
         }
@@ -1040,7 +1030,7 @@ class Firestore {
     }
 
     async getOrCreateDocument(documentId, collection) {
-        const collectionRef = db.collection(collection).doc(documentId);
+        const collectionRef = this.db.collection(collection).doc(documentId);
 
         try {
             const collectionSnapshot = await collectionRef.get();
@@ -1058,6 +1048,27 @@ class Firestore {
             console.error(`Error - Firebase Error - getOrCreateDocument: ${error}`);
             throw error;
         }
+    }
+
+    static async handleFirebase(args) {
+        console.log('~~~~ Start handleFirebase\n');
+    
+        const admin = require("firebase-admin");
+        // TODO: Fix where config is at and service account location 
+        let serviceAccount = args.firebaseCredentials; 
+    
+        console.log(admin.apps)
+        if (!admin.apps.length) {
+            console.log('CLI:Firebase')
+            admin.initializeApp({
+                credential: admin.credential.cert(serviceAccount),
+                databaseURL: args.databaseURL,
+            });
+            console.log(admin.apps)
+        }
+        
+        const db = admin.firestore();
+        db.settings({ignoreUndefinedProperties: true}); 
     }
 }
 

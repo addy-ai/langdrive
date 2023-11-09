@@ -1,12 +1,10 @@
 #!/usr/bin/env node
-require("dotenv").config();
-
-if (process.argv.includes('deploy')) {
-  const handleDeploy = require('./main_cli');
-  handleDeploy(process.argv);
-}
+process?.argv?.length>2 && require('./main_cli')( 
+  process.argv.slice(2).reduce((acc, curr, i, arr) => 
+    (i % 2 === 0 ? acc[curr] = arr[i + 1] || '' : null, acc), {})); // runs deploy({flag:val})
 
 module.exports = {
-  DriveUtils: require("./src/server/drive_utils"),
-  DriveChatbot: require("./src/server/drive_chatbot")
+  DriveTrain: require("./src/train/drive_train"),
+  DriveUtils: require("./src/gdrive"),
+  DriveChatbot: require("./src/chatbot")
 };
