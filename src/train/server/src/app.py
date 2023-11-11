@@ -8,6 +8,13 @@ import os
 app = Flask(__name__)
 CORS(app)
 
+defin = """
+    This is a Flask web application with two endpoints:
+
+    - / (root): A simple endpoint that returns a success response.
+    - /train (POST method): This endpoint is designed to handle training requests. It checks if the necessary information is provided, 
+                            trains a language model using the LLMTrain class (defined in train.py).
+"""
 @app.route("/")
 def index():
     try:

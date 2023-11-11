@@ -295,7 +295,8 @@ class Firestore {
         filterData,
         operation,
         limit,
-    ) {
+    ) { 
+        // console.log('firestore:filterCollectionWithMultipleWhereClauseWithLimit', {collection, filterKey, filterData, operation, limit})
         let col = await this.db.collection(collection);
         for (let i = 0; i < filterKey.length; i++) {
             col = col.where(filterKey[i], operation[i], filterData[i]);
@@ -1050,27 +1051,37 @@ class Firestore {
         }
     }
 
-    static async handleFirebase(config) {
-        console.log('~~~~ Start handleFirebase\n');
-        console.log(JSON.stringify(config))
+    static async init(config) {
+        let fb = config.firebase || config;
+        console.log('CLI:handleFirebase\n'); 
     
-        const admin = require("firebase-admin", config.firebase);
-        // TODO: Fix where config is at and service account location 
-        let clientJson = config.firebase.clientJson; 
-    
-        console.log(admin.apps)
+        const admin = require("firebase-admin", fb); 
+        let clientJson = fb.clientJson;  
+
         if (!admin.apps.length) {
-            console.log('CLI:Firebase')
+            console.log('firestore"handleFirebase:initializeApp')
             admin.initializeApp({
                 credential: admin.credential.cert(clientJson),
-                databaseURL: config.firebase.databaseURL,
-            });
-            console.log(admin.apps)
+                databaseURL: fb.databaseURL,
+            }); 
         }
         
         const db = admin.firestore();
         db.settings({ignoreUndefinedProperties: true}); 
+        let store =  new Firestore({db: db});
+        
+        return store
     }
 }
-
+// getTotalNumDocumentsInCollection
+// getNumberOfDocumentsInSubCollection
+// getDocInSubCollection
+// getAllDocumentsInCollection
+// filterCollectionWithWhereClauseWithID
+// filterCollectionWithWhereClauseIncludeDocID
+// filterCollectionWithWhereClause
+// filterCollectionWithMultipleWhereClause 
+// filterCollectionWithMultipleWhereClauseWithLimit 
+// filterCollectionWithMultipleWhereClauseIncludeDocID 
+// filterSubCollectionWithMultipleWhereClauseIncludeDocID
 module.exports = Firestore;

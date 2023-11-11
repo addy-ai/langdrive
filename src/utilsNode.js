@@ -1,40 +1,63 @@
 const fs = require('fs');
 const path = require('path');
-const yaml = require('js-yaml');
-const firestore = require("./firestore");
+const yaml = require('js-yaml'); 
+const Train = require("./train");
 require("dotenv").config(); 
 
-function deploy(args) { 
-  console.log(`~~~~ Start handleDeploy:${JSON.stringify(args)}:`);
-  const config = getConfig(args); 
-  // console.log(JSON.stringify(config))
-  if(!config){return} 
-  if(config.firebase){ firestore.handleFirebase(config); }
+// Gets the config and calls deploy
+function cli_deploy(args) { console.log(`~~~~ Start cli_deploy:${JSON.stringify(args)}:`);  
+  const config = getConfig(args);
+  deploy(config);
+}
+
+// config.train.input.serviceName == config.serviceName == class serviceName 
+async function deploy(config) {
+  console.log(`~~~~ Start deploy:`);//${JSON.stringify(config)}:`);   
+  if(!config){return}   
+
+  let initClass = async (service) =>{ 
+    if(!!service){ 
+      let classInstance = await require(`./${service}`)  
+      return await classInstance?.init({verbose: config.verbose, ...config[service]})
+    }
+  }
+  config.train.service = await initClass(config.train.service)
+  config.train.inputService = await initClass(config.train.input.service)
+  config.train.outputService = await initClass(config.train.output.service)
+  
+  // Train the model using the spec
+  let trainer = await Train.init({verbose: config.verbose, ...config.train}); 
+
+  let trainingResults = await trainer.train();
+  
+  // Deploy the data needed
+  // if(config.heroku){ config.firebase.heroku = heroku.handleHeroku(config); }
 }
 
 // Retrieves YAML using args.path, default: to langdrive.yaml
+// {[...services], train}
 function getConfig(args){ 
+  console.log(`~~~~ Start getConfig:${JSON.stringify(args)}:`);  
 
     // Relative path to YAML
     // Note: process.cwd() is Directory where the CLI Executed From
     // Note: __dirname is the Directory of this Current File
     const currentDirectory = process.cwd();
-    let yamlFilePath = args.path ? 
-      path.resolve(currentDirectory, args[path]) : 
+    let yamlFilePath = args.yaml ? 
+      path.resolve(currentDirectory, args[yaml]) : 
       path.resolve(currentDirectory, './langdrive.yaml')
   
-    console.log(`- yamlFilePath: ${yamlFilePath}`);
+    // console.log(`- yamlFilePath: ${yamlFilePath}`);
   
     // Check if YAML File Exists
     let fileExists = fs.existsSync(yamlFilePath) 
-    console.log(`YAML File ${fileExists?"Found": "Not Found"}\n`)
-    if(!fileExists){return}
-    console.log('getConfig5');
+    // console.log(`YAML File ${fileExists?"Found": "Not Found"}\n`)
+    if(!fileExists){return} 
 
     // Check if it has contents
     const fileContents = fs.readFileSync(yamlFilePath, 'utf8'); 
     let config = yaml.load(fileContents);
-    console.log(`YAML Content ${config?"Found": "Not Found"}\n`)
+    // console.log(`YAML Content ${config?"Found": "Not Found"}\n`)
     if(!config){return}  
     /*
     config.heroku = { 
@@ -54,10 +77,14 @@ function getConfig(args){
       return node;
     }
 
-    config = replaceEnvValues(config);   
-    config.firebase.clientJsonData = config?.firebase?.clientJson && JSON.parse(fs.readFileSync(path.resolve(process.cwd(), config.firebase.clientJson), 'utf8'));
+    config = replaceEnvValues(config); 
     return config
 }
 
-module.exports = {deploy, getConfig};
-exports = {deploy, getConfig};
+
+module.exports = {deploy, getConfig, cli_deploy}; 
+exports = {deploy, getConfig, cli_deploy};  
+
+
+// if(config.firebase & !config.firebase.instance){ config.firebase.instance = firestore.init(config); }
+// config.train.input.sourceTool = config[inputService]?.instance 

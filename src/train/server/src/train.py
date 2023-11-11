@@ -140,7 +140,6 @@ class LLMTrain:
         PEFT_MODEL = model_path
         model.push_to_hub(PEFT_MODEL, use_auth_token=True)
 
-    
     # Generate dialog prompt with human and assistant tags
     def generate_prompt(self, data_point):
         return f"""

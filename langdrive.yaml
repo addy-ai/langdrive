@@ -1,8 +1,12 @@
-firebase:
+verbose: true
+firestore: 
   clientJson: "secrets/firebase_service_client.json"
   databaseURL: "env:FIREBASE_DATABASE_URL"
 
-gmail:
+drive:
+  clientJson: "secrets/drive_service_client.json" 
+
+email:
   password: env:GMAIL_PASSWORD
   email: env:GMAIL_EMAIL
 
@@ -11,3 +15,17 @@ huggingface:
   models: 
     - name: "vilsonrodrigues/falcon-7b-instruct-sharded"
       train: "example.json"
+
+train:
+  service: firestore
+  query: 
+    filterCollectionWithMultipleWhereClauseWithLimit:
+      collection: "chat-state"
+      filterKey: []
+      filterData: []
+      operation: []
+      limit: 5
+  input:
+    value: "chat.0.content"
+  output:
+    value: "chat.1.content"

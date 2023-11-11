@@ -1,5 +1,9 @@
 # You would need to use hugging face hub library by runnin 'pip install huggingface_hub'
 
+# huggingFace get_token will user OUR HF token which is a nono.
+# endpoint_url
+# model_name
+
 from huggingface_hub import HfApi, HfFolder, Repository
 
 class HuggingFaceModelUploader:
@@ -36,12 +40,12 @@ class HuggingFaceModelUploader:
 
         return self.endpoint_url
 
-"""
-# Usage
-model_uploader = HuggingFaceModelUploader(model_name='your_model_name', model_directory='path_to_your_model_directory')
-model_uploader.login(token='your_huggingface_token')  # Optional: If you don't pass a token, you will be prompted to enter one
-model_endpoint = model_uploader.upload_model()
-print(f"Model endpoint: {model_endpoint}")
+ll = """
+    # Usage
+    model_uploader = HuggingFaceModelUploader(model_name='your_model_name', model_directory='path_to_your_model_directory')
+    model_uploader.login(token='your_huggingface_token')  # Optional: If you don't pass a token, you will be prompted to enter one
+    model_endpoint = model_uploader.upload_model()
+    print(f"Model endpoint: {model_endpoint}")
 
 """
 
