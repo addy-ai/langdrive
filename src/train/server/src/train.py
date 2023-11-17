@@ -169,3 +169,26 @@ class LLMTrain:
         print(
             f"trainable params: {trainable_params} || all params: {all_param} || trainables%: {100 * trainable_params / all_param}"
         )
+
+    def generate_download_url(base_url, folder_path, token=None):
+        """
+        Generates a URL for the download endpoint.
+
+        :param base_url: The base URL of the server (e.g., 'http://yourserver.com')
+        :param folder_path: The path to the folder to be downloaded.
+        :param token: Optional authentication token.
+        :return: The complete URL for downloading the folder.
+        """
+        from urllib.parse import quote
+
+        # URL encode the folder path
+        encoded_path = quote(folder_path)
+
+        # Construct the URL
+        url = f"{base_url}/download/{encoded_path}"
+
+        # Add the token to the query string if provided
+        if token:
+            url += f"?token={token}"
+
+        return url

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://addy-ai.com/products/langdrive/api/firestore/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Firestore - Langdrive</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Firestore";
+        var mkdocs_page_input_path = "api/firestore.md";
+        var mkdocs_page_url = "/products/langdrive/api/firestore/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Langdrive
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../cli/">CLI</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../security/authentication/">App Authentication</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../security/verification/">App Verification</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Data API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../dataOverview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../gdrive/">DriveUtils</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../emails.md">emailRetriever</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Firestore</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#class-firestore">Class: Firestore</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#constructor">Constructor</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-filtercollectionwithwhereclause">Method: filterCollectionWithWhereClause(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-filtercollectionwithwhereclauseincludedocid">Method: filterCollectionWithWhereClauseIncludeDocID(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-filtercollectionwithwhereclausewithid">Method: filterCollectionWithWhereClauseWithID(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-adddocumenttocollection">Method: addDocumentToCollection(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-createdocifnotexist">Method: createDocIfNotExist(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-updatedocument">Method: updateDocument(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-updatedocumentinsubcollection">Method: updateDocumentInSubcollection(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-deletedocumentfromcollection">Method: deleteDocumentFromCollection(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-filtercollectionwithmultiplewhereclause">Method: filterCollectionWithMultipleWhereClause(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-filtercollectionwithmultiplewhereclausewithlimit">Method: filterCollectionWithMultipleWhereClauseWithLimit(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-filtercollectionwithmultiplewhereclauseincludedocid">Method: filterCollectionWithMultipleWhereClauseIncludeDocID(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-filtersubcollectionwithmultiplewhereclauseincludedocid">Method: filterSubCollectionWithMultipleWhereClauseIncludeDocID(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-runtransactionupdate">Method: runTransactionUpdate(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-adddocumenttosubcollection">Method: addDocumentToSubCollection(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-adddocumenttosubcollectionwithcustomid">Method: addDocumentToSubCollectionWithCustomId(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-getdocincollection">Method: getDocInCollection(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-adddocumenttocollectionwithcustomid">Method: addDocumentToCollectionWithCustomId(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-incrementcountbytransaction">Method: incrementCountByTransaction(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-incrementintfieldbytransaction">Method: incrementIntFieldbyTransaction(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-incrementcountbytransactionsubcollection">Method: incrementCountByTransactionSubCollection(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-updatefieldbytransactionsubcollection">Method: updateFieldbyTransactionSubCollection(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-getalldocumentsincollection">Method: getAllDocumentsInCollection(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-gettotalnumdocumentsincollection">Method: getTotalNumDocumentsInCollection(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-getnumberofdocumentsinsubcollection">Method: getNumberOfDocumentsInSubCollection(...)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#method-getfieldinsubcollection">Method: getFieldInSubCollection(...)</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">LLM API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../llmOverview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../huggingFace/">HuggingFace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../ollama.md">Ollama</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../train/">Train</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../heroku/">Heroku</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../chatbot/">Chatbot</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/demo/">Demo</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/yaml/">Yaml</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../contributors/">Contributors</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../../demo.md">Demo</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Langdrive</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Data API</li>
+      <li class="breadcrumb-item active">Firestore</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="firestore-class-documentation">Firestore Class Documentation</h1>
+<p>The <code>Firestore</code> class in Node.js provides functionalities for interacting with Firebase Firestore, including querying, adding, updating, and deleting documents.</p>
+<h2 id="class-firestore">Class: Firestore</h2>
+<h3 id="constructor">Constructor</h3>
+<ul>
+<li><strong>Parameters</strong>: <code>props</code> (Object) containing the Firestore database instance.</li>
+<li><strong>Description</strong>: </li>
+<li>Initializes the Firestore class with a database instance.</li>
+</ul>
+<h3 id="method-filtercollectionwithwhereclause">Method: <code>filterCollectionWithWhereClause(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Filters a collection using a where clause.</li>
+<li><strong>Returns</strong>: Array of documents matching the filter.</li>
+</ul>
+<h3 id="method-filtercollectionwithwhereclauseincludedocid">Method: <code>filterCollectionWithWhereClauseIncludeDocID(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Similar to <code>filterCollectionWithWhereClause</code>, but includes document IDs in the results.</li>
+<li><strong>Returns</strong>: Array of documents with their document IDs.</li>
+</ul>
+<h3 id="method-filtercollectionwithwhereclausewithid">Method: <code>filterCollectionWithWhereClauseWithID(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Filters a collection and returns only the document IDs.</li>
+<li><strong>Returns</strong>: Array of document IDs.</li>
+</ul>
+<h3 id="method-adddocumenttocollection">Method: <code>addDocumentToCollection(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Adds a document to a specified collection.</li>
+<li><strong>Returns</strong>: Object containing the success status and document ID.</li>
+</ul>
+<h3 id="method-createdocifnotexist">Method: <code>createDocIfNotExist(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Creates a document in a collection if it does not exist.</li>
+<li><strong>Returns</strong>: Boolean indicating the document's creation status.</li>
+</ul>
+<h3 id="method-updatedocument">Method: <code>updateDocument(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Updates a document in a collection.</li>
+<li><strong>Returns</strong>: Object containing the success status.</li>
+</ul>
+<h3 id="method-updatedocumentinsubcollection">Method: <code>updateDocumentInSubcollection(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Updates a document in a subcollection.</li>
+<li><strong>Returns</strong>: Object containing the success status.</li>
+</ul>
+<h3 id="method-deletedocumentfromcollection">Method: <code>deleteDocumentFromCollection(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Deletes a document from a collection.</li>
+<li><strong>Returns</strong>: Object containing the success status.</li>
+</ul>
+<h3 id="method-filtercollectionwithmultiplewhereclause">Method: <code>filterCollectionWithMultipleWhereClause(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Filters a collection using multiple where clauses.</li>
+<li><strong>Returns</strong>: Array of documents matching the filters.</li>
+</ul>
+<h3 id="method-filtercollectionwithmultiplewhereclausewithlimit">Method: <code>filterCollectionWithMultipleWhereClauseWithLimit(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Filters a collection using multiple where clauses with a limit on the number of documents.</li>
+<li><strong>Returns</strong>: Array of documents matching the filters.</li>
+</ul>
+<h3 id="method-filtercollectionwithmultiplewhereclauseincludedocid">Method: <code>filterCollectionWithMultipleWhereClauseIncludeDocID(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Filters a collection using multiple where clauses and includes document IDs.</li>
+<li><strong>Returns</strong>: Array of documents with their document IDs.</li>
+</ul>
+<h3 id="method-filtersubcollectionwithmultiplewhereclauseincludedocid">Method: <code>filterSubCollectionWithMultipleWhereClauseIncludeDocID(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Filters a subcollection using multiple where clauses and includes document IDs.</li>
+<li><strong>Returns</strong>: Array of documents with their document IDs.</li>
+</ul>
+<h3 id="method-runtransactionupdate">Method: <code>runTransactionUpdate(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Runs a transaction to update a document in Firestore.</li>
+<li><strong>Returns</strong>: Boolean indicating the success of the transaction.</li>
+</ul>
+<h3 id="method-adddocumenttosubcollection">Method: <code>addDocumentToSubCollection(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Adds a document to a subcollection.</li>
+<li><strong>Returns</strong>: Object containing the success status and document ID.</li>
+</ul>
+<h3 id="method-adddocumenttosubcollectionwithcustomid">Method: <code>addDocumentToSubCollectionWithCustomId(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Adds a document to a subcollection with a custom document ID.</li>
+<li><strong>Returns</strong>: Object containing the success status and document ID.</li>
+</ul>
+<h3 id="method-getdocincollection">Method: <code>getDocInCollection(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Retrieves a document from a collection.</li>
+<li><strong>Returns</strong>: Document data or <code>undefined</code>.</li>
+</ul>
+<h3 id="method-adddocumenttocollectionwithcustomid">Method: <code>addDocumentToCollectionWithCustomId(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Adds a document to a collection with a custom document ID.</li>
+<li><strong>Returns</strong>: Object containing the success status and document ID.</li>
+</ul>
+<h3 id="method-incrementcountbytransaction">Method: <code>incrementCountByTransaction(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Increments a count field in a document by a specified value using a transaction.</li>
+<li><strong>Returns</strong>: Boolean indicating the success of the transaction.</li>
+</ul>
+<h3 id="method-incrementintfieldbytransaction">Method: <code>incrementIntFieldbyTransaction(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Increments an integer field in a document by a specified value using a transaction.</li>
+<li><strong>Returns</strong>: Boolean indicating the success of the transaction.</li>
+</ul>
+<h3 id="method-incrementcountbytransactionsubcollection">Method: <code>incrementCountByTransactionSubCollection(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Increments a count field in a subcollection document by a specified value using a transaction.</li>
+<li><strong>Returns</strong>: Boolean indicating the success of the transaction.</li>
+</ul>
+<h3 id="method-updatefieldbytransactionsubcollection">Method: <code>updateFieldbyTransactionSubCollection(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Updates a field in a subcollection document using a transaction.</li>
+<li><strong>Returns</strong>: Boolean indicating the success of the transaction.</li>
+</ul>
+<h3 id="method-getalldocumentsincollection">Method: <code>getAllDocumentsInCollection(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Retrieves all documents in a specified collection.</li>
+<li><strong>Returns</strong>: Array of documents.</li>
+</ul>
+<h3 id="method-gettotalnumdocumentsincollection">Method: <code>getTotalNumDocumentsInCollection(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Gets the total number of documents in a collection.</li>
+<li><strong>Returns</strong>: Integer representing the total number of documents.</li>
+</ul>
+<h3 id="method-getnumberofdocumentsinsubcollection">Method: <code>getNumberOfDocumentsInSubCollection(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Gets the number of documents in a subcollection.</li>
+<li><strong>Returns</strong>: Integer representing the total number of documents.</li>
+</ul>
+<h3 id="method-getfieldinsubcollection">Method: <code>getFieldInSubCollection(...)</code></h3>
+<ul>
+<li><strong>Purpose</strong>: Retrieves a specific</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../gdrive/" class="btn btn-neutral float-left" title="DriveUtils"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../llmOverview/" class="btn btn-neutral float-right" title="Overview">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../gdrive/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../llmOverview/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

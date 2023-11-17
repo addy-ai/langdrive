@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://addy-ai.com/products/langdrive/api/email/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>EmailRetriever Class Documentation - Langdrive</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "EmailRetriever Class Documentation";
+        var mkdocs_page_input_path = "api/email.md";
+        var mkdocs_page_url = "/products/langdrive/api/email/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Langdrive
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../cli/">CLI</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../security/authentication/">App Authentication</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../security/verification/">App Verification</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Data API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../dataOverview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../gdrive/">DriveUtils</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../emails.md">emailRetriever</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../firestore/">Firestore</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">LLM API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../llmOverview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../huggingFace/">HuggingFace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../ollama.md">Ollama</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../train/">Train</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../heroku/">Heroku</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../chatbot/">Chatbot</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/demo/">Demo</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/yaml/">Yaml</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../contributors/">Contributors</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../../demo.md">Demo</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Langdrive</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">EmailRetriever Class Documentation</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="emailretriever-class-documentation">EmailRetriever Class Documentation</h1>
+<p>The <code>EmailRetriever</code> class in Node.js is designed to retrieve emails from different email clients using SMTP configurations.</p>
+<h2 id="class-emailretriever">Class: EmailRetriever</h2>
+<h3 id="constructor">Constructor</h3>
+<ul>
+<li><strong>Parameters</strong>:</li>
+<li><code>emailAddress</code> (String): The email address of the account.</li>
+<li><code>emailPassword</code> (String): The password of the account.</li>
+<li><code>emailClient</code> (String): The email client hosting the email address (e.g., "gmail", "outlook").</li>
+<li><code>verbose</code> (Boolean): Optional flag for verbose error logging.</li>
+<li><strong>Description</strong>: </li>
+<li>Initializes the <code>EmailRetriever</code> with the provided email address, password, and client.</li>
+<li>Validates and sets the SMTP configuration based on the email client.</li>
+</ul>
+<h3 id="method-getemailsinfolderfoldername-limit-imapsearchcommand">Method: <code>getEmailsInFolder(folderName, limit, IMAPSearchCommand)</code></h3>
+<ul>
+<li><strong>Parameters</strong>:</li>
+<li><code>folderName</code> (String): The name of the folder to scan in the email account.</li>
+<li><code>limit</code> (String): Maximum number of emails to retrieve.</li>
+<li><code>IMAPSearchCommand</code> (String): The IMAP search command (e.g., "ALL", "UNSEEN", "SEEN").</li>
+<li><strong>Returns</strong>: Array of emails or undefined.</li>
+<li><strong>Description</strong>: </li>
+<li>Retrieves emails from a specific folder in the user's email account.</li>
+<li>Utilizes an external API for email retrieval.</li>
+<li>Handles and reports errors, especially if <code>verbose</code> is enabled.</li>
+</ul>
+<h2 id="additional-information">Additional Information</h2>
+<ul>
+<li><strong>SMTP Configuration Constants</strong>: The class uses predefined SMTP configurations for supported email clients, which are stored in <code>emailClientSMTPConfigs</code>.</li>
+<li><strong>Error Handling</strong>: The class throws an error if the specified email client is not supported.</li>
+<li><strong>External API Usage</strong>: Email retrieval is performed through a call to a specified external API (<code>EMAIL_RETRIEVAL_API</code>).</li>
+</ul>
+<h2 id="usage-example">Usage Example</h2>
+<ul>
+<li>Create an <code>EmailRetriever</code> instance by providing the necessary credentials and client information.</li>
+<li>Call <code>getEmailsInFolder</code> with the appropriate parameters to retrieve emails from a specified folder.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

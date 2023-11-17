@@ -3,6 +3,17 @@
     // langdrive deploy hfAPIKey=1234 path=../shared.csv
     // langdrive deploy hfAPIKey=1234 path=../shared.csv inputValue=colname outputValue=colname 
     // langdrive deploy hfAPIKey=1234 inputPath=../input.csv inputValue=colname outputPath=../output.csv outputValue=colname 
+
+
+    filterCollectionWithMultipleWhereClauseWithLimit:
+      collection: "chat-state"
+      filterKey: []
+      filterData: []
+      operation: []
+      limit: 5
+
+      
+
     /* yaml Example 1
     train:
       path: ../shared.csv

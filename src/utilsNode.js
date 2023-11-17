@@ -28,7 +28,7 @@ async function deploy(config) {
   // Train the model using the spec
   let trainer = await Train.init({verbose: config.verbose, ...config.train}); 
 
-  let trainingResults = await trainer.train();
+  let trainingResults = await trainer.trainModel(config.huggingface);
   
   // Deploy the data needed
   // if(config.heroku){ config.firebase.heroku = heroku.handleHeroku(config); }

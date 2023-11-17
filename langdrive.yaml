@@ -11,19 +11,21 @@ email:
   email: env:GMAIL_EMAIL
 
 huggingface:
-  apiKey: env:HUGGINGFACE_API_KEY
-  models: 
-    - name: "vilsonrodrigues/falcon-7b-instruct-sharded"
-      train: "example.json"
+  token: env:HUGGINGFACE_API_KEY
+  baseModel: 
+    name: "vilsonrodrigues/falcon-7b-instruct-sharded"
+  trainedModel: 
+    name: "karpathic/falcon-7b-instruct-tuned"
+  deployTrainedModel: true
 
 train:
   service: firestore
   query: 
     filterCollectionWithMultipleWhereClauseWithLimit:
       collection: "chat-state"
-      filterKey: []
-      filterData: []
-      operation: []
+      filterKey: ["type"]
+      filterData: ["customer-inquiry-bot"]
+      operation: ["=="]
       limit: 5
   input:
     value: "chat.0.content"

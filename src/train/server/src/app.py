@@ -62,7 +62,35 @@ def completion():
     except Exception as e:
         app.logger.error(str(e))
         return jsonify({"error": "Internal server error"}), 500
+    
 
+
+##
+#
+#  Downloading the model
+#  Endpoint generated using Train.generate_download_url
+#
+##
+
+def zip_folder(folder_path, output_filename):
+    with zipfile.ZipFile(output_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, dirs, files in os.walk(folder_path):
+            for file in files:
+                relative_path = os.path.relpath(os.path.join(root, file), folder_path)
+                zipf.write(os.path.join(root, file), arcname=relative_path)
+
+
+@app.route('/download/<path:folder_path>')
+def download_folder(folder_path):
+    token = request.args.get('token')
+    if token != 'expected_token':       return jsonify({'error': 'Invalid token'}),     401
+    if not os.path.exists(folder_path): return jsonify({'error': 'Folder not found'}),  404
+    output_filename = 'output.zip'
+    zip_folder(folder_path, output_filename)
+    response = send_file(output_filename, as_attachment=True)
+    os.remove(output_filename)
+
+    return response
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

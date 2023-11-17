@@ -12,6 +12,53 @@ class HuggingFace {
     }
 
     /**
+     * 
+     *  @desc deleteFiles uploadFile createRepo 
+     *    - check if the account and or api key is valid
+     *    https://huggingface.co/docs/api-inference/quicktour
+     *    https://huggingface.co/docs/hub/security-tokens 
+     *    // Attempt to use the token with an inference call 
+     *    - check if the account and or api key is valid
+     *    https://huggingface.co/docs/api-inference/quicktour
+     *    https://huggingface.co/docs/hub/security-tokens
+    */ 
+    async tokenIsValid() {
+        console.log("HuggingFace:tokenIsValid:Start");
+        try {
+            let models = await this.inference.listModels(); 
+            console.log(models)
+            return true
+        } 
+        catch (error) {
+            console.error("HuggingFace:tokenIsValid:Error", error);
+            return false
+        }
+    }
+
+    /**
+     * 
+     * @desc deleteFiles uploadFile createRepo 
+     * - check if a hub exists
+     * https://huggingface.co/docs/datasets-server/valid
+     * https://huggingface.co/docs/huggingface_hub/v0.10.0.rc0/en/package_reference/hf_api#:~:text=Hugging%20Face%20Hub%20API,the%20root%20of%20the%20package
+     * 
+    */ 
+    async hubExists() {
+        console.log("HuggingFace:hubExists:Start");
+        try {
+            let models = await this.inference.listModels(); 
+            console.log(models)
+            return true
+        } 
+        catch (error) {
+            console.error("HuggingFace:hubExists:Error", error);
+            return false
+        }
+    }
+
+
+
+    /**
      * @desc Calls a question answer model on hugging face
      * @param {String} model 
      * @param {String} inputs 
@@ -63,7 +110,7 @@ class HuggingFace {
             }
           });
     }
-
+ 
     /**
      * @desc Delete files in hugging face hub
      * @param {String} type - Space | 
@@ -78,8 +125,35 @@ class HuggingFace {
             paths: paths
           });
     }
-    
-
-    
+        
 }
 module.exports = HuggingFace;
+
+/* 
+TODO: 
+- Create or update a model on the hub
+https://huggingface.co/docs/huggingface_hub/guides/model-cards
+https://huggingface.co/docs/hub/models-uploading
+
+- connect a model on the hub to an inference endpoint
+https://huggingface.co/docs/inference-endpoints/index#:~:text=%F0%9F%A4%97%20Inference%20Endpoints%20offers%20a,a%20Hugging%20Face%20Model%20Repository
+https://huggingface.co/inference-endpoints#:~:text=1,Choose%20your%20cloud
+https://moon-ci-docs.huggingface.co/docs/huggingface_hub/pr_1513/en/package_reference/inference_client#:~:text=The%20huggingface_hub%20library%20provides%20an,Hugging%20Face%E2%80%99s%20infrastructure%20for%20free
+
+
+- check to see if a spaces exists
+https://huggingface.co/docs/hub/main/spaces-overview
+https://huggingface.co/docs/huggingface_hub/main/guides/manage-spaces
+
+- update or create a space by uploading a dockerfile
+https://huggingface.co/docs/hub/spaces-sdks-docker-panel
+https://huggingface.co/docs/hub/spaces-sdks-docker
+
+- have that space use dedicated 16gb gpu's 
+https://huggingface.co/docs/huggingface_hub/main/guides/manage-spaces
+https://huggingface.co/docs/huggingface_hub/main/guides/manage-spaces
+
+- code to run the space as well as close it
+https://huggingface.co/docs/hub/main/spaces-overview
+https://huggingface.co/docs/hub/spaces
+*/

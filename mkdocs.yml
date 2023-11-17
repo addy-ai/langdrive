@@ -1,0 +1,26 @@
+site_name: Langdrive
+theme: readthedocs
+site_url: https://addy-ai.com/products/langdrive
+nav:
+  - Home: index.md 
+  - CLI: cli.md  
+  - Security:
+      - security/authentication.md
+      - security/verification.md
+  - Data API: 
+      - Overview: api/dataOverview.md 
+      - DriveUtils: api/gdrive.md
+      - emailRetriever: api/emails.md
+      - Firestore: api/firestore.md 
+  - LLM API:
+      - Overview: api/llmOverview.md
+      - HuggingFace: api/huggingFace.md
+      - Ollama: api/ollama.md
+      - Train: api/train.md  
+      - Heroku: api/heroku.md   
+      - Chatbot: api/chatbot.md
+  - Examples:
+      - examples/demo.md
+      - examples/yaml.md 
+  - Contributors: contributors.md
+  - Demo: demo.md
