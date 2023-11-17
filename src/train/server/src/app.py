@@ -41,23 +41,23 @@ def completion():
             return jsonify({"error": "Missing required params"}), 400
         
         # Get the required attributes from the request body
-        model_name = request.json["model"]
+        model_name = request.json["model_name"]
         training_data = request.json["training_data"]
         hf_token = request.json["hf_token"]
         deploy_to_hugging_face = request.json["deploy_to_hugging_face"]
         model_path = request.json["model_path"]
 
-        dataset_path = "" #TODO: Make CSV from json received in training data
-        # Save that CSV locally
+        print(training_data, hf_token, deploy_to_hugging_face, model_path)
 
-        llm_train = LLMTrain(model_name, dataset_path)
-        # Call make completion which calls LiteLLM which calls Vertex AI
-        endpont = ""
-        if not endpont:
-            raise ValueError("ResponseUndefined")
+        llm_train = LLMTrain(model_name, training_data)
+        llm_train.run_train(model_name, training_data, deploy_to_hugging_face, model_path)
+        
+        # endpont = ""
+        # if not endpont:
+        #     raise ValueError("ResponseUndefined")
 
         # Return response
-        return jsonify({"response": response,
+        return jsonify({"response": "",
                         "success": True}), 200
     except Exception as e:
         app.logger.error(str(e))

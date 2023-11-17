@@ -6,7 +6,10 @@ import bitsandbytes as bnb
 import torch
 import torch.nn as nn
 import transformers
-from datasets import load_dataset
+from datasets import (
+    load_dataset,
+    Dataset
+)
 from peft import (
     LoraConfig,
     PeftConfig,
@@ -27,30 +30,40 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 Train LLMs
 """
 
+
 class LLMTrain:
     # Initialize the class with model and data path
-    def __init__(self, MODEL_NAME, dataset_path) -> None:
+    def __init__(self, MODEL_NAME, training_data) -> None:
         self.MODEL_NAME = MODEL_NAME
-        self.dataset_path = dataset_path
+        self.training_data = training_data
 
     # Method to create transformer model and tokenizer
     def create_model_and_tokenizer(self):
-        # Define Quantization configuration to optimize model 
+        # Define Quantization configuration to optimize model
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_use_double_quant=True,
             bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.bfloat16
+            bnb_4bit_compute_dtype=torch.bfloat16,
+            load_in_8bit_fp32_cpu_offload=True  # Set offloading to CPU.
         )
+        # Create a device map
+        device_map = {
+            0: ["transformer.h.0.", "transformer.h.1."],
+            1: ["transformer.h.2.", "transformer.h.3."],
+            -1: ["transformer.h.4.", "transformer.h.5.", "transformer.h.6.", "transformer.h.7."]
+        }
         # Create Transformer model based on given model name
         model = AutoModelForCausalLM.from_pretrained(
             self.MODEL_NAME,
-            device_map="auto",
+            device_map=device_map,   # Pass a custom device map,
             trust_remote_code=True,
             quantization_config=bnb_config
         )
         # Create a tokenizer for the designated model
         tokenizer = AutoTokenizer.from_pretrained(self.MODEL_NAME)
+        tokenizer.pad_token = tokenizer.eos_token
+        self.tokenizer = tokenizer
         return model, tokenizer
 
     # Method to prepare and configure the model for training
@@ -66,7 +79,8 @@ class LLMTrain:
             bias="none",
             task_type="CAUSAL_LM"
         )
-        model = get_peft_model(model, config) # Apply the defined configuration to the model
+        # Apply the defined configuration to the model
+        model = get_peft_model(model, config)
         self.print_trainable_parameters(model)
         return model
 
@@ -74,24 +88,42 @@ class LLMTrain:
     def generate_future_with_prompt(self, model, tokenizer, prompt):
         generation_config = model.generation_config
         device = "cuda:0"
-        # Encoding the prompt using tokenizer 
+        # Encoding the prompt using tokenizer
         encoding = tokenizer(prompt, return_tensors="pt").to(device)
         with torch.inference_mode():
             outputs = model.generate(
-                input_ids = encoding.input_ids,
-                attention_mask = encoding.attention_mask,
-                generation_config = generation_config
+                input_ids=encoding.input_ids,
+                attention_mask=encoding.attention_mask,
+                generation_config=generation_config
             )
         print(tokenizer.decode(outputs[0], skip_special_tokens=True))
 
-    # Method to load and tokenize the dataset
-    def load_and_tokenize_data(self, tokenizer):
-        data = load_dataset("csv", data_files=self.dataset_path)
-        data = data["train"].shuffle().map(self.generate_and_tokenize_prompt)
-        return data
+    """
+    Method to load and tokenize the dataset
+    It expects an array of object each object of the format:
+    {
+        'input': '{{user_input}}',
+        'output': '{{model_output}}'
+    }
+    """
+
+    def load_training_data(self, data):
+        # Convert array of objects to dictionary format
+        data_dict = {
+            'input': [obj['input'] for obj in data],
+            'output': [obj['output'] for obj in data]
+        }
+        d = Dataset.from_dict(data_dict)
+        d = d.shuffle().map(
+            self.generate_and_tokenize_prompt,
+            batched=True,
+            remove_columns=["input", "output"],
+            load_from_cache_file=False
+        )
+        return d
 
     # Method to fine tune the model
-    def fine_tune_model(self, model, data, tokenizer):    
+    def fine_tune_model(self, model, data, tokenizer):
         training_args = transformers.TrainingArguments(
             per_device_train_batch_size=1,
             gradient_accumulation_steps=4,
@@ -109,24 +141,29 @@ class LLMTrain:
             model=model,
             train_dataset=data,
             args=training_args,
-            data_collator=transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
+            data_collator=transformers.DataCollatorForLanguageModeling(
+                tokenizer, mlm=False)
         )
         return trainer
 
     # Run a complete training cycle
-    def run_train(self, MODEL_NAME, dataset_path, deploy_to_hf, model_path):
+    def run_train(self, MODEL_NAME, training_data, deploy_to_hf, model_path):
         self.MODEL_NAME = MODEL_NAME
-        self.dataset_path = dataset_path
+        print("create_model_and_tokenizer")
         model, tokenizer = self.create_model_and_tokenizer()
+        print("prepare_and_configure_model")
         model = self.prepare_and_configure_model(model)
 
         prompt = """
         <human>: midjourney prompt for a girl sit on the mountain
         <assistant>:
         """.strip()
+        print("generating future with prompt")
         self.generate_future_with_prompt(model, tokenizer, prompt)
+        print("loading training data")
+        data = self.load_training_data(training_data)
+        print("\n\ndata:\n\n", data)
 
-        data = self.load_and_tokenize_data(tokenizer)
         trainer = self.fine_tune_model(model, data, tokenizer)
         trainer.train()
 
@@ -143,15 +180,16 @@ class LLMTrain:
     # Generate dialog prompt with human and assistant tags
     def generate_prompt(self, data_point):
         return f"""
-        <human>: {data_point["User"]}
-        <assistant>: {data_point["Prompt"]}
+        <human>: {data_point["input"]}
+        <assistant>: {data_point["output"]}
         """.strip()
 
     # Tokenize the generated dialog prompt
     def generate_and_tokenize_prompt(self, data_point):
         full_prompt = self.generate_prompt(data_point)
         # padding and truncation are set to True for handling sequences of different length.
-        tokenized_full_prompt = self.tokenizer(full_prompt, padding=True, truncation=True)
+        tokenized_full_prompt = self.tokenizer(
+            full_prompt, padding=True, truncation=True)
         return tokenized_full_prompt
 
     # Print the number of parameters that are trainable in the model
@@ -163,9 +201,9 @@ class LLMTrain:
         all_param = 0
 
         for _, param in model.named_parameters():
-            all_param += param.numel() # Total parameters
+            all_param += param.numel()  # Total parameters
             if param.requires_grad:
-                trainable_params += param.numel() # Trainable parameters
+                trainable_params += param.numel()  # Trainable parameters
         print(
             f"trainable params: {trainable_params} || all params: {all_param} || trainables%: {100 * trainable_params / all_param}"
         )
