@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "nodemon ./src/start_server.js",
-    "test": "node ./src/server/test.mjs",
+    "test": "node ./src/server/test.mjs", 
     "deploy": "npm deploy"
   },
   "keywords": [],
