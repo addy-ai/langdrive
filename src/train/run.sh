@@ -1,4 +1,9 @@
 #!/bin/bash
+# This script assumes you have git installed and have cloned the LangDrive git repo from here
+# https://github.com/addy-ai/langdrive.git and are in the langdrive directory
+# If you haven't done that yet
+# please run "sudo apt-get install git && git clone https://github.com/addy-ai/langdrive.git && cd langdrive"
+
 
 # Auto configure Python environment for LLM training
 
@@ -8,18 +13,6 @@ sudo apt-get update
 
 # Finished system udpate
 echo "LangDrive - Finished system update"
-
-# Install git
-echo "LangDrive - Installing git"
-sudo apt-get install git
-
-# Cloning LangDrive repo
-echo "LangDrive - Cloning repo"
-git clone https://github.com/addy-ai/langdrive.git
-
-# Changing into LangDrive directory
-echo "LangDrive - Changing into LangDrive directory"
-cd langdrive
 
 # Install python
 echo "LangDrive - Installing Python3"
