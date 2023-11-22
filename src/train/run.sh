@@ -13,6 +13,14 @@ echo "LangDrive - Finished system update"
 echo "LangDrive - Installing git"
 sudo apt-get install git
 
+# Cloning LangDrive repo
+echo "LangDrive - Cloning repo"
+git clone https://github.com/addy-ai/langdrive.git
+
+# Changing into LangDrive directory
+echo "LangDrive - Changing into LangDrive directory"
+cd langdrive
+
 # Install python
 echo "LangDrive - Installing Python3"
 sudo apt-get install python3
