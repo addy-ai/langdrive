@@ -22,10 +22,6 @@ sudo apt-get install python3
 echo "LangDrive - Installing Pip3"
 sudo apt-get install python3-pip
 
-# Changing into the src/train directory
-echo "LangDrive - Changing into src/train directory"
-cd src/train
-
 # Install venv 
 echo "LangDrive - Installing venv"
 sudo apt-get install python3-venv
