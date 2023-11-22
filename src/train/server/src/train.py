@@ -40,31 +40,29 @@ class LLMTrain:
     # Method to create transformer model and tokenizer
     def create_model_and_tokenizer(self):
         # Define Quantization configuration to optimize model
+        
+
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_use_double_quant=True,
             bnb_4bit_quant_type="nf4",
             bnb_4bit_compute_dtype=torch.bfloat16,
-            load_in_8bit_fp32_cpu_offload=True  # Set offloading to CPU.
         )
-        # Create a device map
-        device_map = {
-            0: ["transformer.h.0.", "transformer.h.1."],
-            1: ["transformer.h.2.", "transformer.h.3."],
-            -1: ["transformer.h.4.", "transformer.h.5.", "transformer.h.6.", "transformer.h.7."]
-        }
-        # Create Transformer model based on given model name
+
+        # Create Transformer model with BnB quantization based on given model name
         model = AutoModelForCausalLM.from_pretrained(
             self.MODEL_NAME,
-            device_map=device_map,   # Pass a custom device map,
             trust_remote_code=True,
             quantization_config=bnb_config
         )
+
         # Create a tokenizer for the designated model
         tokenizer = AutoTokenizer.from_pretrained(self.MODEL_NAME)
         tokenizer.pad_token = tokenizer.eos_token
         self.tokenizer = tokenizer
+
         return model, tokenizer
+
 
     # Method to prepare and configure the model for training
     def prepare_and_configure_model(self, model):
@@ -87,9 +85,17 @@ class LLMTrain:
     # Method to generate result based on user provided prompt
     def generate_future_with_prompt(self, model, tokenizer, prompt):
         generation_config = model.generation_config
+
+        generation_config.max_new_tokens = 200
+        generation_config.temperature = 0.7
+        generation_config.top_p = 0.7
+        generation_config.num_return_sequences = 1
+        generation_config.pad_token_id = tokenizer.eos_token_id
+        generation_config.eos_token_id = tokenizer.eos_token_id
+
         device = "cuda:0"
         # Encoding the prompt using tokenizer
-        encoding = tokenizer(prompt, return_tensors="pt").to(device)
+        encoding = tokenizer(prompt, return_tensors="pt").to(device)  # Move encoding to CPU
         with torch.inference_mode():
             outputs = model.generate(
                 input_ids=encoding.input_ids,
@@ -114,12 +120,7 @@ class LLMTrain:
             'output': [obj['output'] for obj in data]
         }
         d = Dataset.from_dict(data_dict)
-        d = d.shuffle().map(
-            self.generate_and_tokenize_prompt,
-            batched=True,
-            remove_columns=["input", "output"],
-            load_from_cache_file=False
-        )
+        d = d.shuffle().map(self.generate_and_tokenize_prompt)
         return d
 
     # Method to fine tune the model
@@ -159,6 +160,7 @@ class LLMTrain:
         <assistant>:
         """.strip()
         print("generating future with prompt")
+        # Test the original model
         self.generate_future_with_prompt(model, tokenizer, prompt)
         print("loading training data")
         data = self.load_training_data(training_data)
