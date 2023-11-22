@@ -1,5 +1,7 @@
 # App Verification
 
+In order to deploy an app that connects to googleDrive, you will typically need higher degrees of app verification. You can follow these directions to help you get started.
+
 https://support.google.com/cloud/answer/9110914
 
 If your app requests scopes categorized as sensitive or restricted, you will probably need to complete the verification process (see, however, the exceptions). Depending on the degree of access you need — read-only, read and write, and so on.
