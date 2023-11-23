@@ -1,6 +1,12 @@
 # Training Abstraction
 Calls a Python process to run the training process
 
+# Quick Startup Training Image
+- Running the run.sh script
+    - Make sure you're in the train folder
+    - From the train directory run `chmod +x run.sh && ./run.sh`
+
+
 # Running locally
 - CD into the /train root dir
 - Create a python virtual environment

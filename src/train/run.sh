@@ -4,6 +4,9 @@
 # If you haven't done that yet
 # please run "sudo apt-get install git && git clone https://github.com/addy-ai/langdrive.git && cd langdrive"
 
+# cd into the train directory to run this script
+# Please be sure to give this script execution permissions before running
+# run `chmod +x run.sh && ./run.sh`
 
 # Auto configure Python environment for LLM training
 
@@ -51,6 +54,7 @@ if [ -e requirements.txt ]; then
 
     # Pip Install 
     echo "Installing requirements from requirements.txt"
+    pip install Flask flask_cors scipy gunicorn
     pip install -r requirements.txt
 
     # If app.py exists in the directory, run it
