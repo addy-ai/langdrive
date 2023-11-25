@@ -9,7 +9,7 @@
   "scripts": {
     "start": "nodemon ./src/start_server.js",
     "test": "node ./src/server/test.mjs",
-    "swap": "mv docs docs_temp_directory && mv docs_temp docs && mv docs_temp_directory docs_temp",
+    "swap": "mv docs docs_temp_directory ; mv docs_temp docs ; mv docs_temp_directory docs_temp",
     "build": "node mkdocs.js"
   },
   "keywords": [],
