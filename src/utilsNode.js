@@ -21,13 +21,15 @@ async function train(config) {
       return await classInstance?.init({verbose: config.verbose, ...config[service]})
     }
   }
-  config.train.service = await initClass(config.train.service)
-  config.train.inputService = await initClass(config.train.input.service)
-  config.train.outputService = await initClass(config.train.output.service)
+  config.train.service = config.train.service && await initClass(config.train.service)
+  config.train.inputService = config.train.input.service && await initClass(config.train.input.service)
+  config.train.outputService = config.train.output.service && await initClass(config.train.output.service)
  
   console.log(config.train.service)
   // Train the model using the spec
-  let trainer = await Train.init({verbose: config.verbose, ...config.train}); 
+  let trainer = await Train.init({verbose: config.verbose, ...config.train});
+
+  console.log("\n\n\n CHECK OUT THESE HF VALUES\n\n", config.huggingface, "\n\n\n")
 
   let trainingResults = await trainer.trainModel(config.huggingface);
 

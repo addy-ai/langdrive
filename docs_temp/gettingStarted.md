@@ -74,12 +74,10 @@ Training on Hugging Face and hosting the weights on Hugging Face hubs:
 
 <b>NOTE</b>: To specify the model you want to train and where to host it:
 ```
-  huggingface:
+  huggingface: 
     hfToken: env:HUGGINGFACE_API_KEY
-    baseModel: 
-      name: "vilsonrodrigues/falcon-7b-instruct-sharded"
-    trainedModel: 
-      name: "karpathic/falcon-7b-instruct-tuned"
+    baseModel: vilsonrodrigues/falcon-7b-instruct-sharded
+    trainedModel: karpathic/falcon-7b-instruct-tuned
     deployToHf: true 
 ```
 
@@ -106,7 +104,7 @@ Within the `train` entry, setting a `service` and `query` will do the trick. Set
 langdrive.yaml
 ```
     train:
-        service: 'firebase' 
+        service: 'firestore' 
         query:
           filterCollectionWithMultipleWhereClauseWithLimit:
               collection: "chat-state"                
@@ -167,7 +165,7 @@ The request accepts the following data in JSON format.
 - Type: Array
 - Required: Yes
 
-`hfModelPath`: The hugging face model repository to deploy the model to after training is complete
+`hfModelPath`: The hugging face model repository to deploy the model to after training is complete. This path must exist before being used
 
 - Type: String
 - Required: No

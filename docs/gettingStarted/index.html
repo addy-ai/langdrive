@@ -202,12 +202,10 @@ email:
         deployToHf: false 
 </code></pre>
 <p><b>NOTE</b>: To specify the model you want to train and where to host it:</p>
-<pre><code>  huggingface:
+<pre><code>  huggingface: 
     hfToken: env:HUGGINGFACE_API_KEY
-    baseModel: 
-      name: &quot;vilsonrodrigues/falcon-7b-instruct-sharded&quot;
-    trainedModel: 
-      name: &quot;karpathic/falcon-7b-instruct-tuned&quot;
+    baseModel: vilsonrodrigues/falcon-7b-instruct-sharded
+    trainedModel: karpathic/falcon-7b-instruct-tuned
     deployToHf: true 
 </code></pre>
 <p>Simple enough, huh? Here comes the final step.</p>
@@ -224,7 +222,7 @@ email:
 <p>Within the <code>train</code> entry, setting a <code>service</code> and <code>query</code> will do the trick. Set a data-connector as the <code>service</code> and one of its methods (and its args) as the <code>query</code> value. This will require exploring class documentation.</p>
 <p>langdrive.yaml</p>
 <pre><code>    train:
-        service: 'firebase' 
+        service: 'firestore' 
         query:
           filterCollectionWithMultipleWhereClauseWithLimit:
               collection: &quot;chat-state&quot;                
@@ -273,7 +271,7 @@ email:
 <li>Type: Array</li>
 <li>Required: Yes</li>
 </ul>
-<p><code>hfModelPath</code>: The hugging face model repository to deploy the model to after training is complete</p>
+<p><code>hfModelPath</code>: The hugging face model repository to deploy the model to after training is complete. This path must exist before being used</p>
 <ul>
 <li>Type: String</li>
 <li>Required: No</li>

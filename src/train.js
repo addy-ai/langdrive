@@ -57,11 +57,11 @@ class Train {
     */
     // data = inp || this.data
     let sendThis = {
-      "baseModel": huggingfaceInfo.baseModel.name,
+      "baseModel": huggingfaceInfo.baseModel,
       "trainingData": this.data,
-      "hfToken": huggingfaceInfo.token,
+      "hfToken": huggingfaceInfo.hfToken,
       "deployToHf": huggingfaceInfo.deployToHf,
-      "hfModelPath": huggingfaceInfo.hfModelPath.name,                             // where to save the fine tuned model
+      "hfModelPath": huggingfaceInfo.trainedModel,                             // where to save the fine tuned model
     }
     console.log('DriveTrain:trainModel:sendThis', sendThis)
     let model = await fetch('https://api.langdrive.ai/train', {
@@ -78,6 +78,8 @@ class Train {
     if (this.verbose) console.log('DriveTrain:PrepareData()');
     let inp = this.input = await this.getData('input');
     let out = this.output = await this.getData('output');
+
+    console.log('DriveTrain:PrepareData:inp', inp, out)
 
     // create a new array of objects with the input and output data
     let data = this.data = inp.map((input, i) => { return { input, output: out[i] } })
@@ -142,6 +144,7 @@ class Train {
     if (!data && path) { data = await this.getDataFromUrl(path); }
     // Get raw Data from Service   
     else if (!data && service && query) { data = await this.getDataFromService(this[`${lbl}Service`], query) }
+    console.log('RAW DATA WE WILL PULL VALUES FROM', data)
     // Retrieve Data from raw Data  
     let fin = this.getValuesFromData(data, value)
     return fin
