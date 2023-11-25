@@ -1,17 +1,22 @@
-# Vertex AI Microservice
-Simply calls vertex AI
+# Training Abstraction
+Calls a Python process to run the training process
+
+# Quick Startup Training Image
+- Running the run.sh script
+    - Make sure you're in the train folder
+    - From the train directory run `chmod +x run.sh && ./run.sh`
 
 
 # Running locally
-- Create a python environment
+- CD into the /train root dir
+- Create a python virtual environment
     `python3 -m venv .venv`
-    I call it `.venv` folder which is gitignored
 - Activate the environment
-    `source .venv/bin/activate`
+    For Mac OS, run: `source .venv/bin/activate`
 
 
 # Build Server to Google Cloud Run
-- Make sure you have a Dockerfile
+- Make sure you have a Dockerfile in the `/server` directory 
 - cd into the server folder and run the following command
 ``
 gcloud builds submit --tag gcr.io/<project-id>/<cloud_run_app_name>

@@ -24,6 +24,9 @@ from transformers import (
     BitsAndBytesConfig
 )
 
+
+from huggingface_hub import HfFolder, _login
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 """
@@ -33,30 +36,39 @@ Train LLMs
 
 class LLMTrain:
     # Initialize the class with model and data path
-    def __init__(self, MODEL_NAME, training_data) -> None:
+    def __init__(self, MODEL_NAME, training_data, hf_token) -> None:
         self.MODEL_NAME = MODEL_NAME
         self.training_data = training_data
+        self.HUGGINGFACE_TOKEN = hf_token
+        # os.environ['HF_HOME'] = '/content'  # Sets the Hugging Face cache directory
+
+        if 'HF_HOME' in os.environ:
+            print("HF_HOME:", os.environ['HF_HOME'])
+        else:
+            print("HF_HOME environment variable is not set.")
+
+        os.environ.pop('HF_HOME', None)  # Remove HF_HOME if it exists
+
+        os.environ['HUGGINGFACE_HUB_TOKEN'] = hf_token
+        HfFolder.save_token(hf_token)
+
+        self.check_if_hugging_face_token_is_set()
 
     # Method to create transformer model and tokenizer
     def create_model_and_tokenizer(self):
         # Define Quantization configuration to optimize model
+
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_use_double_quant=True,
             bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.bfloat16,
-            load_in_8bit_fp32_cpu_offload=True  # Set offloading to CPU.
+            bnb_4bit_compute_dtype=torch.bfloat16
         )
-        # Create a device map
-        device_map = {
-            0: ["transformer.h.0.", "transformer.h.1."],
-            1: ["transformer.h.2.", "transformer.h.3."],
-            -1: ["transformer.h.4.", "transformer.h.5.", "transformer.h.6.", "transformer.h.7."]
-        }
+
         # Create Transformer model based on given model name
         model = AutoModelForCausalLM.from_pretrained(
             self.MODEL_NAME,
-            device_map=device_map,   # Pass a custom device map,
+            device_map="auto",
             trust_remote_code=True,
             quantization_config=bnb_config
         )
@@ -87,6 +99,14 @@ class LLMTrain:
     # Method to generate result based on user provided prompt
     def generate_future_with_prompt(self, model, tokenizer, prompt):
         generation_config = model.generation_config
+
+        generation_config.max_new_tokens = 200
+        generation_config.temperature = 0.7
+        generation_config.top_p = 0.7
+        generation_config.num_return_sequences = 1
+        generation_config.pad_token_id = tokenizer.eos_token_id
+        generation_config.eos_token_id = tokenizer.eos_token_id
+
         device = "cuda:0"
         # Encoding the prompt using tokenizer
         encoding = tokenizer(prompt, return_tensors="pt").to(device)
@@ -96,7 +116,8 @@ class LLMTrain:
                 attention_mask=encoding.attention_mask,
                 generation_config=generation_config
             )
-        print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+        print("Decoded: ", tokenizer.decode(
+            outputs[0], skip_special_tokens=True))
 
     """
     Method to load and tokenize the dataset
@@ -114,16 +135,11 @@ class LLMTrain:
             'output': [obj['output'] for obj in data]
         }
         d = Dataset.from_dict(data_dict)
-        d = d.shuffle().map(
-            self.generate_and_tokenize_prompt,
-            batched=True,
-            remove_columns=["input", "output"],
-            load_from_cache_file=False
-        )
+        d = d.shuffle().map(self.generate_and_tokenize_prompt)
         return d
 
     # Method to fine tune the model
-    def fine_tune_model(self, model, data, tokenizer):
+    def fine_tune_model(self, model, data, tokenizer, deploy_to_hf, hf_token, hub_model_id, model_path):
         training_args = transformers.TrainingArguments(
             per_device_train_batch_size=1,
             gradient_accumulation_steps=4,
@@ -132,50 +148,85 @@ class LLMTrain:
             fp16=True,
             save_total_limit=3,
             logging_steps=1,
-            output_dir="experiments",
+            output_dir="experiments-1",
+            overwrite_output_dir=True,
             optim="paged_adamw_8bit",
             lr_scheduler_type="cosine",
             warmup_ratio=0.05,
+
+            # should_save=deploy_to_hf,
+            # push_to_hub=deploy_to_hf,
+
+            hub_model_id=hub_model_id,
+            hub_token=hf_token,
         )
         trainer = transformers.Trainer(
             model=model,
             train_dataset=data,
             args=training_args,
             data_collator=transformers.DataCollatorForLanguageModeling(
-                tokenizer, mlm=False)
+                tokenizer, mlm=False),
         )
+
         return trainer
 
     # Run a complete training cycle
-    def run_train(self, MODEL_NAME, training_data, deploy_to_hf, model_path):
+    def run_train(self, MODEL_NAME, training_data, deploy_to_hf, hf_token, model_path):
         self.MODEL_NAME = MODEL_NAME
-        print("create_model_and_tokenizer")
         model, tokenizer = self.create_model_and_tokenizer()
-        print("prepare_and_configure_model")
         model = self.prepare_and_configure_model(model)
-
         prompt = """
         <human>: midjourney prompt for a girl sit on the mountain
         <assistant>:
         """.strip()
-        print("generating future with prompt")
-        self.generate_future_with_prompt(model, tokenizer, prompt)
-        print("loading training data")
-        data = self.load_training_data(training_data)
-        print("\n\ndata:\n\n", data)
 
-        trainer = self.fine_tune_model(model, data, tokenizer)
+        self.generate_future_with_prompt(model, tokenizer, prompt)
+        data = self.load_training_data(training_data)
+
+        push_to_hub_model_id = ""
+
+        if model_path and "/" in model_path:
+            push_to_hub_model_id = model_path.split(
+                "/")[1]  # Get everything after the first "/"
+
+        trainer = self.fine_tune_model(
+            model, data, tokenizer, deploy_to_hf, hf_token, push_to_hub_model_id, model_path)
+        model.config.use_cache = False
+
         trainer.train()
 
         # Deploy model to Hugging Face Model Hub if necessary
-        if (deploy_to_hf):
-            self.deploy_to_hugging_face(model, model_path)
+        if (deploy_to_hf and self.check_if_hugging_face_token_is_set()):
+            # Trainer push to hub
+            trainer.model.push_to_hub(model_path)
+            print("Successfully deployed to hub", model_path)
+            return True
+
+        # If everything went well, return true
+        return True
 
     # Method to save and push the trained model to Hugging Face Model Hub
-    def deploy_to_hugging_face(self, model, model_path):
+
+    def deploy_to_hugging_face(self, model, model_path, hf_token):
         model.save_pretrained("trained-model")
         PEFT_MODEL = model_path
         model.push_to_hub(PEFT_MODEL, use_auth_token=True)
+
+    def check_if_hugging_face_token_is_set(self):
+        # Get the path to the token file
+        token_file = HfFolder.path_token
+
+        print("Token file path:", token_file)
+
+        # Check if the token file exists and read its content
+        if os.path.isfile(token_file):
+            with open(token_file, 'r') as file:
+                saved_token = file.read().strip()
+                print("Token found:", saved_token)
+                return True
+        else:
+            print("No token found.")
+            return False
 
     # Generate dialog prompt with human and assistant tags
     def generate_prompt(self, data_point):
@@ -187,9 +238,11 @@ class LLMTrain:
     # Tokenize the generated dialog prompt
     def generate_and_tokenize_prompt(self, data_point):
         full_prompt = self.generate_prompt(data_point)
+
         # padding and truncation are set to True for handling sequences of different length.
         tokenized_full_prompt = self.tokenizer(
             full_prompt, padding=True, truncation=True)
+
         return tokenized_full_prompt
 
     # Print the number of parameters that are trainable in the model

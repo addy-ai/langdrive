@@ -3,6 +3,7 @@ from request_controller import RequestController
 from train import LLMTrain
 from flask_cors import CORS
 
+import sys
 import os
 
 app = Flask(__name__)
@@ -47,21 +48,26 @@ def completion():
         deploy_to_hugging_face = request.json["deploy_to_hugging_face"]
         model_path = request.json["model_path"]
 
-        print(training_data, hf_token, deploy_to_hugging_face, model_path)
+        print(model_name, deploy_to_hugging_face, model_path)
 
-        llm_train = LLMTrain(model_name, training_data)
-        llm_train.run_train(model_name, training_data, deploy_to_hugging_face, model_path)
-        
-        # endpont = ""
-        # if not endpont:
-        #     raise ValueError("ResponseUndefined")
+        llm_train = LLMTrain(model_name, training_data, hf_token)
+        train = llm_train.run_train(model_name, training_data, deploy_to_hugging_face, hf_token, model_path)
+
+        if not train:
+            raise ValueError("ResponseUndefined")
 
         # Return response
-        return jsonify({"response": "",
-                        "success": True}), 200
+        return jsonify({"success": True,
+                        "model_path": model_path}), 200
+
     except Exception as e:
-        app.logger.error(str(e))
-        return jsonify({"error": "Internal server error"}), 500
+        exc_type, exc_value, tb = sys.exc_info()
+        filename = tb.tb_frame.f_code.co_filename
+        func_name = tb.tb_frame.f_code.co_name
+        error_msg = f"{exc_type.__name__}: {exc_value}"
+        app.logger.error(
+            f"Error: {error_msg}, File: {filename}, Function: {func_name}, Line: {tb.tb_lineno}, Error(e): {e}")
+        return jsonify({"error": "Internal server error", "message": error_msg}), 500
     
 
 
