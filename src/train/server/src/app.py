@@ -32,9 +32,9 @@ def index():
 def completion():
     try:
         # Check if the required attributes are present in the request body
-        required_fields = ["model_name", "training_data",
-                           "hf_token", "deploy_to_hugging_face",
-                           "model_path"]
+        required_fields = ["baseModel", "trainingData",
+                           "hfToken", "deployToHf",
+                           "hfModelPath"]
         is_valid = RequestController.validate_request(request.json, required_fields)
     
         if not is_valid:
@@ -42,11 +42,11 @@ def completion():
             return jsonify({"error": "Missing required params"}), 400
         
         # Get the required attributes from the request body
-        model_name = request.json["model_name"]
-        training_data = request.json["training_data"]
-        hf_token = request.json["hf_token"]
-        deploy_to_hugging_face = request.json["deploy_to_hugging_face"]
-        model_path = request.json["model_path"]
+        model_name = request.json["baseModel"]
+        training_data = request.json["trainingData"]
+        hf_token = request.json["hfToken"]
+        deploy_to_hugging_face = request.json["deployToHf"]
+        model_path = request.json["hfModelPath"]
 
         print(model_name, deploy_to_hugging_face, model_path)
 

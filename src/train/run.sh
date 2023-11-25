@@ -52,7 +52,7 @@ cd server/src
 # If requirements.txt exists in the directory
 if [ -e requirements.txt ]; then
 
-    # Pip Install 
+    # Pip Install
     echo "Installing requirements from requirements.txt"
     pip install Flask flask_cors scipy gunicorn
     pip install -r requirements.txt
