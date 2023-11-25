@@ -57,14 +57,14 @@ class Train {
     */
     // data = inp || this.data
     let sendThis = {
-      "model_name": huggingfaceInfo.baseModel.name,
-      "training_data": this.data,
-      "hf_token": huggingfaceInfo.token,
-      "deploy_to_hugging_face": huggingfaceInfo.deployTrainedModel,
-      "model_path": huggingfaceInfo.trainedModel.name,                             // where to save the fine tuned model
+      "baseModel": huggingfaceInfo.baseModel.name,
+      "trainingData": this.data,
+      "hfToken": huggingfaceInfo.token,
+      "deployToHf": huggingfaceInfo.deployToHf,
+      "hfModelPath": huggingfaceInfo.hfModelPath.name,                             // where to save the fine tuned model
     }
     console.log('DriveTrain:trainModel:sendThis', sendThis)
-    let model = await fetch('https://langdrive-train-public-zquodzeuva-uc.a.run.app/train', {
+    let model = await fetch('https://api.langdrive.ai/train', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(sendThis)
