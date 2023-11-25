@@ -11,7 +11,7 @@ const SCOPES = ["https://www.googleapis.com/auth/drive.metadata.readonly"];
 // time.
 const TOKEN_PATH = path.join(process.cwd(), "token.json");
 console.log({ cwd:process.cwd(), TOKEN_PATH });
-const CREDENTIALS_PATH = path.join(process.cwd(), "google_desktop_client.json");
+const CREDENTIALS_PATH = path.join(process.cwd(), "secrets/google_desktop_client.json");
 
 async function loadSavedCredentialsIfExist() {
   try {

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://addy-ai.com/products/langdrive/api/huggingFace/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>HuggingFace - Langdrive</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "HuggingFace";
+        var mkdocs_page_input_path = "api/huggingFace.md";
+        var mkdocs_page_url = "/products/langdrive/api/huggingFace/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Langdrive
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../gettingStarted/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../yaml/">Yaml</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../cli/">CLI</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../demo/">Demo</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../contributors/">Contributors</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../security/authentication/">App Authentication</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../security/verification/">App Verification</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Data Connectors</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../dataOverview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../gdrive/">DriveUtils</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../email/">Email</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../firestore/">Firestore</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">LLM Services</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../llmOverview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">HuggingFace</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#method-tokenisvalid">Method: tokenIsValid()</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#method-hubexists">Method: hubExists()</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#method-questionansweringmodel-inputs">Method: questionAnswering(model, inputs)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#method-createreporepopath-type">Method: createRepo(repoPath, type)</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../train/">Train</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../heroku/">Heroku</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../chatbot/">Chatbot</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Langdrive</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">LLM Services</li>
+      <li class="breadcrumb-item active">HuggingFace</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="huggingface-documentation">HuggingFace Documentation</h1>
+<p>The <code>HuggingFace</code> class is a wrapper around the <code>HfInference</code> class from <code>@huggingface/inference</code> and some functions (<code>createRepo</code>, <code>uploadFile</code>, <code>deleteFiles</code>) from <code>@huggingface/hub</code>. This class provides methods that enable users to perform actions such as validating tokens, checking if a hub exists, asking questions, creating repositories, uploading files, and deleting files on the Hugging Face platform.</p>
+<h2 id="method-tokenisvalid">Method: <code>tokenIsValid()</code></h2>
+<p>This method checks if the provided access token is valid by making an inference call using the token. This method can help to avoid problems further down the line by ensuring that the token is valid before performing any operation.</p>
+<ul>
+<li>
+<p><strong>Returns</strong>: A boolean indicating whether the token is valid (true) or invalid (false).</p>
+</li>
+<li>
+<p><strong>Description</strong>:</p>
+</li>
+<li>The method lists the models available on the Hugging Face platform and, based on the success or failure of this operation, it returns a boolean.</li>
+<li>
+<p>If an error occurs during the execution of the method, this error is logged and the method returns <code>false</code>.</p>
+</li>
+<li>
+<p><strong>Parameters</strong>: This method has no parameters.</p>
+</li>
+</ul>
+<h2 id="method-hubexists">Method: <code>hubExists()</code></h2>
+<p>This method is used to check if a hub exists on the Hugging Face platform.</p>
+<ul>
+<li>
+<p><strong>Returns</strong>: A boolean indicating whether the hub exists (true) or not (false).</p>
+</li>
+<li>
+<p><strong>Description</strong>: </p>
+<ul>
+<li>This method works by listing the models of the Hugging Face platform and, based on the success or failure of this operation, it returns a boolean.</li>
+<li>If an error occurs during the execution of the method, this error is logged and the method returns <code>false</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Parameters</strong>: This method does not take any parameters.</p>
+</li>
+</ul>
+<h2 id="method-questionansweringmodel-inputs">Method: <code>questionAnswering(model, inputs)</code></h2>
+<p>This method runs a question answering model on Hugging Face, using the provided model and inputs.</p>
+<ul>
+<li>
+<p><strong>Returns</strong>: The result of the question answering model inference.</p>
+</li>
+<li>
+<p><strong>Description</strong>:</p>
+</li>
+<li>
+<p>This method uses the <code>questionAnswer</code> method from the <code>HfInference</code> instance (<code>this.inference</code>) to answer questions.</p>
+</li>
+<li>
+<p><strong>Parameters</strong>:</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+<th>Accepted Values/Data Types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>model</td>
+<td>The model to be used</td>
+<td>String</td>
+</tr>
+<tr>
+<td>inputs</td>
+<td>The inputs to the model</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<h2 id="method-createreporepopath-type">Method: <code>createRepo(repoPath, type)</code></h2>
+<ul>
+<li>
+<p><strong>Returns</strong>: The response from the <code>createRepo</code> function from the <code>@huggingface/hub</code> package.</p>
+</li>
+<li>
+<p><strong>Description</strong>:</p>
+</li>
+<li>
+<p>This method is used to create a new repository or folder on the Hugging Face hub.</p>
+</li>
+<li>
+<p><strong>Parameters</strong>:</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+<th>Accepted Values/Data Types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>repoPath</td>
+<td>The path to the new repository</td>
+<td>String</td>
+</tr>
+<tr>
+<td>type</td>
+<td>The type of the new repository</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<p>For more methods like <code>uploadFile</code>, <code>deleteFiles</code>, etc., the template provided above should be followed to document them.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../llmOverview/" class="btn btn-neutral float-left" title="Overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../train/" class="btn btn-neutral float-right" title="Train">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../llmOverview/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../train/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

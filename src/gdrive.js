@@ -19,7 +19,7 @@ else if(this.appType === "web") {
 // google.auth.fromJSON(credentials);
 // await authenticate({ scopes: this.scopes, keyfilePath: this.keyFilePath }); -> We need this one.
 
-class DriveUtils {
+class Gdrive {
   constructor(props) {
     this.verbose = props.verbose;
     this.appType = props.appType || 'false';
@@ -42,7 +42,7 @@ class DriveUtils {
           else { throw new Error('Drive: Either keyFile or keyFileContents must be provided');}
           // credentials = require(this.keyFile) 
           // auth = google.auth.fromJSON(credentials) 
-        }   
+        } 
         if (this.appType === "desktop") {
           // When using a keyfile or keyFileContents, 
           // We actually need to perfrom the auth and save the resulting token to a file
@@ -450,9 +450,80 @@ class DriveUtils {
       return error;
     }
   }
-
+  
   // CALLED BEFORE CREATING AN INSTANCE
   // GET THE LOGIN URL TO GET THE ACCESS TOKEN TO INITIALIZE THE CHATBOT
+  static createOAuthServer() { 
+    const express = require("express");
+    const session = require("express-session");
+    const SQLiteStore = require("connect-sqlite3")(session);
+    const app = express();
+    app.use(
+      session({
+        secret: ""+Math.random() * 100000000000000000,
+        resave: false,
+        saveUninitialized: false,
+        cookie: { secure: false },
+        store: new SQLiteStore({ db: "sessions.db", table: "sessions", dir: "." }),
+      })
+    );
+    app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
+    app.listen(3000, () => console.log(`Server running on http://localhost:3000`));
+    app.use(express.json()); 
+
+    // ... (continue with your existing routes)
+
+    // Create and return the OAuth URL for Google authentication
+    app.get("/auth/google", (req, res) => {
+      let authUrl = DriveUtils.getAuthUrl({
+        redirect_uri, 
+        scope: "https://www.googleapis.com/auth/drive",
+        client_id: GOOGLE_WEB_CLIENT_ID
+      });
+      res.redirect(authUrl);
+    });
+    app.get("/auth/google/callback", async (req, res) => {
+      const { code } = req.query;
+      let callback = await DriveUtils.handleAuthCallback({
+        code,
+        client_id: GOOGLE_WEB_CLIENT_ID,
+        client_secret: GOOGLE_WEB_CLIENT_SECRET,
+        redirect_uri
+      });
+      // console.log("auth/google/callback", { callback });
+      req.session.access_token = callback.access_token;
+      req.session.refresh_token = callback.refresh_token;
+      req.session.timestamp = new Date().toISOString();
+      // console.log("SAVING access_token: ", req.session.access_token);
+      callback.access_token ? res.redirect("/chat") : res.status(500).send("Error during authentication");
+    });
+
+    app.get("/chat", checkAccessToken, (req, res, next) => {
+      res.sendFile(__dirname + "/client/chatbot.html");
+    });
+
+    async function checkAccessToken(req, res, next) {
+      let access_token = req.session.access_token;
+      if (access_token) {
+        access_token = await DriveUtils.checkAndRefresh({
+          access_token,
+          timestamp: req.session.timestamp,
+          refresh_token: req.session.refresh_token,
+          client_id: GOOGLE_WEB_CLIENT_ID,
+          client_secret: GOOGLE_WEB_CLIENT_SECRET
+        });
+        req.session.timestamp = new Date().toISOString();
+      }
+      if (!access_token) {
+        // console.log("NO ACCESS TOKEN ");
+        return res.redirect("/auth/google");
+      }
+      req.session.access_token = access_token;
+      next();
+    }
+    return app;
+  }
+
   static getAuthUrl = config => {
     const authQuery = querystring.stringify({
       redirect_uri: config.redirect_uri,
@@ -540,10 +611,35 @@ class DriveUtils {
       throw error;
     }
   };
+
+  // Refresh the access token and return back the new access token
+  static init = async config => {
+    try {
+      const { data } = await axios.post(
+        "https://oauth2.googleapis.com/token",
+        querystring.stringify({
+          client_secret: config.client_secret,
+          grant_type: "refresh_token",
+          refresh_token: config.refresh_token,
+          client_id: config.client_id
+        }),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+
+      return data.access_token;
+    } catch (error) {
+      config.verbose && console.error("Error refreshing token", error);
+      throw error;
+    }
+  };
 }
-module.exports = DriveUtils;
+module.exports = Gdrive;
 // Frontend: 
-// Getting the auth tokens is separate from the DriveUtils class. our needs for them are also different.
+// Getting the auth tokens is separate from the Gdrive class. our needs for them are also different.
 // retrieving the service.json to create the access token for our users
 // Backend : 
 // storage and retrieval and refreshing of user access token 

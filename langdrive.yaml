@@ -3,8 +3,8 @@ firestore:
   clientJson: "secrets/firebase_service_client.json"
   databaseURL: "env:FIREBASE_DATABASE_URL"
 
-drive:
-  clientJson: "secrets/drive_service_client.json" 
+gdrive: 
+  clientJson: "secrets/google_desktop_client.json" 
 
 email:
   password: env:GMAIL_PASSWORD
@@ -19,15 +19,14 @@ huggingface:
   deployTrainedModel: true
 
 train:
-  service: firestore
+  service: gdrive
   query: 
-    filterCollectionWithMultipleWhereClauseWithLimit:
-      collection: "chat-state"
-      filterKey: ["type"]
-      filterData: ["customer-inquiry-bot"]
-      operation: ["=="]
-      limit: 5
+    getFileByName:
+      filename: "test.csv"
+      mimeType: "text/csv"
+      directory: "chatbot"
+      directoryId: '1JTFGaaL1QDIdJbq3IONBg2PkxU9Zd48K' 
   input:
-    value: "chat.0.content"
+    value: "input"
   output:
-    value: "chat.1.content"
+    value: "output"

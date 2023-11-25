@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://addy-ai.com/products/langdrive/gettingStarted/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Getting Started - Langdrive</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Getting Started";
+        var mkdocs_page_input_path = "gettingStarted.md";
+        var mkdocs_page_url = "/products/langdrive/gettingStarted/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Langdrive
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Getting Started</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#using-the-cli">Using the CLI</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#getting-started-with-yaml">Getting Started with YAML</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#step-1-configure-your-data-connectors">Step 1: Configure your data connectors</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-2-configure-your-llm-tools">Step 2: Configure your llm tools</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#connecting-your-data-to-your-llm">Connecting your data to your llm</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#gettings-started-with-api">Gettings Started with API:</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#model-training">Model Training</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#models-support-matrix">Models Support Matrix</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#causal-language-modeling">Causal Language Modeling</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#model-type-support">Model Type Support</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../yaml/">Yaml</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../demo/">Demo</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../contributors/">Contributors</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../security/authentication/">App Authentication</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../security/verification/">App Verification</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Data Connectors</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/dataOverview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/gdrive/">DriveUtils</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/email/">Email</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/firestore/">Firestore</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">LLM Services</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/llmOverview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/huggingFace/">HuggingFace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/train/">Train</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/heroku/">Heroku</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/chatbot/">Chatbot</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Langdrive</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Getting Started</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="getting-started">Getting Started</h1>
+<p>Thank you for taking interest in LangDrive!</p>
+<p>Langdrive's set of connectors and services makes training LLMs easy for downstream applications, and you can get started with just a CSV file. By providing a huggingface API key  you can train models and even host them in the cloud 😉  </p>
+<p>Import langdrive in your next project or configure and execute Langdrive directly from the CLI. The remainder of this article will explore using both approaches for training and deploy models with langdrive. Along the way we will explore the use of a YAML doc to help with the connecting to data and services.</p>
+<h2 id="using-the-cli">Using the CLI</h2>
+<p>Node developers can train and deploy a model in 2 simple steps. </p>
+<ol>
+<li><code>npm install langDrive</code></li>
+<li><code>langdrive train --csv ./path/to/csvFileName.csv --hftoken apikey123 --deploy</code></li>
+</ol>
+<p>In this case, Langdrive will retrieve the data, train a model, host it's weights on huggingface, and return an inference endpoint you may use to query the LLM.  </p>
+<p>The command <code>langdrive train</code> is used to train the LLM, please see how to configure the command below.</p>
+<p>args:</p>
+<ul>
+<li><code>yaml</code>: Path to optional YAML config doc, default Value: './langdrive.yaml'. This will load up any class and query for records and their values for both inputs and ouputs.</li>
+<li><code>csv</code>: Path to training dataCSV*The training data should be a two-column CSV of input and output pairs.</li>
+<li><code>hftoken</code>: Explain what its</li>
+<li><code>baseModel</code>: The original model to train: This can be one of the models in our supported models [list the supported models]</li>
+<li><code>deployToHf</code>: true | false</li>
+<li><code>hfModelPath</code>: The full path to your hugging face model repo where the model should be deployed. Format: hugging face username/model</li>
+</ul>
+<p>It is assumed you do not want to deploy your model if you run <code>langdrive train</code>. In such a case a link to where you can download the weights will be provided. Adding <code>--deploy</code> will return a link to the inferencing endpoint.</p>
+<p>Read more how to ingest simple data using the CLI from the <a href="../cli/">CLI</a> docs. For more comlex examples, read on...</p>
+<h2 id="getting-started-with-yaml">Getting Started with YAML</h2>
+<p>Getting the data and services you need shouldn't be the hardest part about training your models! Using YAML, you can configure more advanced data retrieval and training/ deployment strategies. Once configured, these settings are available for the standalone API and also from the CLI when using YAML.</p>
+<p>Refer to the <a href="../yaml/">Yaml</a> docs for more information or read on...</p>
+<h3 id="step-1-configure-your-data-connectors">Step 1: Configure your data connectors</h3>
+<p>Our growing list of data-connectors allow anyone to retrieve data through a simple config doc. As LangDrive grows, our set of Open-Source integrations will grow. At the moment, you can connect to your data using our <code>email</code>, <code>firestore</code>, and <code>gdrive</code> classes.  </p>
+<p>In essense, config of these data-connectors is as straight forward as:</p>
+<pre><code>firestore: 
+  clientJson: "secrets/firebase_service_client.json"
+  databaseURL: "env:FIREBASE_DATABASE_URL"
+
+drive:
+  clientJson: "secrets/drive_service_client.json"
+
+email:
+  password: env:GMAIL_PASSWORD
+  email: env:GMAIL_EMAIL
+</code></pre>
+<p>You may specify .env variables using <code>env:</code> as a prefix for your secret information.</p>
+<p>Once this information is provided, the entire <strong>OAuth Process</strong> will automatically be handled on your behalf when using any associated library, regardless if it's used in the CLI or API. Please refer to our notes on <a href="../security/authentication/">security</a> for more information on the Outh2 process when using google.</p>
+<h2 id="step-2-configure-your-llm-tools">Step 2: Configure your llm tools</h2>
+<p>Once you have your data-connectors set up, config your training and deployment information. The last step will be to connect the two.</p>
+<p>Training on huggingface and hosting the weights on huggingface hubs:</p>
+<pre><code>    huggingface:
+        token: env:HUGGINGFACE_API_KEY 
+        deployTrainedModel: false 
+</code></pre>
+<p><b>NOTE</b>: To specify the model you want to train and where to host it:</p>
+<pre><code>  huggingface:
+    token: env:HUGGINGFACE_API_KEY
+    baseModel: 
+      name: &quot;vilsonrodrigues/falcon-7b-instruct-sharded&quot;
+    trainedModel: 
+      name: &quot;karpathic/falcon-7b-instruct-tuned&quot;
+    deployTrainedModel: true 
+</code></pre>
+<p>Simple enough, huh? Here comes the final step.</p>
+<h4 id="connecting-your-data-to-your-llm">Connecting your data to your llm</h4>
+<p>To connect data to your llm tool, we will need to create a new YAML entry <code>train:</code>. </p>
+<p>Here we specify specific the specific data we want to train on. In the case of a CSV, a most simple example, we can use the <code>path</code> value to specify it's location. </p>
+<p>langdrive.yaml</p>
+<pre><code>    train:
+      path: ../shared.csv               - Default Path for Input and Output 
+      inputValue: input                 - Attribute to extract from path
+      outpuValue: output 
+</code></pre>
+<p>Now lets show how to query data from one of those third-party services we configured earlier.</p>
+<p>Within the <code>train</code> entry, setting a <code>service</code> and <code>query</code> will do the trick. Set a data-connector as the <code>service</code> and one one of it's methods / arg values as the <code>query</code> value. This will require exploring class documentation.</p>
+<p>langdrive.yaml</p>
+<pre><code>    train:
+        service: 'firebase' 
+        query:
+          filterCollectionWithMultipleWhereClauseWithLimit:
+              collection: &quot;chat-state&quot;
+              filterKey: []
+              filterData: []
+              operation: []
+              limit: 5
+</code></pre>
+<blockquote>
+<p>If the file has two columns they are assumed to be in the order [input, output]. If more columns exist, langdrive grabs the first two columns after first looking for an 'inputValue' and 'outpuValue' column. The same logic applies for information retrieved from a query and works similarly for nested Json Objects (ala: <code>att1.attr2</code>)</p>
+</blockquote>
+<h2 id="gettings-started-with-api">Gettings Started with API:</h2>
+<p>Our classes can be exposed in the typical manner. For more information on any one class, please refer to it's corresponding documentation.</p>
+<p>Coming Soon: Deploy self-hosted cloud based training infrastructure on google, heroku, or huggingface. Code is currently being used internally and is under development prior to general release - code avaialbe in repo under <code>/src/train</code>.</p>
+<p>If you would like to interact directly directly with our training endpoint you can call our hosted training image directly via the langdrive API. </p>
+<p>Endpoint: POST https://api.langdrive.ai/train </p>
+<p>Request Body:  The request accepts the following data in JSON format.</p>
+<pre><code>{
+   &quot;baseModel&quot;: &quot;string&quot;,
+   &quot;hfToken&quot;: &quot;string&quot;,
+   &quot;deployToHf&quot;: &quot;Boolean&quot;,
+  &quot;trainingData&quot;: &quot;Array&quot;,
+   &quot;hfModelPath&quot;: &quot;string&quot;,
+}
+</code></pre>
+<p><code>baseModel</code>: The original model to train. This can be a hugging face model or one of the list of models that we support</p>
+<ul>
+<li>Type: String</li>
+<li>Required: Yes</li>
+</ul>
+<p><code>hfToken</code>: Your hugging face token with write permissions. You can create a hugging face access token here</p>
+<ul>
+<li>Type: String</li>
+<li>Required: Yes</li>
+</ul>
+<p><code>deployToHf</code>: A boolean representing whether or not to deploy the model to hugging face after training</p>
+<ul>
+<li>Type: Boolean</li>
+<li>Required: Yes</li>
+</ul>
+<p><code>trainingData</code>: This is an array of objects. Each object must have two attributes: input and output. The input attribute represents the user’s input and output attribute represents the model’s output.</p>
+<ul>
+<li>Type: Array</li>
+<li>Required: Yes</li>
+</ul>
+<p><code>hfModelPath</code>: The hugging face model repository to deploy the model to after training is complete</p>
+<ul>
+<li>Type: String</li>
+<li>Required: No</li>
+</ul>
+<pre><code>HTTP/1.1 200
+Content-type: application/json
+{
+   &quot;success&quot;: &quot;true&quot;,
+}
+</code></pre>
+<h2 id="model-training">Model Training</h2>
+<p>We plan to expand the number of available models for training. at the mopemnt only sharded models work as using PEFT is how these models are trained.</p>
+<h3 id="models-support-matrix">Models Support Matrix</h3>
+<h4 id="causal-language-modeling">Causal Language Modeling</h4>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Supported</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Falcon-7b-sharded</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>GPT-2</td>
+<td>Comming Soon</td>
+</tr>
+<tr>
+<td>Bloom</td>
+<td>Comming Soon</td>
+</tr>
+<tr>
+<td>OPT</td>
+<td>Comming Soon</td>
+</tr>
+<tr>
+<td>LLaMA</td>
+<td>Comming Soon</td>
+</tr>
+<tr>
+<td>ChatGLM</td>
+<td>Comming Soon</td>
+</tr>
+</tbody>
+</table>
+<h4 id="model-type-support">Model Type Support</h4>
+<table>
+<thead>
+<tr>
+<th>Model Type</th>
+<th>Support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Conditional Generation</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Conditional Generation</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Sequence Classification</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Token Classification</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Text-to-Image Generation</td>
+<td></td>
+</tr>
+<tr>
+<td>Image Classification</td>
+<td></td>
+</tr>
+<tr>
+<td>Image to text (Multi-modal models)</td>
+<td></td>
+</tr>
+<tr>
+<td>Semantic Segmentation</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../yaml/" class="btn btn-neutral float-right" title="Yaml">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../yaml/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

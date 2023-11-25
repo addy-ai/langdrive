@@ -4,19 +4,19 @@ const yaml = require('js-yaml');
 const Train = require("./train");
 require("dotenv").config(); 
 
-// Gets the config and calls deploy
-function cli_deploy(args) { console.log(`~~~~ Start cli_deploy:${JSON.stringify(args)}:`);  
+// Gets the config and calls train
+function cli_train(args) { console.log(`~~~~ Start cli_train:${JSON.stringify(args)}:`);  
   const config = getConfig(args);
-  deploy(config);
+  train(config);
 }
 
 // config.train.input.serviceName == config.serviceName == class serviceName 
-async function deploy(config) {
-  console.log(`~~~~ Start deploy:`);//${JSON.stringify(config)}:`);   
-  if(!config){return}   
+async function train(config) {
+  console.log(`~~~~ Start train:`);//${JSON.stringify(config)}:`);   
+  if(!config){return} 
 
   let initClass = async (service) =>{ 
-    if(!!service){ 
+    if(!!service){  
       let classInstance = await require(`./${service}`)  
       return await classInstance?.init({verbose: config.verbose, ...config[service]})
     }
@@ -24,13 +24,13 @@ async function deploy(config) {
   config.train.service = await initClass(config.train.service)
   config.train.inputService = await initClass(config.train.input.service)
   config.train.outputService = await initClass(config.train.output.service)
-  
+ 
+  console.log(config.train.service)
   // Train the model using the spec
   let trainer = await Train.init({verbose: config.verbose, ...config.train}); 
 
   let trainingResults = await trainer.trainModel(config.huggingface);
-  
-  // Deploy the data needed
+
   // if(config.heroku){ config.firebase.heroku = heroku.handleHeroku(config); }
 }
 
@@ -82,8 +82,8 @@ function getConfig(args){
 }
 
 
-module.exports = {deploy, getConfig, cli_deploy}; 
-exports = {deploy, getConfig, cli_deploy};  
+module.exports = {train, getConfig, cli_train}; 
+exports = {train, getConfig, cli_train};  
 
 
 // if(config.firebase & !config.firebase.instance){ config.firebase.instance = firestore.init(config); }

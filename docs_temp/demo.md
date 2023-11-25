@@ -27,4 +27,4 @@ You can clone the repo and get started with our demo chatbot
 4. .env.examples -> .env + Keys
 5. npm run start
 
-More instructions for hands-on configuration available in the [Chatbot](/api/chatbot.md) section
+More instructions for hands-on configuration available in the [Chatbot](./api/chatbot.md) section

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://addy-ai.com/products/langdrive/api/llmOverview/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Overview - Langdrive</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Overview";
+        var mkdocs_page_input_path = "api/llmOverview.md";
+        var mkdocs_page_url = "/products/langdrive/api/llmOverview/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Langdrive
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../gettingStarted/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../yaml/">Yaml</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../cli/">CLI</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../demo/">Demo</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../contributors/">Contributors</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../security/authentication/">App Authentication</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../security/verification/">App Verification</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Data Connectors</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../dataOverview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../gdrive/">DriveUtils</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../email/">Email</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../firestore/">Firestore</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">LLM Services</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Overview</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#huggingface-class-overview">HuggingFace Class Overview</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#class-huggingface">Class: HuggingFace</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#constructor">Constructor</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#key-methods">Key Methods</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#herokuhandler-class-overview">HerokuHandler Class Overview</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#class-herokuhandler">Class: HerokuHandler</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#constructor_1">Constructor</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#key-methods_1">Key Methods</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#npm-langdrive-drivechatbot-class-overview">NPM: Langdrive: DriveChatbot Class Overview</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#chatbot">Chatbot</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#train-class-overview">Train Class Overview</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#class-train">Class: Train</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#constructor_2">Constructor</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#key-methods_2">Key Methods</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils-script-overview">Utils Script Overview</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#script-utils">Script: utils</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#main-functions">Main Functions</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#modules">Modules</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../huggingFace/">HuggingFace</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../train/">Train</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../heroku/">Heroku</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../chatbot/">Chatbot</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Langdrive</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">LLM Services</li>
+      <li class="breadcrumb-item active">Overview</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="llm-overview">LLM Overview</h1>
+<p>Welcome to the LLM Overview! Here, we delve into the intricacies and unique features of several Node.js classes. Our goal is to offer you an engaging and informative guide through their functionalities and capabilities, making your development journey both efficient and enjoyable.</p>
+<h2 id="huggingface-class-overview">HuggingFace Class Overview</h2>
+<h3 id="class-huggingface">Class: <code>HuggingFace</code></h3>
+<p>The <code>HuggingFace</code> class is your gateway to interacting with the innovative Hugging Face API. From validating tokens and managing repositories to uploading files and performing model inference, this class is equipped to handle it all with ease.</p>
+<h4 id="constructor">Constructor</h4>
+<ul>
+<li><strong>Parameters</strong>:</li>
+<li><code>accessToken</code> (String): Your key to access the diverse features of the Hugging Face API.</li>
+<li><code>defaultOptions</code> (Object): Customize the class behavior to suit your needs.</li>
+</ul>
+<h4 id="key-methods">Key Methods</h4>
+<blockquote>
+<ul>
+<li><strong><code>tokenIsValid()</code>:</strong> Wondering about your token's validity? This method swiftly confirms it for you.</li>
+<li><strong><code>hubExists()</code>:</strong> Check if your desired hub is up and running with a simple call.</li>
+<li><strong><code>questionAnswering(model, inputs)</code>:</strong> Dive into AI-driven question answering with your chosen model.</li>
+<li><strong><code>createRepo(repoPath, type)</code>:</strong> Setting up a new repository is just a few parameters away.</li>
+<li><strong><code>uploadFile(repoPath, filePath, blob)</code>:</strong> Easily upload files to your repository in the Hugging Face hub.</li>
+<li><strong><code>deleteFiles(type, name, paths)</code>:</strong> Need to clear some space? Delete files seamlessly with this method.</li>
+</ul>
+</blockquote>
+<hr />
+<h2 id="herokuhandler-class-overview">HerokuHandler Class Overview</h2>
+<h3 id="class-herokuhandler">Class: <code>HerokuHandler</code></h3>
+<p>Embark on a smooth journey with Heroku using the <code>HerokuHandler</code> class. It simplifies interactions with the Heroku API, ensuring you can check installation and login statuses effortlessly.</p>
+<h4 id="constructor_1">Constructor</h4>
+<ul>
+<li><strong>Parameters</strong>:</li>
+<li><code>props</code> (Object): All you need to connect - Heroku API key, username, and password.</li>
+</ul>
+<h4 id="key-methods_1">Key Methods</h4>
+<blockquote>
+<ul>
+<li><strong><code>checkInstall()</code>:</strong> Quickly verify if Heroku CLI is part of your toolkit.</li>
+<li><strong><code>checkLogin()</code>:</strong> Log in hassles? This method ensures you're connected to Heroku.</li>
+<li><strong><code>handleHeroku(args)</code>:</strong> Manage your Heroku setup and status with this comprehensive function.</li>
+</ul>
+</blockquote>
+<hr />
+<h2 id="npm-langdrive-drivechatbot-class-overview">NPM: Langdrive: DriveChatbot Class Overview</h2>
+<h3 id="chatbot">Chatbot</h3>
+<p>Primarily for demonstration and testing purposes. Engage with the <code>DriveChatbot</code>, where Async Promises bring your chatbot interactions to life.</p>
+<hr />
+<h2 id="train-class-overview">Train Class Overview</h2>
+<h3 id="class-train">Class: <code>Train</code></h3>
+<p>The <code>Train</code> class is your companion in the realm of machine learning. It's designed to streamline the training process of your models and manage data sources efficiently.</p>
+<h4 id="constructor_2">Constructor</h4>
+<ul>
+<li><strong>Parameters</strong>: <code>props</code> (Object): Fine-tune your training experience with verbose and train options.</li>
+</ul>
+<h4 id="key-methods_2">Key Methods</h4>
+<ul>
+<li><strong><code>init(config)</code>:</strong> Initializes the class and prepares data.</li>
+<li><strong><code>trainModel(huggingfaceInfo)</code>:</strong> Manages the model training process.</li>
+<li><strong><code>prepareData()</code>:</strong> Prepares training data.</li>
+<li><strong><code>getDataFromUrl(url)</code>:</strong> Fetches data from a URL.</li>
+<li><strong><code>getDataFromService(classInstance, query)</code>:</strong> Retrieves data using a service class.</li>
+<li><strong><code>getValuesFromData(data, value)</code>:</strong> Extracts specific values from data.</li>
+<li><strong><code>getData(lbl)</code>:</strong> General method for data retrieval.</li>
+</ul>
+<hr />
+<h2 id="utils-script-overview">Utils Script Overview</h2>
+<h3 id="script-utils">Script: <code>utils</code></h3>
+<p>This Node.js script is essential for deploying machine learning models. It utilizes key libraries like <code>fs</code>, <code>path</code>, <code>js-yaml</code>, and <code>dotenv</code> for various file operations, path resolution, YAML processing, and environment variable management.</p>
+<h4 id="main-functions">Main Functions</h4>
+<ul>
+<li><strong><code>cli_deploy(args)</code></strong>: Entry point for deploying the model. Manages deployment initiation and configuration retrieval.</li>
+<li><strong><code>deploy(config)</code></strong>: Handles the core deployment process of the machine learning model.</li>
+<li><strong><code>getConfig(args)</code></strong>: Retrieves deployment configurations from a YAML file.</li>
+</ul>
+<h4 id="modules">Modules</h4>
+<ul>
+<li><strong><code>fs</code></strong>: Handles file system operations.</li>
+<li><strong><code>path</code></strong>: Manages file paths.</li>
+<li><strong><code>js-yaml</code></strong>: Processes YAML files.</li>
+<li><strong><code>dotenv</code></strong>: Loads environment variables.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../firestore/" class="btn btn-neutral float-left" title="Firestore"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../huggingFace/" class="btn btn-neutral float-right" title="HuggingFace">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../firestore/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../huggingFace/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
