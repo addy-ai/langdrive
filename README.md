@@ -11,7 +11,7 @@
 <img alt="GitHub Issues" src="https://img.shields.io/github/issues/addy-ai/langdrive" />
 <img alt="GitHub Pull Requests" src="https://img.shields.io/github/issues-pr/addy-ai/langdrive" />
 <img alt="Github License" src="https://img.shields.io/badge/License-Apache-yellow.svg" />
-<img alt="Discord" src="https://img.shields.io/discord/1057844886243643532?label=Discord&logo=discord&logoColor=white&style=plastic&color=d7b023)](https://discord.gg/G8eYmcaTTd" />
+<!-- <img alt="Discord" src="https://img.shields.io/discord/1057844886243643532?label=Discord&logo=discord&logoColor=white&style=plastic&color=d7b023)](https://discord.gg/G8eYmcaTTd" /> -->
 </p>
 
 </div>
