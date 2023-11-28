@@ -43,7 +43,8 @@
     "querystring": "^0.2.1"
   },
   "devDependencies": {
-    "faiss-node": "^0.2.3"
+    "faiss-node": "^0.2.3",
+    "mkdocs": "^0.0.1"
   },
   "nodemonConfig": {
     "watch": [
