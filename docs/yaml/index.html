@@ -150,12 +150,10 @@ email:
   email: env:GMAIL_EMAIL
 
 huggingface:
-  token: env:HUGGINGFACE_API_KEY
-  baseModel: 
-    name: "vilsonrodrigues/falcon-7b-instruct-sharded"
-  trainedModel: 
-    name: "karpathic/falcon-7b-instruct-tuned"
-  deployTrainedModel: true
+  hfToken: env:HUGGINGFACE_API_KEY
+  baseModel: vilsonrodrigues/falcon-7b-instruct-sharded
+  trainedModel: karpathic/falcon-7b-instruct-tuned
+  deployToHf: true
 
 train:
   service: firestore
@@ -215,7 +213,7 @@ train:
 </code></pre>
 <p>Here's an example:</p>
 <pre><code>train:
-  service: 'firebase' 
+  service: 'firestore' 
   query:
     filterCollectionWithMultipleWhereClauseWithLimit:
       collection: "chat-state"
@@ -225,13 +223,11 @@ train:
       limit: 5
 </code></pre>
 <p>To specify the model you want to train and where to host it:</p>
-<pre><code>  huggingface:
-    token: env:HUGGINGFACE_API_KEY
-    baseModel: 
-      name: &quot;vilsonrodrigues/falcon-7b-instruct-sharded&quot;
-    trainedModel: 
-      name: &quot;karpathic/falcon-7b-instruct-tuned&quot;
-    deployTrainedModel: true
+<pre><code>    huggingface:
+      hfToken: env:HUGGINGFACE_API_KEY
+      baseModel: vilsonrodrigues/falcon-7b-instruct-sharded
+      trainedModel: karpathic/falcon-7b-instruct-tuned
+      deployToHf: true 
 </code></pre>
               
             </div>

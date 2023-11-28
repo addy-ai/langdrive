@@ -5,7 +5,7 @@ Langdrive: Easily train and deploy your favorite models.
 
 There are many ways to train and develop LLMs with LangDrive - One way is to configure a [YAML](./yaml.md) doc and by issuing a [CLI](./cli.md) command. Another way would be importing it as a class modules within a project of your own, YAML doc optional. 
 
-Whether you're a beginner or an experienced developer, our Data Connectors and LLM tools empower you to build, integrate, and deploy with confidence. Data  Connectors help source data from third parties (email, firebase, gdrive) and prepare it for your models. When it comes to training, hosting, and deploying models (Locally, Huggingface, SageMaker, CloudRun), our LLM tools have you covered. All of this is readily available from CLI arguements, a YAML doc, or directly in-code. 
+Whether you're a beginner or an experienced developer, our Data Connectors and LLM tools empower you to build, integrate, and deploy with confidence. Data  Connectors help source data from third parties (email, firestore, gdrive) and prepare it for your models. When it comes to training, hosting, and deploying models (Locally, Huggingface, SageMaker, CloudRun), our LLM tools have you covered. All of this is readily available from CLI arguements, a YAML doc, or directly in-code. 
 
 LangDrive, built specifically for Node.js, makes training and deploying AI models effortless. We provide a library that facilitates data connection and automates training and deployment, ensuring your projects are easy to manage and scale.
 

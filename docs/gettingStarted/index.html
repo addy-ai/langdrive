@@ -46,7 +46,25 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Getting Started</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#data-connectors">Data Connectors</a>
+    <li class="toctree-l2"><a class="reference internal" href="#using-the-cli">Using the CLI</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#getting-started-with-yaml">Getting Started with YAML</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#step-1-configure-your-data-connectors">Step 1: Configure Your Data Connectors</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#step-2-configure-your-llm-tools">Step 2: Configure Your LLM Tools</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#step-3-connecting-your-data-to-your-llm">Step 3: Connecting Your Data to Your LLM</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#gettings-started-with-api">Gettings Started with API:</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#request-body">Request Body</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#response-body">Response Body</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#model-training">Model Training</a>
         <ul>
@@ -59,8 +77,6 @@
         </ul>
     </li>
         </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#deploying-your-model">Deploying your Model</a>
     </li>
     </ul>
                 </li>
@@ -136,34 +152,140 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="getting-started">Getting Started</h1>
-<p>Langdrive's set of connectors and services makes training LLMs easy for downstream applications. You can get started with just a CSV file! By providing a huggingface API key  you can train models and even host them in the cloud!  </p>
+<p>Thank you for taking interest in LangDrive!</p>
+<p>Langdrive's set of connectors and services makes training LLMs easy, and you can get started with just a CSV file. By providing a Hugging Face API key  you can train models and even host them in the cloud 😉  </p>
+<p>Import langdrive in your project or configure and execute Langdrive directly from the CLI. The remainder of this article will explore using both approaches for training and deploy models with langdrive. Along the way we will explore the use of a YAML doc to help with the connecting to data and services.</p>
+<h2 id="using-the-cli">Using the CLI</h2>
 <p>Node developers can train and deploy a model in 2 simple steps. </p>
 <ol>
-<li><code>npm install langDrive</code> to access our classes then </li>
-<li><code>langdrive deploy --csv ./path/to/csv.csv --hftoken apikey123</code> to deploy it.</li>
+<li><code>npm install langDrive</code></li>
+<li><code>langdrive train --csv ./path/to/csvFileName.csv --hftoken apikey123 --deploy</code></li>
 </ol>
-<h2 id="data-connectors">Data Connectors</h2>
-<p>Getting the data you need shouldn't be the hardest part about training your models! With Langdrive data-connectors data ingest is a breeze. Read more how to ingest simple data using the CLI from the <a href="./cli">CLI</a> docs. You can configure more advanced data retrievals using the YAML doc. Here we specify specific columns from a CSV we want to train on. </p>
+<p>In this case, Langdrive will retrieve the data, train a model, host it's weights on Hugging Face, and return an inference endpoint you may use to query the LLM.  </p>
+<p>The command <code>langdrive train</code> is used to train the LLM, please see how to configure the command below.</p>
+<p>args:</p>
+<ul>
+<li><code>yaml</code>: Path to optional YAML config doc, default Value: './langdrive.yaml'. This will load up any class and query for records and their values for both inputs and ouputs.</li>
+<li><code>csv</code>: Path to training dataCSV*The training data should be a two-column CSV of input and output pairs.</li>
+<li><code>hfToken</code>: An API key provided by Hugging Face with <code>write</code> permissions. Get one <a href="https://huggingface.co/docs/hub/security-tokens">here</a>.</li>
+<li><code>baseModel</code>: The original model to train: This can be one of the models in our supported models shown at the bottom of this page</li>
+<li><code>deployToHf</code>: true | false</li>
+<li><code>hfModelPath</code>: The full path to your hugging face model repo where the model should be deployed. Format: hugging face username/model</li>
+</ul>
+<p>It is assumed you do not want to deploy your model if you run <code>langdrive train</code>. In such a case a link to where you can download the weights will be provided. Adding <code>--deploy</code> will return a link to the inferencing endpoint.</p>
+<p>More information on how to ingest simple data using the CLI can be found in the <a href="../cli/">CLI</a> docs. For more comlex examples, read on...</p>
+<h2 id="getting-started-with-yaml">Getting Started with YAML</h2>
+<p>Getting the data and services you need shouldn't be the hardest part about training your models! Using YAML, you can configure more advanced data retrieval and training/ deployment strategies. Once configured, these settings are available for the standalone API and also from the CLI.</p>
+<p>Refer to the <a href="../yaml/">Yaml</a> docs for more information.</p>
+<h3 id="step-1-configure-your-data-connectors">Step 1: Configure Your Data Connectors</h3>
+<p>Our growing list of data-connectors allow anyone to retrieve data through a simple config doc. As LangDrive grows, our set of Open-Source integrations will grow. At the moment, you can connect to your data using our <code>email</code>, <code>firestore</code>, and <code>gdrive</code> classes.  </p>
+<p>In essense, config of these data-connectors is as straight forward as:</p>
+<pre><code>firestore: 
+  clientJson: "secrets/firebase_service_client.json"
+  databaseURL: "env:FIREBASE_DATABASE_URL"
+
+drive:
+  clientJson: "secrets/drive_service_client.json"
+
+email:
+  password: env:GMAIL_PASSWORD
+  email: env:GMAIL_EMAIL
+</code></pre>
+<p>You may specify .env variables using <code>env:</code> as a prefix for your secret information.</p>
+<p>In our example above, the <code>clientJson</code> attribute is a <a href="https://firebase.google.com/support/guides/service-accounts">Firebase service account file</a>.</p>
+<p>Once this information is provided, the entire <strong>OAuth Process</strong> will automatically be handled on your behalf when using any associated library, regardless if it's used in the CLI or API. Please refer to our notes on <a href="../security/authentication/">security</a> for more information on the Outh2 process when using google. </p>
+<h3 id="step-2-configure-your-llm-tools">Step 2: Configure Your LLM Tools</h3>
+<p>Once you have your data-connectors set up, config your training and deployment information. The last step will be to connect the two.</p>
+<p>Training on Hugging Face and hosting the weights on Hugging Face hubs:</p>
+<pre><code>    huggingface:
+        hfToken: env:HUGGINGFACE_API_KEY 
+        deployToHf: false 
+</code></pre>
+<p><b>NOTE</b>: To specify the model you want to train and where to host it:</p>
+<pre><code>  huggingface: 
+    hfToken: env:HUGGINGFACE_API_KEY
+    baseModel: vilsonrodrigues/falcon-7b-instruct-sharded
+    trainedModel: karpathic/falcon-7b-instruct-tuned
+    deployToHf: true 
+</code></pre>
+<p>Simple enough, huh? Here comes the final step.</p>
+<h3 id="step-3-connecting-your-data-to-your-llm">Step 3: Connecting Your Data to Your LLM</h3>
+<p>To connect data to your LLM tool, we will need to create a new YAML entry <code>train:</code>. </p>
+<p>Here we specify specific the specific data we want to train on. In the case of a CSV, a most simple example, we can use the <code>path</code> value to specify it's location. </p>
 <p>langdrive.yaml</p>
 <pre><code>    train:
       path: ../shared.csv               - Default Path for Input and Output 
       inputValue: input                 - Attribute to extract from path
       outpuValue: output 
 </code></pre>
-<p>More complete YAML examples can be found in the <a href="./yaml">yaml</a> docs. The ability to retrieve data is not limited to just simple csv's though, and the YAML config can tap into any class LangDrive supporst. <code>langdrive deploy</code> will load up any class and query for records and their values for both inputs and ouputs. Simply locate a method from a select class (aka, <code>service</code>) and its arguements and supply it as an object for your <code>query</code> value</p>
+<p>Now lets show how to query data from one of those third-party services we configured earlier.</p>
+<p>Within the <code>train</code> entry, setting a <code>service</code> and <code>query</code> will do the trick. Set a data-connector as the <code>service</code> and one of its methods (and its args) as the <code>query</code> value. This will require exploring class documentation.</p>
 <p>langdrive.yaml</p>
 <pre><code>    train:
-        service: 'firebase' 
+        service: 'firestore' 
         query:
-        filterCollectionWithMultipleWhereClauseWithLimit:
-            collection: &quot;chat-state&quot;
-            filterKey: []
-            filterData: []
-            operation: []
-            limit: 5
+          filterCollectionWithMultipleWhereClauseWithLimit:
+              collection: &quot;chat-state&quot;                
+              filterKey: []
+              filterData: []
+              operation: []
+              limit: 5
+</code></pre>
+<p>In the example above we use the <code>filterCollectionWithMultipleWhereClauseWithLimit</code> method from Langdrive's Firestore class, passing arguements as specified in the Langdrive <a href="../api/firestore/">Firestore</a> docs. <code>collection</code> is the firestore collection name to retrieve data from, (limited to the first 5 entries). <code>filterKey</code> and <code>filterData</code> are not specified in this example but contain the field name/key to filter. The <code>operation</code> value specifies the firebstore query operator to use (For example, '==', '&gt;=', '&lt;=' ).</p>
+<p>Note:</p>
+<blockquote>
+<p>If the retrieved data has two columns (or attributes) they are assumed to be in the order [input, output]. If more columns exist, langdrive grabs the first two columns after first looking for an 'inputValue' and 'outpuValue' column. The same logic applies for information retrieved from a query and works similarly for nested Json Objects (ala: <code>att1.attr2</code>)</p>
+</blockquote>
+<h2 id="gettings-started-with-api">Gettings Started with API:</h2>
+<p>Our classes can be exposed in the typical manner. For more information on any one class, please refer to it's corresponding documentation.</p>
+<p>Coming Soon: Deploy self-hosted cloud based training infrastructure on AWS, Google Cloud Platform, Heroku, or Hugging Face. Code is currently being used internally and is under development prior to general release - code avaialbe in-repo under <code>/src/train</code>.</p>
+<p>If you would like to interact directly directly with our training endpoint you can call our hosted training image directly via the langdrive API. </p>
+<p>Endpoint: <code>POST https://api.langdrive.ai/train</code></p>
+<h3 id="request-body">Request Body</h3>
+<p>The request accepts the following data in JSON format.</p>
+<pre><code>{
+   &quot;baseModel&quot;: &quot;string&quot;,
+   &quot;hfToken&quot;: &quot;string&quot;,
+   &quot;deployToHf&quot;: &quot;Boolean&quot;,
+  &quot;trainingData&quot;: &quot;Array&quot;,
+   &quot;hfModelPath&quot;: &quot;string&quot;,
+}
+</code></pre>
+<p><code>baseModel</code>: The original model to train. This can be one of our supported models, listed below, or a Hugging Face model</p>
+<ul>
+<li>Type: String</li>
+<li>Required: Yes</li>
+</ul>
+<p><code>hfToken</code>: Your Hugging Face token with write permissions. Learn how to create a Hugging Face token <a href="https://huggingface.co/docs/hub/security-tokens">here</a>.</p>
+<ul>
+<li>Type: String</li>
+<li>Required: Yes</li>
+</ul>
+<p><code>deployToHf</code>: A boolean representing whether or not to deploy the model to Hugging Face after training</p>
+<ul>
+<li>Type: Boolean</li>
+<li>Required: Yes</li>
+</ul>
+<p><code>trainingData</code>: This is an array of objects. Each object must have two attributes: input and output. The input attribute represents the user’s input and output attribute represents the model’s output.</p>
+<ul>
+<li>Type: Array</li>
+<li>Required: Yes</li>
+</ul>
+<p><code>hfModelPath</code>: The hugging face model repository to deploy the model to after training is complete. This path must exist before being used</p>
+<ul>
+<li>Type: String</li>
+<li>Required: No</li>
+</ul>
+<h3 id="response-body">Response Body</h3>
+<p>The request returns the following data in JSON format.</p>
+<pre><code>HTTP/1.1 200
+Content-type: application/json
+{
+   &quot;success&quot;: &quot;true&quot;,
+}
 </code></pre>
 <h2 id="model-training">Model Training</h2>
-<p>We plan to expand the number of available models for training. at the mopemnt only sharded models work as using PEFT is how these models are trained.</p>
+<p>We plan to expand the number of available models for training. at the moment only sharded models work as using PEFT is how these models are trained.</p>
 <h3 id="models-support-matrix">Models Support Matrix</h3>
 <h4 id="causal-language-modeling">Causal Language Modeling</h4>
 <table>
@@ -243,22 +365,6 @@
 </tr>
 </tbody>
 </table>
-<h2 id="deploying-your-model">Deploying your Model</h2>
-<p>It is assumed you want to deploy your model if you run <code>langdrive deploy</code> but you may want to toggle that off. In any other circumstance if the attribute is NA then it is evaluates to false at which points a link to where you can download the weights will be provided.</p>
-<p>Example Training on hugginface and hosting the weights on hugginface hubs:</p>
-<pre><code>    huggingface:
-        token: env:HUGGINGFACE_API_KEY 
-        deployTrainedModel: false 
-</code></pre>
-<p>To specify the model you want to train and where to host it:</p>
-<pre><code>  huggingface:
-    token: env:HUGGINGFACE_API_KEY
-    baseModel: 
-      name: &quot;vilsonrodrigues/falcon-7b-instruct-sharded&quot;
-    trainedModel: 
-      name: &quot;karpathic/falcon-7b-instruct-tuned&quot;
-    deployTrainedModel: true 
-</code></pre>
               
             </div>
           </div><footer>

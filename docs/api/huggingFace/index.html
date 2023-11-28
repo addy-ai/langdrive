@@ -87,27 +87,13 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="./">HuggingFace</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#class-huggingface">Class: HuggingFace</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#constructor">Constructor</a>
+    <li class="toctree-l2"><a class="reference internal" href="#method-tokenisvalid">Method: tokenIsValid()</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#method-tokenisvalid">Method: tokenIsValid()</a>
+    <li class="toctree-l2"><a class="reference internal" href="#method-hubexists">Method: hubExists()</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#method-hubexists">Method: hubExists()</a>
+    <li class="toctree-l2"><a class="reference internal" href="#method-questionansweringmodel-inputs">Method: questionAnswering(model, inputs)</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#method-questionansweringmodel-inputs">Method: questionAnswering(model, inputs)</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#method-createreporepopath-type">Method: createRepo(repoPath, type)</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#method-uploadfilerepopath-filepath-blob">Method: uploadFile(repoPath, filePath, blob)</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#method-deletefilestype-name-paths">Method: deleteFiles(type, name, paths)</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#export">Export</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#comments-and-todos">Comments and TODOs</a>
+    <li class="toctree-l2"><a class="reference internal" href="#method-createreporepopath-type">Method: createRepo(repoPath, type)</a>
     </li>
     </ul>
                   </li>
@@ -142,81 +128,116 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="huggingface">HuggingFace</h1>
-<p>The <code>HuggingFace</code> class in Node.js facilitates interaction with the Hugging Face API for operations such as validating tokens, managing repositories, uploading files, and performing model inference.</p>
-<h2 id="class-huggingface">Class: HuggingFace</h2>
-<h3 id="constructor">Constructor</h3>
+                <h1 id="huggingface-documentation">HuggingFace Documentation</h1>
+<p>The <code>HuggingFace</code> class is a wrapper around the <code>HfInference</code> class from <code>@huggingface/inference</code> and some functions (<code>createRepo</code>, <code>uploadFile</code>, <code>deleteFiles</code>) from <code>@huggingface/hub</code>. This class provides methods that enable users to perform actions such as validating tokens, checking if a hub exists, asking questions, creating repositories, uploading files, and deleting files on the Hugging Face platform.</p>
+<h2 id="method-tokenisvalid">Method: <code>tokenIsValid()</code></h2>
+<p>This method checks if the provided access token is valid by making an inference call using the token. This method can help to avoid problems further down the line by ensuring that the token is valid before performing any operation.</p>
 <ul>
-<li><strong>Parameters</strong>:</li>
-<li><code>accessToken</code> (String): Access token for Hugging Face API.</li>
-<li><code>defaultOptions</code> (Object): Default options for the class.</li>
-<li><strong>Description</strong>: </li>
-<li>Initializes the class with the provided access token and default options.</li>
-<li>Sets up an instance of <code>HfInference</code> for model inference tasks.</li>
+<li>
+<p><strong>Returns</strong>: A boolean indicating whether the token is valid (true) or invalid (false).</p>
+</li>
+<li>
+<p><strong>Description</strong>:</p>
+</li>
+<li>The method lists the models available on the Hugging Face platform and, based on the success or failure of this operation, it returns a boolean.</li>
+<li>
+<p>If an error occurs during the execution of the method, this error is logged and the method returns <code>false</code>.</p>
+</li>
+<li>
+<p><strong>Parameters</strong>: This method has no parameters.</p>
+</li>
 </ul>
-<h3 id="method-tokenisvalid">Method: <code>tokenIsValid()</code></h3>
+<h2 id="method-hubexists">Method: <code>hubExists()</code></h2>
+<p>This method is used to check if a hub exists on the Hugging Face platform.</p>
 <ul>
-<li><strong>Returns</strong>: Boolean indicating if the token is valid.</li>
-<li><strong>Description</strong>: </li>
-<li>Validates the provided access token by attempting to list models.</li>
-<li>Logs the process and errors if any.</li>
-</ul>
-<h3 id="method-hubexists">Method: <code>hubExists()</code></h3>
+<li>
+<p><strong>Returns</strong>: A boolean indicating whether the hub exists (true) or not (false).</p>
+</li>
+<li>
+<p><strong>Description</strong>: </p>
 <ul>
-<li><strong>Returns</strong>: Boolean indicating if the hub exists.</li>
-<li><strong>Description</strong>: </li>
-<li>Checks for the existence of a hub by attempting to list models.</li>
-<li>Handles and logs any errors encountered.</li>
+<li>This method works by listing the models of the Hugging Face platform and, based on the success or failure of this operation, it returns a boolean.</li>
+<li>If an error occurs during the execution of the method, this error is logged and the method returns <code>false</code>.</li>
 </ul>
-<h3 id="method-questionansweringmodel-inputs">Method: <code>questionAnswering(model, inputs)</code></h3>
+</li>
+<li>
+<p><strong>Parameters</strong>: This method does not take any parameters.</p>
+</li>
+</ul>
+<h2 id="method-questionansweringmodel-inputs">Method: <code>questionAnswering(model, inputs)</code></h2>
+<p>This method runs a question answering model on Hugging Face, using the provided model and inputs.</p>
 <ul>
-<li><strong>Parameters</strong>:</li>
-<li><code>model</code> (String): The model to use for question answering.</li>
-<li><code>inputs</code> (String): The inputs for the model.</li>
-<li><strong>Returns</strong>: The result of the question answering model.</li>
-<li><strong>Description</strong>: </li>
-<li>Calls a question-answering model on the Hugging Face platform.</li>
-<li>Returns the model's response.</li>
+<li>
+<p><strong>Returns</strong>: The result of the question answering model inference.</p>
+</li>
+<li>
+<p><strong>Description</strong>:</p>
+</li>
+<li>
+<p>This method uses the <code>questionAnswer</code> method from the <code>HfInference</code> instance (<code>this.inference</code>) to answer questions.</p>
+</li>
+<li>
+<p><strong>Parameters</strong>:</p>
+</li>
 </ul>
-<h3 id="method-createreporepopath-type">Method: <code>createRepo(repoPath, type)</code></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+<th>Accepted Values/Data Types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>model</td>
+<td>The model to be used</td>
+<td>String</td>
+</tr>
+<tr>
+<td>inputs</td>
+<td>The inputs to the model</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<h2 id="method-createreporepopath-type">Method: <code>createRepo(repoPath, type)</code></h2>
 <ul>
-<li><strong>Parameters</strong>:</li>
-<li><code>repoPath</code> (String): The path to the repository.</li>
-<li><code>type</code> (String): The type of repository.</li>
-<li><strong>Returns</strong>: Result of repository creation.</li>
-<li><strong>Description</strong>: </li>
-<li>Creates a repository or folder in the Hugging Face hub.</li>
-<li>Handles different repository types.</li>
+<li>
+<p><strong>Returns</strong>: The response from the <code>createRepo</code> function from the <code>@huggingface/hub</code> package.</p>
+</li>
+<li>
+<p><strong>Description</strong>:</p>
+</li>
+<li>
+<p>This method is used to create a new repository or folder on the Hugging Face hub.</p>
+</li>
+<li>
+<p><strong>Parameters</strong>:</p>
+</li>
 </ul>
-<h3 id="method-uploadfilerepopath-filepath-blob">Method: <code>uploadFile(repoPath, filePath, blob)</code></h3>
-<ul>
-<li><strong>Parameters</strong>:</li>
-<li><code>repoPath</code> (String): The repository path.</li>
-<li><code>filePath</code> (String): The file path.</li>
-<li><code>blob</code> (Blob): The file content.</li>
-<li><strong>Returns</strong>: Result of file upload.</li>
-<li><strong>Description</strong>: </li>
-<li>Uploads a file to the specified repository in the Hugging Face hub.</li>
-</ul>
-<h3 id="method-deletefilestype-name-paths">Method: <code>deleteFiles(type, name, paths)</code></h3>
-<ul>
-<li><strong>Parameters</strong>:</li>
-<li><code>type</code> (String): Type of repository or space.</li>
-<li><code>name</code> (String): The path to the repo or space.</li>
-<li><code>paths</code> (Array): File paths to delete.</li>
-<li><strong>Returns</strong>: Result of file deletion.</li>
-<li><strong>Description</strong>: </li>
-<li>Deletes files in the specified repository or space on the Hugging Face hub.</li>
-</ul>
-<h2 id="export">Export</h2>
-<ul>
-<li>The <code>HuggingFace</code> class is exported for use in other modules.</li>
-</ul>
-<h2 id="comments-and-todos">Comments and TODOs</h2>
-<ul>
-<li>The code includes TODO comments outlining future goals like updating models, connecting models to inference endpoints, checking for space existence, and managing space resources.</li>
-<li>These comments link to relevant documentation for further guidance on these tasks.</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+<th>Accepted Values/Data Types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>repoPath</td>
+<td>The path to the new repository</td>
+<td>String</td>
+</tr>
+<tr>
+<td>type</td>
+<td>The type of the new repository</td>
+<td>String</td>
+</tr>
+</tbody>
+</table>
+<p>For more methods like <code>uploadFile</code>, <code>deleteFiles</code>, etc., the template provided above should be followed to document them.</p>
               
             </div>
           </div><footer>
