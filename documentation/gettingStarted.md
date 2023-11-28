@@ -11,7 +11,7 @@ Import langdrive in your project or configure and execute Langdrive directly fro
 
 Node developers can train and deploy a model in 2 simple steps. 
 
-1. `npm install langDrive`
+1. `npm install langdrive`
 2. `langdrive train --csv ./path/to/csvFileName.csv --hftoken apikey123 --deploy`
 
 In this case, Langdrive will retrieve the data, train a model, host it's weights on Hugging Face, and return an inference endpoint you may use to query the LLM.  

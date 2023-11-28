@@ -7,7 +7,7 @@ swap_dir="./temp_swap_dir"
 # Function to build and replace 'docs'
 build_and_replace_docs() {
   # Create the documenation using chatGPT
-  node mkdocs.js
+  # node mkdocs.js
   mkdocs build
   rm -r "$docs_dir"
   mv "site" "$docs_dir"
