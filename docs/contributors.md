@@ -23,5 +23,6 @@ To help with your development, these command may help:
 
 Two bash scripts exist to help with the development of our docs.
 
-- `npm run serveDocs` - serves .md files from ./docs using mkdocs' dev server
-- `npm run buildDocs` - builds the site using ./docs' for use in github pages
+- `pip install mkdocs` - Installs mkdocs
+- `npm run serveDocs` - Serves .md files from ./docs using mkdocs' dev server
+- `npm run buildDocs` - Builds the site using ./docs' for use in github pages
