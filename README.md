@@ -49,7 +49,7 @@ LangDrive lets you builds amazing AI apps like:
 ## Features:
 
 - Data ingestion
-    > LangDrive comes with the following built in data connectors to simplify data ingestion:
+    LangDrive comes with the following built in data connectors to simplify data ingestion:
     - Firebase Firestore
     - Email Ingestion via SMTP
     - Google Drive
@@ -58,23 +58,22 @@ LangDrive lets you builds amazing AI apps like:
     - (more coming soon, or you can build yours - LangDrive is open source)
 
 - Fine tuning
-    > Fine tune open source LLMs easily by formating your data into input:output completion pairs
+    - Fine tune open source LLMs easily by formating your data into input:output completion pairs
 
 - Deployment
-    > Add your Hugging Face access token to deploy your model directly to hugging face hub after fine tuning
-    - Hugging Face
+    - Add your Hugging Face access token to deploy your model directly to hugging face hub after fine tuning
 
 - Inference
-    > Query our supported open source models
+    - Query our supported open source models
 
 - Data Utils
-    > LangDrive comes built-in with data utils for CRUD operations for the different data connectors
+    - LangDrive comes built-in with data utils for CRUD operations for the different data connectors
 
 - API
-    > Call our support open source models from a single API
+    - Call our support open source models from a single API
     - Completions API: https://api.langdrive.ai/v1/chat/completions
     - Fine tuning API: https://api.langdrive.ai/train
-    Read the [docs](https://docs.LangDrive.ai) for more.
+    - Read the [docs](https://docs.LangDrive.ai) for more.
 
 -----
 
