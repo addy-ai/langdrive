@@ -103,16 +103,17 @@ class Train {
 
   // Source type 2
   async getDataFromService(classInstance, query) {
-    // console.log('DriveTrain:prepareData:getDataFromService', {classInstance, query, value})
+    this.verbose && console.log('DriveTrain:prepareData:getDataFromService')
     let classMethodName = Object.keys(query)[0]
     let fn = classInstance[classMethodName]
     let getOrderedFnArgNames = (func) => { // Returns Class Method Parameters in Order of Declaration
       const fnStr = func.toString().replace(/((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg, '');
       const result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(/([^\s,]+)/g);
       return result === null ? [] : result;
-    }
+    } 
     let args = getOrderedFnArgNames(fn).map((paramName) => query[classMethodName][paramName])
-    let data = await Promise.resolve(classInstance[classMethodName](...args)) // Preserve 'this'  
+    args = args[0] != undefined && args || [query[classMethodName]] 
+    let data = await Promise.resolve(classInstance[classMethodName](...args)) // Preserve 'this'   
     return data
   }
   // Handle the optional 'value' parameter from Source Data
@@ -131,7 +132,7 @@ class Train {
   }
 
   // Retrieves data and handles the optional 'value' parameter
-  async getData(lbl) {
+  async getData(lbl) { 
     this.verbose && console.log(`DriveTrain:getData: ${lbl}`)
 
     let path = this[`${lbl}Path`]
@@ -140,10 +141,13 @@ class Train {
     let data = this[`${lbl}Data`]
     let value = this[`${lbl}Value`]
 
+    
+    // console.log('getData: ', {path, service, query, data, value})
+
     // Get raw Data from URL 
     if (!data && path) { data = await this.getDataFromUrl(path); }
     // Get raw Data from Service   
-    else if (!data && service && query) { data = await this.getDataFromService(this[`${lbl}Service`], query) }
+    else if (!data && service && query) { data = await this.getDataFromService(service, query) }
     console.log('RAW DATA WE WILL PULL VALUES FROM', data)
     // Retrieve Data from raw Data  
     let fin = this.getValuesFromData(data, value)

@@ -5,27 +5,36 @@ const Train = require("./train");
 require("dotenv").config(); 
 
 // Gets the config and calls train
-function cli_train(args) { console.log(`~~~~ Start cli_train:${JSON.stringify(args)}:`);  
-  const config = getConfig(args);
+async function cli_train(args) { console.log(`~~~~ Start cli_train:${JSON.stringify(args)}:`);  
+  let config = getConfig(args)
+  config = await initConfig(config);
+  // console.log({config})
   train(config);
+}
+
+async function initConfig(config) {
+  console.log(`~~~~ Start initConfig:`);//${JSON.stringify(config)}:`);   
+  if(!config){return} 
+
+  let initClass = async (service) =>{ 
+    if(!!service){
+      let classInstance = await require(`./${service}`)  
+      return await classInstance?.init({verbose: config.verbose, ...config[service]})
+    }
+    else{return false}
+  }
+
+  config.train.service = await initClass(config.train.service)
+  config.train.inputService = await initClass(config.train.input.service)
+  config.train.outputService = await initClass(config.train.output.service)
+  return config
 }
 
 // config.train.input.serviceName == config.serviceName == class serviceName 
 async function train(config) {
   console.log(`~~~~ Start train:`);//${JSON.stringify(config)}:`);   
   if(!config){return} 
-
-  let initClass = async (service) =>{ 
-    if(!!service){  
-      let classInstance = await require(`./${service}`)  
-      return await classInstance?.init({verbose: config.verbose, ...config[service]})
-    }
-  }
-  config.train.service = config.train.service && await initClass(config.train.service)
-  config.train.inputService = config.train.input.service && await initClass(config.train.input.service)
-  config.train.outputService = config.train.output.service && await initClass(config.train.output.service)
- 
-  console.log(config.train.service)
+  
   // Train the model using the spec
   let trainer = await Train.init({verbose: config.verbose, ...config.train});
 

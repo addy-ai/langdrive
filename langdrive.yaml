@@ -1,11 +1,18 @@
 verbose: true
+
 firestore: 
   clientJson: "secrets/firebase_service_client.json"
   databaseURL: "env:FIREBASE_DATABASE_URL"
 
 gdrive: 
-  clientJson: "secrets/google_desktop_client.json" 
-
+  appType: "desktop"
+  keyFilePath: "secrets/google_desktop_client.json"
+  tokenFilePath: "secrets/google_desktop_token.json"
+  temp: 'getFileByName - filename, mimeType, directory, directoryId'
+  scopes: 
+    - "https://www.googleapis.com/auth/drive"
+    - "https://www.googleapis.com/auth/drive.metadata.readonly"
+    
 email:
   password: env:GMAIL_PASSWORD
   email: env:GMAIL_EMAIL
@@ -17,14 +24,13 @@ huggingface:
   deployToHf: true 
 
 train:
-  service: 'firestore' 
+  service: 'gdrive' 
   query:
-    filterCollectionWithMultipleWhereClauseWithLimit:
-      collection: "chat-state"
-      filterKey: []
-      filterData: []
-      operation: []
-      limit: 5
+    getFileByName:
+      filename: 'test123'
+      mimeType: 'application/msword'
+      directory: false
+      directoryId: false
   input:
     value: "chat.0.content"
   output:

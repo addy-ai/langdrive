@@ -119,6 +119,10 @@ Here's an example:
           filterData: []
           operation: []
           limit: 5
+      input:
+        value: "chat.0.content"
+      output:
+        value: "chat.1.content"
 
 To specify the model you want to train and where to host it:
 
@@ -129,3 +133,5 @@ To specify the model you want to train and where to host it:
       trainedModel: karpathic/falcon-7b-instruct-tuned
       deployToHf: true 
 ```
+
+ 

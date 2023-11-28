@@ -9,8 +9,8 @@
   "scripts": {
     "start": "nodemon ./src/start_server.js",
     "test": "node ./src/server/test.mjs",
-    "serveDocs": "mkdocs serve",
-    "buildDocs": "mkdocs build ; rm -r ./docs_temp ; mv site ./docs_temp",
+    "serveDocs": "bash ./serveDocs.sh",
+    "buildDocs": "bash ./buildDocs.sh",
     "swapDocs": "mv ./docs ./docs_temp_directory ; mv ./docs_temp docs ; mv ./docs_temp_directory ./docs_temp",
     "build": "node mkdocs.js"
   },

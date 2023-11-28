@@ -18,3 +18,10 @@ To help with your development, these command may help:
 - `npm unlink langdrive` - Unlink for good measure
 - `npm unlink langdrive, npm link --loglevel verbose` - Do both
 - `langdrive deploy --path "../../path/to/file.yaml"` - Test path
+
+### Docs 
+
+Two bash scripts exist to help with the development of our docs.
+
+- `npm run serveDocs` - serves .md files from ./docs using mkdocs' dev server
+- `npm run buildDocs` - builds the site using ./docs' for use in github pages

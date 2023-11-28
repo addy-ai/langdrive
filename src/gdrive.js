@@ -26,9 +26,9 @@ class Gdrive {
     this.client_id = props.client_id;
     this.client_secret = props.client_secret;
     this.redirect_uri = this.scopes = props.scopes;
-    this.keyFilePath = props.keyFilePath || path.resolve() + `/google_${this.appType}_credentials.json` 
+    this.keyFilePath = path.resolve() +'/'+ ( props.keyFilePath || `google_${this.appType}_credentials.json` )
     this.keyFileContents = props.keyFileContents
-    this.tokenFilePath = props.tokenFilePath || path.resolve() + `/google_${this.appType}_token.json`
+    this.tokenFilePath = path.resolve() +'/'+ (props.tokenFilePath || `google_${this.appType}_token.json`)
     this.access_token = props.access_token; 
     this.oauth2Client = (async () => {
       let errormsg = `Drive: ${this.appType} ERROR: DriveUtils: Unable to Authetnicate Drive. `;
@@ -46,29 +46,36 @@ class Gdrive {
         if (this.appType === "desktop") {
           // When using a keyfile or keyFileContents, 
           // We actually need to perfrom the auth and save the resulting token to a file
-          // First we check if the token file exists 
+
+          // First we check and loadSavedCredentialsIfExist from the token file
           let tokenExists = await fs.access(this.tokenFilePath).then(() => true).catch(() => false);
-          if(tokenExists){
+          if(tokenExists){`Drive: ${this.appType}: Auth: TokenFile EXISTS`
             // If the token exists, use it!
             this.verbose && console.log(`Drive: ${this.appType}: Auth: TokenFile EXISTS`)
             const content = await fs.readFile(this.tokenFilePath);
-            const credentials = JSON.parse(content);
+            const credentials = JSON.parse(content);  
             client =  google.auth.fromJSON(credentials);
           }
           else {   
-            // If the token does not exist, we need to authenticate and save the token to a file
+            // Otherwise we need to authenticate client.json and save the resulting token to a file
             this.verbose && console.log(`Drive: ${this.appType}: Auth: NO TokenFile`)
             let keyFileExists = await fs.access(this.keyFilePath).then(() => true).catch(() => false);
+            // Create the client.json file if it doesn't exist but was provided as text in the constructor
             if( this.keyFileContents && !keyFileExists ){
+              this.verbose && console.log(`Drive: ${this.appType}: Auth: Created KeyFile from keyFileContents`)
               await fs.writeFile(this.keyFilePath, this.keyFileContents);
             }
+            console.log('path resovle', path.resolve())
+            this.verbose && console.log(`\n\nDrive: ${this.appType}: Auth: KeyFile EXISTS`, this.keyFilePath, '\n\n')
+            this.verbose && console.log(`\n\nDrive: ${this.appType}: Auth: scopes`, this.scopes, '\n\n')
             client = await authenticate({
               scopes: this.scopes,
               keyfilePath: this.keyFilePath
             }); 
+            console.log('client', client)
             if (client.credentials) { 
-              this.verbose && console.log(`Drive: ${this.appType}: Auth: START`)
               // Save the file as a token file.
+              this.verbose && console.log(`Drive: ${this.appType}: Auth: START`) 
               const content = await fs.readFile(this.keyFilePath);
               const keys = JSON.parse(content);
               const key = keys.installed || keys.web;
@@ -98,9 +105,21 @@ class Gdrive {
     })();
   }
 
+  // Refresh the access token and return back the new access token
+  static init = async config => {
+    try { 
+      return new Gdrive(config);
+ 
+    } catch (error) { 
+      config.verbose && console.error("Error initializing Gdrive", error);
+      throw error;
+    }
+  };
+
   async getDrive() {
     this.drive = this.drive || google.drive({ version: "v3", auth: await this.oauth2Client });
   }
+
   async listFilez() {
     await this.getDrive();
     try {
@@ -206,6 +225,7 @@ class Gdrive {
   // Filters ListFiles by name. Returns 1 result.
   async getFileInfo(props) {
     let { filename, mimeType, directory, directoryId } = props;
+    this.verbose && console.log("\n\n 2.1 - DriveUtils: getFileInfo: ", props);
     /*
     console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     console.log("~~~~~~~~~ Get json File In Drive ~~~~~~~~~~~~~~~~~~~~~~");
@@ -231,10 +251,11 @@ class Gdrive {
     }
   }
 
-  async getFileById(props) {
-    await this.getDrive();
+  async getFileById(props) { 
     let { id, fileId } = props;
     id = id || fileId;
+    this.verbose && console.log("\n\n 2.2 - DriveUtils: getFileByName => getFileById: ", id);
+    await this.getDrive(); 
     // console.log("GET FILE BY ID", props);
     /*
     console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -249,7 +270,8 @@ class Gdrive {
     }
     try {
       const drive = await this.drive;
-      const response = await drive.files.get({ fileId: id, alt: "media" });
+      console.log('ABOUT TO QUERY getFileById', {id})
+      const response = await drive.files.get({ fileId: id, alt: 'media'});
       return { status: 200, message: "Got File by ID.", data: response.data };
     } catch (err) {
       this.verbose &&
@@ -274,11 +296,13 @@ class Gdrive {
     */
     let error = { status: 400, data: false, message: "Unable to filename: ", filename, mimeType };
     try {
+      this.verbose && console.log("\n\n 1.0 - DriveUtils: getFileByName");
       let type = mimeType && `mimeType='${mimeType}'`;
       let response = await this.getFileInfo({ filename, type, directory, directoryId });
       if (response.status == 400) return error;
-      console.log("\n\n 1 - DriveUtils: getFileByName => getFileInfo: ", response);
-      response = this.getFileById({ fileId: response.data.id });
+      // this.verbose && console.log("\n\n 1.1 - DriveUtils: getFileByName => getFileInfo: ", response);
+      response = await this.getFileById({ fileId: response.data.id });
+      // this.verbose && console.log("\n\n 1.2 - DriveUtils: getFileByName => getFileById: ", response);
       if (response.status == 400) return error;
       return { status: 200, message: "Got File by ID.", data: file.data };
     } catch (err) {
@@ -497,30 +521,7 @@ class Gdrive {
       // console.log("SAVING access_token: ", req.session.access_token);
       callback.access_token ? res.redirect("/chat") : res.status(500).send("Error during authentication");
     });
-
-    app.get("/chat", checkAccessToken, (req, res, next) => {
-      res.sendFile(__dirname + "/client/chatbot.html");
-    });
-
-    async function checkAccessToken(req, res, next) {
-      let access_token = req.session.access_token;
-      if (access_token) {
-        access_token = await DriveUtils.checkAndRefresh({
-          access_token,
-          timestamp: req.session.timestamp,
-          refresh_token: req.session.refresh_token,
-          client_id: GOOGLE_WEB_CLIENT_ID,
-          client_secret: GOOGLE_WEB_CLIENT_SECRET
-        });
-        req.session.timestamp = new Date().toISOString();
-      }
-      if (!access_token) {
-        // console.log("NO ACCESS TOKEN ");
-        return res.redirect("/auth/google");
-      }
-      req.session.access_token = access_token;
-      next();
-    }
+    
     return app;
   }
 
@@ -612,30 +613,6 @@ class Gdrive {
     }
   };
 
-  // Refresh the access token and return back the new access token
-  static init = async config => {
-    try {
-      const { data } = await axios.post(
-        "https://oauth2.googleapis.com/token",
-        querystring.stringify({
-          client_secret: config.client_secret,
-          grant_type: "refresh_token",
-          refresh_token: config.refresh_token,
-          client_id: config.client_id
-        }),
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          }
-        }
-      );
-
-      return data.access_token;
-    } catch (error) {
-      config.verbose && console.error("Error refreshing token", error);
-      throw error;
-    }
-  };
 }
 module.exports = Gdrive;
 // Frontend: 

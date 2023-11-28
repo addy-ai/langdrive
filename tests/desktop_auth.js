@@ -12,11 +12,13 @@ const SCOPES = ["https://www.googleapis.com/auth/drive.metadata.readonly"];
 const TOKEN_PATH = path.join(process.cwd(), "token.json");
 console.log({ cwd:process.cwd(), TOKEN_PATH });
 const CREDENTIALS_PATH = path.join(process.cwd(), "secrets/google_desktop_client.json");
+console.log({ cwd:process.cwd(), CREDENTIALS_PATH });
 
 async function loadSavedCredentialsIfExist() {
   try {
     const content = await fs.readFile(TOKEN_PATH);
     const credentials = JSON.parse(content);
+    console.log('credentials', credentials)
     return google.auth.fromJSON(credentials);
   } catch (err) {
     return null;
