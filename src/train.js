@@ -23,7 +23,7 @@ class Train {
     this.inputPath = props.inputPath || i.path || props.path || false
     this.inputService = props.inputService || i.service || props.service || false // Config
     this.inputQuery = props.inputQuery || i.query || props.query || false
-    this.inputValue = props.inputValue || i.value || false
+    this.inputValue = props.inputValue || i.value || 'input'
 
     // Set Output
     const o = props.output || {};
@@ -31,7 +31,7 @@ class Train {
     this.outputPath = props.outputPath || o.path || props.path || false  // !data & !service user input 
     this.outputService = props.outputService || o.service || props.service || false // !data & !path user input 
     this.outputQuery = props.outputQuery || o.query || props.query || false //
-    this.outputValue = props.outputValue || o.value || false
+    this.outputValue = props.outputValue || o.value || 'output'
   }
 
   // Initialize the class
@@ -63,7 +63,7 @@ class Train {
       "deployToHf": huggingfaceInfo.deployToHf,
       "hfModelPath": huggingfaceInfo.trainedModel,                             // where to save the fine tuned model
     }
-    console.log('DriveTrain:trainModel:sendThis', sendThis)
+    console.log('Train:trainModel:sendThis', sendThis.trainingData) 
     let model = await fetch('https://api.langdrive.ai/train', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -79,33 +79,48 @@ class Train {
     let inp = this.input = await this.getData('input');
     let out = this.output = await this.getData('output');
 
-    console.log('DriveTrain:PrepareData:inp', inp, out)
+    // console.log('DriveTrain:PrepareData:inp', inp, out)
 
     // create a new array of objects with the input and output data
-    let data = this.data = inp.map((input, i) => { return { input, output: out[i] } })
+    let data = this.data = inp.map((input, i) => { return { input: inp[i], output: out[i] } })
 
     // this.verbose && console.log(`DriveTrain:PrepareData:FIN`,this.input, this.output)
     return data
   }
 
   // Source type 1
-  getDataFromUrl(url) {
-    return new Promise((resolve, reject) => {
-      Papa.parse(url, {
-        download: true,
-        header: true,
-        complete: function (results) {
-          resolve(results.data || results.text || results.error)
+  async getDataFromUrl(url) {
+    try {
+      let data;
+      // User provided a relative link to a local file
+      if (!url.startsWith('http')) { 
+        const fs = require('fs');
+        data = await fs.promises.readFile(url, 'utf8');
+      }
+      // User provided a URL to a remote file
+      else {
+        const response = await fetch(url);
+        if (!response.ok) { 
+          throw new Error('Network response was not ok'); 
         }
-      })
-    })
-  }
+        data = await response.text();
+      } 
+      const parseCsv = require("./utilsNode").parseCsv;
+      console.log(data)
+      let finData = parseCsv(data)
+      return finData 
+    } catch (error) {
+      throw new Error(`Error retrieving data: ${error.message}`);
+    }
+  } 
+  
 
   // Source type 2
   async getDataFromService(classInstance, query) {
     this.verbose && console.log('DriveTrain:prepareData:getDataFromService')
     let classMethodName = Object.keys(query)[0]
     let fn = classInstance[classMethodName]
+    console.log('getDataFromService', {classMethodName, fn, query})
     let getOrderedFnArgNames = (func) => { // Returns Class Method Parameters in Order of Declaration
       const fnStr = func.toString().replace(/((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg, '');
       const result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(/([^\s,]+)/g);
@@ -118,6 +133,7 @@ class Train {
   }
   // Handle the optional 'value' parameter from Source Data
   getValuesFromData(data, value) {
+    console.log('GET VALUES FROM DATA', value, data[0])
     if (!value) { return data }
     if (value === '*') { return data }
     else {
@@ -141,17 +157,22 @@ class Train {
     let data = this[`${lbl}Data`]
     let value = this[`${lbl}Value`]
 
-    
     // console.log('getData: ', {path, service, query, data, value})
 
     // Get raw Data from URL 
     if (!data && path) { data = await this.getDataFromUrl(path); }
     // Get raw Data from Service   
-    else if (!data && service && query) { data = await this.getDataFromService(service, query) }
-    console.log('RAW DATA WE WILL PULL VALUES FROM', data)
+    else if (!data && service && query) { data = await this.getDataFromService(service, query) } 
     // Retrieve Data from raw Data  
     let fin = this.getValuesFromData(data, value)
     return fin
   }
 }
 module.exports = Train;
+
+// FOR NOTES: 
+// default == 'input' or 'output'
+// if (value === '*') { return data }
+// We dont have a service to work with local files atm.
+// for csvs set 'csv' as service (optionally,atm) and 'path' as path (required)
+// be explicitly clear that the cli args overwrite the yaml file.

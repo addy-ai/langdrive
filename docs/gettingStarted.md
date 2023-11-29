@@ -2,9 +2,9 @@
 
 Thank you for taking interest in LangDrive!
 
-Langdrive's set of connectors and services makes training LLMs easy, and you can get started with just a CSV file. By providing a Hugging Face API key  you can train models and even host them in the cloud 😉  
+Langdrive's set of connectors and services makes training LLMs easy, and you can get started with just a CSV file! By providing a Hugging Face API key you can even train models and host them directly in the cloud 😉  
 
-Import langdrive in your project or configure and execute Langdrive directly from the CLI. The remainder of this article will explore using both approaches for training and deploy models with langdrive. Along the way we will explore the use of a YAML doc to help with the connecting to data and services.
+Import Langdrive in your project or configure and execute Langdrive directly from the CLI. The remainder of this article will explore using both approaches for training and deploy models with langdrive. Along the way we will explore the use of a YAML doc to help with the connecting to data and services.
 
 
 ## Using the CLI
@@ -18,23 +18,24 @@ In this case, Langdrive will retrieve the data, train a model, host it's weights
 	
 The command `langdrive train` is used to train the LLM, please see how to configure the command below.
 
-args:
+**CLI Arguements**:
 
 - `yaml`: Path to optional YAML config doc, default Value: './langdrive.yaml'. This will load up any class and query for records and their values for both inputs and ouputs.
-- `csv`: Path to training dataCSV*The training data should be a two-column CSV of input and output pairs.
+- `csv`: Path to training data. The training data should be a two-column CSV of input and output pairs.
 - `hfToken`: An API key provided by Hugging Face with `write` permissions. Get one [here](https://huggingface.co/docs/hub/security-tokens).
-- `baseModel`: The original model to train: This can be one of the models in our supported models shown at the bottom of this page
-- `deployToHf`: true | false
+- `baseModel`: The original model to train. This can be one of the models in our supported models shown at the bottom of this page
+- `deploy`: Weather training weights should be hosted in a hosting service. Default False. 
+- `deployToHf`: Whether traiing weights should be stored in huggingface specifically. Either true | false
 - `hfModelPath`: The full path to your hugging face model repo where the model should be deployed. Format: hugging face username/model
 
-It is assumed you do not want to deploy your model if you run `langdrive train`. In such a case a link to where you can download the weights will be provided. Adding `--deploy` will return a link to the inferencing endpoint.
+It is assumed you do not want to deploy your model if you run `langdrive train`. In such a case a link to where you can download the weights will be provided. Adding `--deployToHf` will return a link to the inferencing endpoint.
 
-More information on how to ingest simple data using the CLI can be found in the [CLI](./cli.md) docs. For more comlex examples, read on...
+More information on how to ingest simple data using the CLI can be found in the [CLI](./cli.md) docs. For more complex examples, read on...
 
 
 ## Getting Started with YAML
 
-Getting the data and services you need shouldn't be the hardest part about training your models! Using YAML, you can configure more advanced data retrieval and training/ deployment strategies. Once configured, these settings are available for the standalone API and also from the CLI.
+Getting the data and services you need shouldn't be the hardest part about training your models! Using YAML, you can configure more advanced data retrieval, processing, and training/ deployment strategies. Once configured, these settings are available for the standalone API and also from the CLI.
 
 Refer to the [Yaml](./yaml.md) docs for more information.
 
@@ -49,7 +50,11 @@ In essense, config of these data-connectors is as straight forward as:
       databaseURL: "env:FIREBASE_DATABASE_URL"
 
     drive:
+      appType: "desktop"
       clientJson: "secrets/drive_service_client.json" 
+      scopes: 
+        - "https://www.googleapis.com/auth/drive"
+        - "https://www.googleapis.com/auth/drive.metadata.readonly"
 
     email:
       password: env:GMAIL_PASSWORD
@@ -99,7 +104,7 @@ langdrive.yaml
 
 Now lets show how to query data from one of those third-party services we configured earlier.
 
-Within the `train` entry, setting a `service` and `query` will do the trick. Set a data-connector as the `service` and one of its methods (and its args) as the `query` value. This will require exploring class documentation.
+Setting a `service` and `query` within the `train` entry will do this. To begin, set the name of a data-connector as the `service` and one of its methods (and its args) as the `query` value. Users are encouraged to explore the service documentation to find available methods and the parameters they take. Once the service, method, and parameters are known - you may set them like so:
 
 langdrive.yaml
 ```
@@ -117,7 +122,7 @@ langdrive.yaml
 In the example above we use the `filterCollectionWithMultipleWhereClauseWithLimit` method from Langdrive's Firestore class, passing arguements as specified in the Langdrive [Firestore](./api/firestore.md) docs. `collection` is the firestore collection name to retrieve data from, (limited to the first 5 entries). `filterKey` and `filterData` are not specified in this example but contain the field name/key to filter. The `operation` value specifies the firebstore query operator to use (For example, '==', '>=', '<=' ).
 
 
-Note:
+**Note**:
 
 > If the retrieved data has two columns (or attributes) they are assumed to be in the order [input, output]. If more columns exist, langdrive grabs the first two columns after first looking for an 'inputValue' and 'outpuValue' column. The same logic applies for information retrieved from a query and works similarly for nested Json Objects (ala: `att1.attr2`)
 
@@ -130,6 +135,8 @@ Coming Soon: Deploy self-hosted cloud based training infrastructure on AWS, Goog
 If you would like to interact directly directly with our training endpoint you can call our hosted training image directly via the langdrive API. 
 
 Endpoint: `POST https://api.langdrive.ai/train`
+
+You can test the quality of one of these models by visit the Langdrive [Playground](https://addy-ai.com/products/langdrive#playground)
 
 ### Request Body
 

@@ -270,7 +270,7 @@ class Gdrive {
     }
     try {
       const drive = await this.drive;
-      console.log('ABOUT TO QUERY getFileById', {id})
+      console.log('ABOUT TO QUERY getFileById', {id}) // mimeType: 'application/msword' 'text/csv'
       const response = await drive.files.get({ fileId: id, alt: 'media'});
       return { status: 200, message: "Got File by ID.", data: response.data };
     } catch (err) {
@@ -300,11 +300,12 @@ class Gdrive {
       let type = mimeType && `mimeType='${mimeType}'`;
       let response = await this.getFileInfo({ filename, type, directory, directoryId });
       if (response.status == 400) return error;
-      // this.verbose && console.log("\n\n 1.1 - DriveUtils: getFileByName => getFileInfo: ", response);
+      // this.verbose && console.log("\n\n 1.1 - DriveUtils: getFileByName => getFileInfo response: ", response);
       response = await this.getFileById({ fileId: response.data.id });
-      // this.verbose && console.log("\n\n 1.2 - DriveUtils: getFileByName => getFileById: ", response);
+      // this.verbose && console.log("\n\n 1.2 - DriveUtils: getFileByName => getFileById response: ", response);
       if (response.status == 400) return error;
-      return { status: 200, message: "Got File by ID.", data: file.data };
+      console.log("\n\n 1.3 - DriveUtils: getFileByName => getFileById: ", response);
+      return { status: 200, message: "Got File by ID.", data: response.data };
     } catch (err) {
       this.verbose &&
         console.log(
@@ -317,6 +318,13 @@ class Gdrive {
         );
       return error;
     }
+  }
+
+  async getCsvByName(props) {
+    let response = await this.getFileByName(props)
+    const parseCsv = require("./utilsNode").parseCsv;
+    let finData = parseCsv(response.data)
+    return finData
   }
 
   async createFile(props) {

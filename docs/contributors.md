@@ -16,8 +16,7 @@ To help with your development, these command may help:
 
 - `npm link --loglevel verbose` - Uses loads the current repo and a npm module. 
 - `npm unlink langdrive` - Unlink for good measure
-- `npm unlink langdrive, npm link --loglevel verbose` - Do both
-- `langdrive deploy --path "../../path/to/file.yaml"` - Test path
+- `npm unlink langdrive, npm link --loglevel verbose` - Do both 
 
 ### Docs 
 

@@ -24,14 +24,15 @@ huggingface:
   deployToHf: true 
 
 train:
-  service: 'gdrive' 
-  query:
-    getFileByName:
-      filename: 'test123'
-      mimeType: 'application/msword'
-      directory: false
-      directoryId: false
-  input:
-    value: "chat.0.content"
-  output:
-    value: "chat.1.content"
+    service: 'firestore' 
+    query:
+      filterCollectionWithMultipleWhereClauseWithLimit:
+          collection: "chat-state"                
+          filterKey: []
+          filterData: []
+          operation: []
+          limit: 5
+      input:
+        value: "chat.0.content"
+      output:
+        value: "chat.1.content"

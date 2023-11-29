@@ -1,6 +1,6 @@
 {
   "name": "langdrive",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "",
   "main": "main.js",
   "bin": {
@@ -37,6 +37,7 @@
     "langchain": "^0.0.124",
     "nodemon": "^3.0.1",
     "openai": "^4.20.0",
+    "papaparse": "^5.4.1",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-oauth2-refresh": "^2.2.0",

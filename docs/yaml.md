@@ -30,7 +30,11 @@ Example 0: Bespoke example with many settings
       databaseURL: "env:FIREBASE_DATABASE_URL"
 
     drive:
+      appType: "desktop"
       clientJson: "secrets/drive_service_client.json" 
+      scopes: 
+        - "https://www.googleapis.com/auth/drive"
+        - "https://www.googleapis.com/auth/drive.metadata.readonly"
 
     email:
       password: env:GMAIL_PASSWORD
@@ -123,6 +127,19 @@ Here's an example:
         value: "chat.0.content"
       output:
         value: "chat.1.content"
+
+    train:
+      service: 'gdrive' 
+      query:
+        getFileByName:
+          filename: 'test123'
+          mimeType: 'application/msword'
+          directory: false
+          directoryId: false
+      input:
+        value: "input"
+      output:
+        value: "output"
 
 To specify the model you want to train and where to host it:
 
