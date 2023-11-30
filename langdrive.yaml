@@ -20,19 +20,9 @@ email:
 huggingface:
   hfToken: env:HUGGINGFACE_API_KEY
   baseModel: vilsonrodrigues/falcon-7b-instruct-sharded
-  trainedModel: karpathic/falcon-7b-instruct-tuned
+  hfModelPath: karpathic/falcon-7b-instruct-tuned
   deployToHf: true 
 
 train:
-    service: 'firestore' 
-    query:
-      filterCollectionWithMultipleWhereClauseWithLimit:
-          collection: "chat-state"                
-          filterKey: []
-          filterData: []
-          operation: []
-          limit: 5
-      input:
-        value: "chat.0.content"
-      output:
-        value: "chat.1.content"
+  service: 'csv'
+  path: './tests/midjourney_prompt.csv' 

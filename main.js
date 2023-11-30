@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-process?.argv?.length > 2 && require('./main_cli')(
-  process.argv.slice(3).reduce((acc, curr, i, arr) => {
+process?.argv?.length > 2 && (async () => { 
+  const mainCLI = require('./main_cli') 
+  const args = process.argv.slice(3).reduce((acc, curr, i, arr) => {
     if (curr.startsWith('--')) {
       const key = curr.slice(2);
       const nextArg = arr[i + 1];
@@ -12,8 +13,11 @@ process?.argv?.length > 2 && require('./main_cli')(
       }
     }
     return acc;
-  }, {})
-);
+  }, {}); 
+  let config = await mainCLI( args )
+  // console.log('main.js', {config})
+  process.exit();
+})() || process.exit();
 
 // runs main_cli.js cli_train({flag: val})
 

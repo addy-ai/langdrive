@@ -12,6 +12,8 @@
 */
 // import Papa from 'papaparse'; // CSV Parser
 
+const { type } = require('os');
+
 class Train {
   constructor(props) {
     const { verbose, ...train } = props;
@@ -56,28 +58,31 @@ class Train {
     ? - do this in the fask api method
     */
     // data = inp || this.data
+    // console.log('Train:trainModel:huggingfaceInfo', huggingfaceInfo)
+    // console.log('DriveTrain:trainModel()', this.data); 
     let sendThis = {
-      "baseModel": huggingfaceInfo.baseModel,
+      "baseModel": huggingfaceInfo?.baseModel || "vilsonrodrigues/falcon-7b-instruct-sharded",
       "trainingData": this.data,
       "hfToken": huggingfaceInfo.hfToken,
       "deployToHf": huggingfaceInfo.deployToHf,
-      "hfModelPath": huggingfaceInfo.trainedModel,                             // where to save the fine tuned model
+      "hfModelPath": huggingfaceInfo.hfModelPath,                             // where to save the fine tuned model
     }
-    console.log('Train:trainModel:sendThis', sendThis.trainingData) 
+    // console.log('Train:trainModel:sendThis', sendThis.trainingData) 
     let model = await fetch('https://api.langdrive.ai/train', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(sendThis)
     })
+    console.log('trainModel:sentthis:', {sendThis})
 
     return model
   }
 
   // Retrieve the data needed
   async prepareData() {
-    if (this.verbose) console.log('DriveTrain:PrepareData()');
+    if (this.verbose) console.log('DriveTrain:PrepareData()'); 
     let inp = this.input = await this.getData('input');
-    let out = this.output = await this.getData('output');
+    let out = this.output = await this.getData('output'); 
 
     // console.log('DriveTrain:PrepareData:inp', inp, out)
 
@@ -90,6 +95,7 @@ class Train {
 
   // Source type 1
   async getDataFromUrl(url) {
+    // console.log('Train:prepareData:getDataFromUrl')
     try {
       let data;
       // User provided a relative link to a local file
@@ -105,8 +111,8 @@ class Train {
         }
         data = await response.text();
       } 
-      const parseCsv = require("./utilsNode").parseCsv;
-      console.log(data)
+      const parseCsv = require("./utilsNode").parseCsv; 
+      // console.log('Train:prepareData:getDataFromUrl:Parsing')
       let finData = parseCsv(data)
       return finData 
     } catch (error) {
@@ -117,10 +123,10 @@ class Train {
 
   // Source type 2
   async getDataFromService(classInstance, query) {
-    this.verbose && console.log('DriveTrain:prepareData:getDataFromService')
+    this.verbose && console.log('DriveTrain:prepareData:getDataFromService:START')
     let classMethodName = Object.keys(query)[0]
     let fn = classInstance[classMethodName]
-    console.log('getDataFromService', {classMethodName, fn, query})
+    // console.log('DriveTrain:prepareData:getDataFromService:MID', {classMethodName, fn, query})
     let getOrderedFnArgNames = (func) => { // Returns Class Method Parameters in Order of Declaration
       const fnStr = func.toString().replace(/((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg, '');
       const result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(/([^\s,]+)/g);
@@ -129,20 +135,29 @@ class Train {
     let args = getOrderedFnArgNames(fn).map((paramName) => query[classMethodName][paramName])
     args = args[0] != undefined && args || [query[classMethodName]] 
     let data = await Promise.resolve(classInstance[classMethodName](...args)) // Preserve 'this'   
+    // console.log('DriveTrain:getDataFromService:END',{data})
     return data
   }
   // Handle the optional 'value' parameter from Source Data
-  getValuesFromData(data, value) {
-    console.log('GET VALUES FROM DATA', value, data[0])
+  getValuesFromData(data, value) { 
     if (!value) { return data }
-    if (value === '*') { return data }
+    // console.log(!!value, value, value=='',typeof(value) )     
+    if (value === '*') { return data } 
     else {
       // Iterate through each row and retrieve the value
+      // console.log(value,'GET VALUES FROM DATA', data[0], value) 
       return data.map((row) => {
-        if (value.includes('.')) {
+        try{
+          if (value.includes('.')) {
           return value.split('.').reduce((obj, key) => obj ? obj[isNaN(key) ? key : parseInt(key)] : undefined, row);
         }
         return row[value]
+        }
+        catch(err){
+          console.log('getValuesFromData:err', err)
+          return false
+          // return JSON.stringify(row)
+        }
       })
     }
   }
@@ -157,15 +172,16 @@ class Train {
     let data = this[`${lbl}Data`]
     let value = this[`${lbl}Value`]
 
-    // console.log('getData: ', {path, service, query, data, value})
+    // console.log('getData: ', {path, service, query, data, value}) 
 
     // Get raw Data from URL 
     if (!data && path) { data = await this.getDataFromUrl(path); }
     // Get raw Data from Service   
     else if (!data && service && query) { data = await this.getDataFromService(service, query) } 
     // Retrieve Data from raw Data  
-    let fin = this.getValuesFromData(data, value)
-    return fin
+    let extractedData = this.getValuesFromData(data, value)  
+    // console.log('getData:extractedData', extractedData)
+    return extractedData
   }
 }
 module.exports = Train;

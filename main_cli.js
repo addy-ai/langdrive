@@ -1,7 +1,9 @@
 // For now just call train
-function cli(args) { 
-  console.log(`~~~~ Start cli\n`) 
-  require('./src/utilsNode').cli_train(args);
+async function cli(args) { 
+  const utils = require('./src/utilsNode')
+  const returnThis = await utils.cli_train(args);
+  // console.log('~~~~ main_cli', {returnThis})
+  return returnThis
 }
 
 module.exports = cli;
