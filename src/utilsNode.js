@@ -71,6 +71,11 @@ function mergeCliArgsAndYaml(args, config) {
     };
   } 
   if (args['deploy']) { config.train.deploy = true; }
+  if(args['path']){ config.train.path = args['path']; }
+  if(args['outputValue']){ config.train.outputValue = args['outputValue']; }
+  if(args['inputValue']){ config.train.inputValue = args['inputValue']; }
+  if(args['outputPath']){ config.train.outputPath = args['outputPath']; }
+  if(args['inputPath']){ config.train.inputPath = args['inputPath']; }
   config.verbose = args['verbose'] ? config.verbose : false;
    
   // config.verbose && console.log(`mergeCliArgsAndYaml:config`, config);
@@ -108,7 +113,7 @@ async function train(config) {
   let trainer = await Train.init(trainConfig); 
  
   let trainOnThis = {...{deployToHf: config.train.deploy||false}, ...config.huggingface}
-  console.log(config, trainOnThis)
+  console.log({config}, {trainer})
   let trainingResults = await trainer.trainModel(trainOnThis);
 
   // if(config.heroku){ config.firebase.heroku = heroku.handleHeroku(config); }

@@ -21,8 +21,8 @@ huggingface:
   hfToken: env:HUGGINGFACE_API_KEY
   baseModel: vilsonrodrigues/falcon-7b-instruct-sharded
   hfModelPath: karpathic/falcon-7b-instruct-tuned
-  deployToHf: true 
-
+  deployToHf: true  
+  
 train: 
   input:
     path: ./tests/midjourney_prompt.csv

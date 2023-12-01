@@ -153,34 +153,40 @@
               
                 <h1 id="getting-started">Getting Started</h1>
 <p>Thank you for taking interest in LangDrive!</p>
-<p>Langdrive's set of connectors and services makes training LLMs easy, and you can get started with just a CSV file! By providing a Hugging Face API key you can even train models and host them directly in the cloud 😉  </p>
-<p>Import Langdrive in your project or configure and execute Langdrive directly from the CLI. The remainder of this article will explore using both approaches for training and deploy models with langdrive. Along the way we will explore the use of a YAML doc to help with the connecting to data and services.</p>
+<p>Langdrive's set of connectors and services makes training LLMs easy! You can get started with just a CSV file, but by providing a Hugging Face API key you can train models and host them directly in the cloud 😉 </p>
+<p>Import and use Langdrive modules in your scripts or configure and execute Langdrive directly from the CLI. The remainder of this article will explore using both approaches for training and deploy models with langdrive. Along the way we will explore the use of a YAML doc to help with the connecting to data and services.</p>
 <h2 id="using-the-cli">Using the CLI</h2>
 <p>Node developers can train and deploy a model in 2 simple steps. </p>
 <ol>
-<li><code>npm install langdrive</code></li>
-<li><code>langdrive train --csv ./path/to/csvFileName.csv --hftoken apikey123 --deploy</code></li>
+<li><code>npm install langdrive --save-dev</code></li>
+<li><code>langdrive train --csv ./path/to/csvFileName.csv --hftoken apikey123 --deploy  --hfModelPath username/new-model-name</code></li>
 </ol>
-<p>In this case, Langdrive will retrieve the data, train a model, host it's weights on Hugging Face, and return an inference endpoint you may use to query the LLM.  </p>
+<p>In this case, Langdrive will retrieve the data, train a model, host it's weights on Hugging Face, and return an inference endpoint you may use to query the LLM. Here's a working <a href="https://github.com/addy-ai/langdrive/blob/main/tests/midjourney_prompt.csv">sample dataset</a>.</p>
 <p>The command <code>langdrive train</code> is used to train the LLM, please see how to configure the command below.</p>
 <p><strong>CLI Arguements</strong>:</p>
 <ul>
-<li><code>yaml</code>: Path to optional YAML config doc, default Value: './langdrive.yaml'. This will load up any class and query for records and their values for both inputs and ouputs.</li>
-<li><code>csv</code>: Path to training data. The training data should be a two-column CSV of input and output pairs.</li>
+<li><code>yaml</code>: Path to optional YAML config doc, default Value: './langdrive.yaml'. This will load up any class and query for records and their values for both inputs and ouputs. </li>
 <li><code>hfToken</code>: An API key provided by Hugging Face with <code>write</code> permissions. Get one <a href="https://huggingface.co/docs/hub/security-tokens">here</a>.</li>
 <li><code>baseModel</code>: The original model to train. This can be one of the models in our supported models shown at the bottom of this page</li>
 <li><code>deploy</code>: Weather training weights should be hosted in a hosting service. Default False. </li>
 <li><code>deployToHf</code>: Whether traiing weights should be stored in huggingface specifically. Either true | false</li>
 <li><code>hfModelPath</code>: The full path to your hugging face model repo where the model should be deployed. Format: hugging face username/model</li>
+<li><code>csv</code>: Path to shared csv training data.</li>
+<li><code>path</code>: Path to shared training data.</li>
+<li><code>inputPath</code>: Path to input training data if not shared.</li>
+<li><code>outputPath</code>: Path to output training data if not shared.</li>
+<li><code>inputValue</code>: Input value to extract from training data.  default: input </li>
+<li><code>outputValue</code>: Output value to extract from training data.  default: output   </li>
 </ul>
 <p>It is assumed you do not want to deploy your model if you run <code>langdrive train</code>. In such a case a link to where you can download the weights will be provided. Adding <code>--deployToHf</code> will return a link to the inferencing endpoint.</p>
 <p>More information on how to ingest simple data using the CLI can be found in the <a href="../cli/">CLI</a> docs. For more complex examples, read on...</p>
 <h2 id="getting-started-with-yaml">Getting Started with YAML</h2>
 <p>Getting the data and services you need shouldn't be the hardest part about training your models! Using YAML, you can configure more advanced data retrieval, processing, and training/ deployment strategies. Once configured, these settings are available for the standalone API and also from the CLI.</p>
-<p>Refer to the <a href="../yaml/">Yaml</a> docs for more information.</p>
+<p>The information covered in this subsection is included in this <a href="https://github.com/addy-ai/langdrive/blob/main/langdrive.example.yaml">Sample YAML</a> doc. Refer to the <a href="../yaml/">Yaml</a> docs for more information.</p>
 <h3 id="step-1-configure-your-data-connectors">Step 1: Configure Your Data Connectors</h3>
 <p>Our growing list of data-connectors allow anyone to retrieve data through a simple config doc. As LangDrive grows, our set of Open-Source integrations will grow. At the moment, you can connect to your data using our <code>email</code>, <code>firestore</code>, and <code>gdrive</code> classes.  </p>
 <p>In essense, config of these data-connectors is as straight forward as:</p>
+<p>langdrive.yaml</p>
 <pre><code>firestore: 
   clientJson: "secrets/firebase_service_client.json"
   databaseURL: "env:FIREBASE_DATABASE_URL"
@@ -197,51 +203,90 @@ email:
   email: env:GMAIL_EMAIL
 </code></pre>
 <p>You may specify .env variables using <code>env:</code> as a prefix for your secret information.</p>
-<p>In our example above, the <code>clientJson</code> attribute is a <a href="https://firebase.google.com/support/guides/service-accounts">Firebase service account file</a>.</p>
+<p>In our example above, the firestore <code>clientJson</code> attribute is a <a href="https://firebase.google.com/support/guides/service-accounts">Firebase service account file</a>, the drive <code>clientJson</code> is from the <a href="https://console.cloud.google.com/apis/credentials">Cloud Console</a>, and the <code>password</code> attribute in the email config is for an <a href="https://myaccount.google.com/apppasswords">app password</a>. </p>
 <p>Once this information is provided, the entire <strong>OAuth Process</strong> will automatically be handled on your behalf when using any associated library, regardless if it's used in the CLI or API. Please refer to our notes on <a href="../security/authentication/">security</a> for more information on the Outh2 process when using google. </p>
 <h3 id="step-2-configure-your-llm-tools">Step 2: Configure Your LLM Tools</h3>
-<p>Once you have your data-connectors set up, config your training and deployment information. The last step will be to connect the two.</p>
-<p>Training on Hugging Face and hosting the weights on Hugging Face hubs:</p>
-<pre><code>    huggingface:
-        hfToken: env:HUGGINGFACE_API_KEY 
-        deployToHf: false 
+<p>Once you have your data-connectors set up, config your training and deployment information.</p>
+<p>Training on Hugging Face and hosting the weights on Hugging Face hubs: </p>
+<p>langdrive.yaml</p>
+<pre><code>huggingface:
+  hfToken: env:HUGGINGFACE_API_KEY 
+  deployToHf: false
 </code></pre>
-<p><b>NOTE</b>: To specify the model you want to train and where to host it:</p>
-<pre><code>  huggingface: 
-    hfToken: env:HUGGINGFACE_API_KEY
-    baseModel: vilsonrodrigues/falcon-7b-instruct-sharded
-    trainedModel: karpathic/falcon-7b-instruct-tuned
-    deployToHf: true 
+<p>Heres how you could specify the model you want to train, and where to host it:  </p>
+<pre><code>huggingface: 
+  hfToken: env:HUGGINGFACE_API_KEY
+  baseModel: vilsonrodrigues/falcon-7b-instruct-sharded
+  trainedModel: karpathic/falcon-7b-instruct-tuned
+  deployToHf: true
 </code></pre>
 <p>Simple enough, huh? Here comes the final step.</p>
 <h3 id="step-3-connecting-your-data-to-your-llm">Step 3: Connecting Your Data to Your LLM</h3>
 <p>To connect data to your LLM tool, we will need to create a new YAML entry <code>train:</code>. </p>
 <p>Here we specify specific the specific data we want to train on. In the case of a CSV, a most simple example, we can use the <code>path</code> value to specify it's location. </p>
-<p>langdrive.yaml</p>
-<pre><code>    train:
-      path: ../shared.csv               - Default Path for Input and Output 
-      inputValue: input                 - Attribute to extract from path
-      outpuValue: output 
+<p>If the csv has an 'input' and 'output' column, all you need to do is specify the path.</p>
+<p>langdrive.yaml </p>
+<pre><code>train: 
+  path: ../shared.csv               - Default Path for Input and Output
+</code></pre>
+<p>But just in case, you can set the columns too. </p>
+<pre><code>train: 
+  path: ../shared.csv                - Default Path for Input and Output 
+  inputValue: inputColumnName        - Attribute to extract from path
+  outpuValue: outputColumnName
+</code></pre>
+<p>You can even specify which datasets to use.</p>
+<pre><code>train:
+  input:
+    path: ../input.csv
+    value: inputColumnName
+  output:
+    path: ../output.csv
+    value: outputColumnName
 </code></pre>
 <p>Now lets show how to query data from one of those third-party services we configured earlier.</p>
-<p>Setting a <code>service</code> and <code>query</code> within the <code>train</code> entry will do this. To begin, set the name of a data-connector as the <code>service</code> and one of its methods (and its args) as the <code>query</code> value. Users are encouraged to explore the service documentation to find available methods and the parameters they take. Once the service, method, and parameters are known - you may set them like so:</p>
-<p>langdrive.yaml</p>
-<pre><code>    train:
-        service: 'firestore' 
-        query:
-          filterCollectionWithMultipleWhereClauseWithLimit:
-              collection: &quot;chat-state&quot;                
-              filterKey: []
-              filterData: []
-              operation: []
-              limit: 5
+<p>To do this, set a <code>service</code> and <code>query</code> within the <code>train</code> entry. Begin by setting the name of a data-connector as the <code>service</code> and one of its methods (and its args) as the <code>query</code> value. Users are encouraged to explore the service documentation to find available methods and the parameters they take. Once the service, method, and parameters are known. </p>
+<pre><code>train:
+  service: gdrive 
+  query:
+    getCsvByName:
+      filename: midjourney_prompt.csv
+      mimeType: text/csv
+      directory: false
+      directoryId: false
+    input:
+      value: input
+    output:
+      value: output
 </code></pre>
-<p>In the example above we use the <code>filterCollectionWithMultipleWhereClauseWithLimit</code> method from Langdrive's Firestore class, passing arguements as specified in the Langdrive <a href="../api/firestore/">Firestore</a> docs. <code>collection</code> is the firestore collection name to retrieve data from, (limited to the first 5 entries). <code>filterKey</code> and <code>filterData</code> are not specified in this example but contain the field name/key to filter. The <code>operation</code> value specifies the firebstore query operator to use (For example, '==', '&gt;=', '&lt;=' ).</p>
-<p><strong>Note</strong>:</p>
-<blockquote>
-<p>If the retrieved data has two columns (or attributes) they are assumed to be in the order [input, output]. If more columns exist, langdrive grabs the first two columns after first looking for an 'inputValue' and 'outpuValue' column. The same logic applies for information retrieved from a query and works similarly for nested Json Objects (ala: <code>att1.attr2</code>)</p>
-</blockquote>
+<p>In the example we use the <code>getCsvByName</code> method from Langdrive's gdrive class, passing arguements as specified in the Langdrive <a href="../api/gdrive/">GDrive</a> docs. <code>filename</code> is the filename to retrieve data from. <code>mimeType</code> and <code>directory</code>/<code>directoryId</code> can optionally be used to speed up the file search.</p>
+<p><strong>Note:</strong> Much like <code>path</code> parameter in the examples above, the <code>service</code> and <code>query</code> attributes can be place at the root of the train entry, or nested within an <code>input</code> and <code>output</code> child entry. </p>
+<p>Lets take a look at another example. </p>
+<pre><code>train:
+    service: firestore
+    query:
+      filterCollectionWithMultipleWhereClauseWithLimit:
+          collection: chat-state                
+          filterKey: []
+          filterData: []
+          operation: []
+          limit: 5
+    input:
+      value: chat.0.content             - retrieved nested Json Objects data
+    output:
+      value: chat.1.content
+</code></pre>
+<p>In the example, we use the <code>filterCollectionWithMultipleWhereClauseWithLimit</code> method from Langdrive's Firestore class, passing arguements as specified in the Langdrive <a href="../api/firestore/">Firestore</a> docs. <code>collection</code> is the firestore collection name to retrieve data from, (limited to the first 5 entries). <code>filterKey</code> and <code>filterData</code> are not specified in this example but contain the field name/key to filter. The <code>operation</code> value specifies the firebstore query operator to use (For example, '==', '&gt;=', '&lt;=' ). </p>
 <h2 id="gettings-started-with-api">Gettings Started with API:</h2>
+<p>Import Langdrive in your next project</p>
+<pre><code>  import langdrive
+</code></pre>
+<p>or</p>
+<pre><code>  &lt;script type="module"&gt; import langdrive from https://cdn.jsdelivr.net/npm/langdrive@1.0.9/+esm &lt;/script&gt;
+</code></pre>
+<p>and for select classes: [gdrive]</p>
+<pre><code>  &lt;script src="https://cdn.jsdelivr.net/npm/langdrive@1.0.9/main.min.js"&gt;&lt;/script&gt;
+</code></pre>
 <p>Our classes can be exposed in the typical manner. For more information on any one class, please refer to it's corresponding documentation.</p>
 <p>Coming Soon: Deploy self-hosted cloud based training infrastructure on AWS, Google Cloud Platform, Heroku, or Hugging Face. Code is currently being used internally and is under development prior to general release - code avaialbe in-repo under <code>/src/train</code>.</p>
 <p>If you would like to interact directly directly with our training endpoint you can call our hosted training image directly via the langdrive API. </p>
