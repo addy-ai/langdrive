@@ -98,22 +98,22 @@ Simple enough, huh? Here comes the final step.
 
 ### Step 3: Connecting Your Data to Your LLM
 
-To connect data to your LLM tool, we will need to create a new YAML entry `train:`. 
+To connect data to your LLM tool, we will need to create a new YAML entry `train`. 
 
-Here we specify specific the specific data we want to train on. In the case of a CSV, a most simple example, we can use the `path` value to specify it's location. 
+Here we set the labels of data we want to train on. In the case of a CSV, a most simple example, we can use the `path` value to specify it's location. 
 
 If the csv has an 'input' and 'output' column, all you need to do is specify the path.
 
 langdrive.yaml 
 
     train: 
-      path: ../shared.csv               - Default Path for Input and Output 
+      path: ../shared.csv
 
 
 But just in case, you can set the columns too. 
 
     train: 
-      path: ../shared.csv                - Default Path for Input and Output 
+      path: ../shared.csv
       inputValue: inputColumnName        - Attribute to extract from path
       outpuValue: outputColumnName 
 

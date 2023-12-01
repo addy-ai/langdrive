@@ -8,9 +8,20 @@ require("dotenv").config();
 async function cli_train(args) { // console.log(`~~~~ cli_train: ARGS::${''}::\n`, args);  
   let config = getConfig(args); // console.log(`~~~~ cli_train: CONFIG::${''}::\n`, config);  
   config = mergeCliArgsAndYaml(args, config); // console.log(`~~~~ cli_train: MERGED::${''}:\n`, config);  
+  config = replaceEnvValues(config); 
   config = await initConfig(config); // console.log(`~~~~ cli_train: INITIALIZED::${''}:\n`, config);  
   let training = await train(config);
   return config
+}
+
+function replaceEnvValues(node) {
+  function getEnvValue(str){return process.env[str.substring(4)] || str}
+  if (Array.isArray(node)) { return node.map(replaceEnvValues); } 
+  else if (typeof node === 'string') { return getEnvValue(node); } 
+  else if (typeof node === 'object' && node !== null) { 
+  Object.keys(node).forEach((key) => { node[key] = replaceEnvValues(node[key]); });
+  }
+  return node;
 }
 
 // Retrieves YAML using args.path, default: to langdrive.yaml
@@ -42,17 +53,7 @@ function getConfig(args){
       ...config.heroku
   }
   */
-  function replaceEnvValues(node) {
-    function getEnvValue(str){return process.env[str.substring(4)] || str}
-    if (Array.isArray(node)) { return node.map(replaceEnvValues); } 
-    else if (typeof node === 'string') { return getEnvValue(node); } 
-    else if (typeof node === 'object' && node !== null) { 
-    Object.keys(node).forEach((key) => { node[key] = replaceEnvValues(node[key]); });
-    }
-    return node;
-  }
-
-  config = replaceEnvValues(config); 
+ 
   return config
 }
 

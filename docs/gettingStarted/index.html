@@ -222,16 +222,16 @@ email:
 </code></pre>
 <p>Simple enough, huh? Here comes the final step.</p>
 <h3 id="step-3-connecting-your-data-to-your-llm">Step 3: Connecting Your Data to Your LLM</h3>
-<p>To connect data to your LLM tool, we will need to create a new YAML entry <code>train:</code>. </p>
-<p>Here we specify specific the specific data we want to train on. In the case of a CSV, a most simple example, we can use the <code>path</code> value to specify it's location. </p>
+<p>To connect data to your LLM tool, we will need to create a new YAML entry <code>train</code>. </p>
+<p>Here we set the labels of data we want to train on. In the case of a CSV, a most simple example, we can use the <code>path</code> value to specify it's location. </p>
 <p>If the csv has an 'input' and 'output' column, all you need to do is specify the path.</p>
 <p>langdrive.yaml </p>
 <pre><code>train: 
-  path: ../shared.csv               - Default Path for Input and Output
+  path: ../shared.csv
 </code></pre>
 <p>But just in case, you can set the columns too. </p>
 <pre><code>train: 
-  path: ../shared.csv                - Default Path for Input and Output 
+  path: ../shared.csv
   inputValue: inputColumnName        - Attribute to extract from path
   outpuValue: outputColumnName
 </code></pre>
