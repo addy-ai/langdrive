@@ -11,7 +11,7 @@
     "serveDocs": "bash ./serveDocs.sh",
     "buildDocs": "bash ./buildDocs.sh", 
     "version": "npm version patch",
-    "testCli": "node ./tests/test_cli.bash",
+    "testCli": "./tests/test_cli.bash",
     "testChatbot": "node ./src/server/test.mjs"
   },
   "keywords": [],
