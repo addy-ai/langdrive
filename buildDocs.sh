@@ -6,17 +6,19 @@ build_and_replace_docs() {
   # node mkdocs.js
   mkdocs build
   # Backup current 'docs' and move built site to 'docs'
-  mv "./docs" "./docs_backup"
+  rm -rf "./docs_backup"
+  cp -rf "./docs" "./docs_backup"
+  rm -rf "./docs"
   mv "./site" "./docs"
+  echo " ./docs directories has html files now."
 }
 
-# Check if '/docs' directory exists and has '.md' files
-if [ -d "$docs_dir" ] && [ "$(find "$docs_dir" -name '*.md' | wc -l)" -gt 0 ]; then
-  # Swap 'docs' and 'documentation' directories
-  mv "./docs" "./temp_swap_dir"
-  mv "./documentation" "./docs"
-  mv "./temp_swap_dir" "./documentation"
-  echo "Swapped "./docs" and "./documentation" directories."
+# Check if '/docs' directory exists but doesn't have '.md' files
+if [ -d "$docs_dir" ] && [ "$(find "$docs_dir" -name '*.md' | wc -l)" -eq 0 ]; then
+  # Copy the backup into docs.
+  rm -rf "./docs"
+  cp -rf "./docs_backup" "./docs"
+  echo " ./docs directories has md files now for mkdocs compiling."
 fi
 
 # Build and replace 'docs' regardless of whether a swap happened or not

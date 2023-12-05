@@ -1,5 +1,5 @@
 // Below recommended for cloud functions to format console logs
-require("firebase-functions/logger/compat");
+// require("firebase-functions/logger/compat");
 // const functions = require("firebase-functions");
 // const {firebaseDatabaseURL} = functions.config().fbase.database.url;
 
@@ -1053,13 +1053,13 @@ class Firestore {
 
     static async init(config) {
         let fb = config.firebase || config;
-        console.log('CLI:handleFirebase\n'); 
+        //console.log('firestore:init\n'); 
     
         const admin = require("firebase-admin", fb); 
         let clientJson = fb.clientJson;  
 
         if (!admin.apps.length) {
-            console.log('firestore"handleFirebase:initializeApp')
+            //console.log('firestore"init:initializeApp')
             admin.initializeApp({
                 credential: admin.credential.cert(clientJson),
                 databaseURL: fb.databaseURL,

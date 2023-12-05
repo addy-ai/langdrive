@@ -1,18 +1,18 @@
 {
   "name": "langdrive",
-  "version": "1.0.9",
+  "version": "1.01.00",
   "description": "",
   "main": "main.js",
   "bin": {
     "langdrive": "./main.js"
   },
   "scripts": {
-    "start": "nodemon ./src/start_server.js",
-    "test": "node ./src/server/test.mjs",
+    "start": "nodemon ./src/start_server.js", 
     "serveDocs": "bash ./serveDocs.sh",
-    "buildDocs": "bash ./buildDocs.sh",
-    "swapDocs": "mv ./docs ./docs_temp_directory ; mv ./docs_temp docs ; mv ./docs_temp_directory ./docs_temp",
-    "build": "node mkdocs.js"
+    "buildDocs": "bash ./buildDocs.sh", 
+    "version": "npm version patch",
+    "testCli": "./tests/test_cli.bash",
+    "testChatbot": "node ./src/server/test.mjs"
   },
   "keywords": [],
   "author": "",
