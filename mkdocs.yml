@@ -2,8 +2,8 @@ site_name: Langdrive
 theme: readthedocs
 site_url: https://addy-ai.com/products/langdrive
 nav:
-  - Getting Started: gettingStarted.md 
-  - About LangDrive: index.md
+  - About LangDrive: about.md
+  - Getting Started: index.md
   - Yaml: yaml.md 
   - CLI: cli.md  
   - Demo: demo.md 
