@@ -8,8 +8,10 @@
   },
   "scripts": {
     "start": "nodemon ./src/start_server.js", 
-    "serveDocs": "cd markdown; npm run start;",
-    "buildDocs": "cd markdown; npm run build; mv build/* ../docs/; cp CNAME ../docs/", 
+    "serveDocs": "cd markdown && npm run start",
+    "serveDocsw": "cd markdown; npm run start",
+    "buildDocs": "rm ./docs/* -r && cd markdown && npm run build && mv build/* ../docs/ && cp CNAME ../docs/", 
+    "buildDocsw": "rm ./docs/* -r; cd markdown; npm run build; mv build/* ../docs/; cp CNAME ../docs/", 
     "version": "npm version patch",
     "testCli": "./tests/test_cli.bash",
     "testChatbot": "node ./src/server/test.mjs"
