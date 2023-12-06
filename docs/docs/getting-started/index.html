@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-getting-started" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.0.1">
+<title data-rh="true">Getting Started | Langdrive Documents</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://addy-ai.com/static/media/logo.8f4a17f3b5148a7b4e66.png"><meta data-rh="true" name="twitter:image" content="https://addy-ai.com/static/media/logo.8f4a17f3b5148a7b4e66.png"><meta data-rh="true" property="og:url" content="https://docs.langdrive.ai/docs/getting-started"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Getting Started | Langdrive Documents"><meta data-rh="true" name="description" content="Thank you for taking interest in LangDrive!"><meta data-rh="true" property="og:description" content="Thank you for taking interest in LangDrive!"><link data-rh="true" rel="icon" href="https://addy-ai.com/favicon.ico"><link data-rh="true" rel="canonical" href="https://docs.langdrive.ai/docs/getting-started"><link data-rh="true" rel="alternate" href="https://docs.langdrive.ai/docs/getting-started" hreflang="en"><link data-rh="true" rel="alternate" href="https://docs.langdrive.ai/docs/getting-started" hreflang="x-default"><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Langdrive Documents RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Langdrive Documents Atom Feed"><link rel="stylesheet" href="/assets/css/styles.f107caf2.css">
+<script src="/assets/js/runtime~main.a9221edf.js" defer="defer"></script>
+<script src="/assets/js/main.e8135eaa.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return localStorage.getItem("theme")}catch(t){}}();t(null!==e?e:"light")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/"><div class="navbar__logo"><img src="https://avatars.githubusercontent.com/u/122666693?s=48&amp;v=4" alt="Langdrive Logo" class="themedComponent_mlkZ themedComponent--light_NVdE"><img src="https://avatars.githubusercontent.com/u/122666693?s=48&amp;v=4" alt="Langdrive Logo" class="themedComponent_mlkZ themedComponent--dark_xIcU"></div><b class="navbar__title text--truncate">Langdrive</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/docs/getting-started">Getting Started</a><a class="navbar__item navbar__link" sidebarid="apiSidebar" href="/docs/overview/intro">Docs</a><a class="navbar__item navbar__link" sidebarid="apiSidebar" href="/docs/api/cli">API</a></div><div class="navbar__items navbar__items--right"><a class="navbar__item navbar__link" href="/blog">Blog</a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="Switch between dark and light mode (currently light mode)" aria-label="Switch between dark and light mode (currently light mode)" aria-live="polite"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" href="/docs/getting-started">Getting Started</a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" aria-expanded="false" href="/docs/overview/intro">Overview</a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" aria-expanded="false" href="/docs/api/yaml">API</a></div></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/docs/overview/contributors">Contributing</a></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs" itemscope="" itemtype="https://schema.org/BreadcrumbList"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem" class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link" itemprop="name">Getting Started</span><meta itemprop="position" content="1"></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><h1>Getting Started</h1>
+<p>Thank you for taking interest in LangDrive!</p>
+<p>Langdrive&#x27;s set of connectors and services makes training LLMs easy! You can get started with just a CSV file, but by providing a Hugging Face API key you can train models and host them directly in the cloud 😉</p>
+<p>Import and use Langdrive modules in your scripts or configure and execute Langdrive directly from the CLI. The remainder of this article will explore using both approaches for training and deploy models with langdrive. Along the way we will explore the use of a YAML doc to help with the connecting to data and services.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="using-the-cli">Using the CLI<a href="#using-the-cli" class="hash-link" aria-label="Direct link to Using the CLI" title="Direct link to Using the CLI">​</a></h2>
+<p>Node developers can train and deploy a model in 2 simple steps.</p>
+<ol>
+<li><code>npm install langdrive --save-dev</code></li>
+<li><code>langdrive train --csv ./path/to/csvFileName.csv --hfToken apikey123 --deploy --hfModelPath username/new-model-name</code></li>
+</ol>
+<p>In this case, Langdrive will retrieve the data, train a model, host it&#x27;s weights on Hugging Face, and return an inference endpoint you may use to query the LLM. Here&#x27;s a working <a href="https://github.com/addy-ai/langdrive/blob/main/tests/midjourney_prompt.csv" target="_blank" rel="noopener noreferrer">sample dataset</a>.</p>
+<p>The command <code>langdrive train</code> is used to train the LLM, please see how to configure the command below.</p>
+<p><strong>CLI Arguements</strong>:</p>
+<ul>
+<li><code>yaml</code>: Path to optional YAML config doc, default Value: &#x27;./langdrive.yaml&#x27;. This will load up any class and query for records and their values for both inputs and ouputs.</li>
+<li><code>hfToken</code>: An API key provided by Hugging Face with <code>write</code> permissions. Get one <a href="https://huggingface.co/docs/hub/security-tokens" target="_blank" rel="noopener noreferrer">here</a>.</li>
+<li><code>baseModel</code>: The original model to train. This can be one of the models in our supported models shown at the bottom of this page</li>
+<li><code>deploy</code>: Weather training weights should be hosted in a hosting service. Default False.</li>
+<li><code>deployToHf</code>: Whether traiing weights should be stored in huggingface specifically. Either true | false</li>
+<li><code>hfModelPath</code>: The full path to your hugging face model repo where the model should be deployed. Format: hugging face username/model</li>
+<li><code>csv</code>: Path to shared csv training data.</li>
+<li><code>path</code>: Path to shared training data.</li>
+<li><code>inputPath</code>: Path to input training data if not shared.</li>
+<li><code>outputPath</code>: Path to output training data if not shared.</li>
+<li><code>inputValue</code>: Input value to extract from training data.  default: input</li>
+<li><code>outputValue</code>: Output value to extract from training data.  default: output</li>
+</ul>
+<p>It is assumed you do not want to deploy your model if you run <code>langdrive train</code>. In such a case a link to where you can download the weights will be provided. Adding <code>--deployToHf</code> will return a link to the inferencing endpoint.</p>
+<p>More information on how to ingest simple data using the CLI can be found in the <a href="/docs/cli.md">CLI</a> docs. For more complex examples, read on...</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="getting-started-with-yaml">Getting Started with YAML<a href="#getting-started-with-yaml" class="hash-link" aria-label="Direct link to Getting Started with YAML" title="Direct link to Getting Started with YAML">​</a></h2>
+<p>Getting the data and services you need shouldn&#x27;t be the hardest part about training your models! Using YAML, you can configure more advanced data retrieval, processing, and training/ deployment strategies. Once configured, these settings are available for the standalone API and also from the CLI.</p>
+<p>For yaml, langdrive reads the yaml configs from a file called <code>langdrive.yaml</code> from the root directory by default.</p>
+<p>The information covered in this subsection is included in this <a href="https://github.com/addy-ai/langdrive/blob/main/langdrive.example.yaml" target="_blank" rel="noopener noreferrer">Sample YAML</a> doc. Refer to the <a href="/docs/yaml.md">Yaml</a> docs for more information.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="step-1-configure-your-data-connectors">Step 1: Configure Your Data Connectors<a href="#step-1-configure-your-data-connectors" class="hash-link" aria-label="Direct link to Step 1: Configure Your Data Connectors" title="Direct link to Step 1: Configure Your Data Connectors">​</a></h3>
+<p>Our growing list of data-connectors allow anyone to retrieve data through a simple config doc. As LangDrive grows, our set of Open-Source integrations will grow. At the moment, you can connect to your data using our <code>email</code>, <code>firestore</code>, and <code>gdrive</code> classes.</p>
+<p>In essense, config of these data-connectors is as straight forward as:</p>
+<p>langdrive.yaml</p>
+<p>firestore:
+clientJson: &quot;secrets/firebase_service_client.json&quot;
+databaseURL: &quot;env<!-- -->:FIREBASE_DATABASE_URL<!-- -->&quot;</p>
+<p>drive:
+appType: &quot;desktop&quot;
+clientJson: &quot;secrets/drive_service_client.json&quot;
+scopes:</p>
+<ul>
+<li>&quot;<a href="https://www.googleapis.com/auth/drive" target="_blank" rel="noopener noreferrer">https://www.googleapis.com/auth/drive</a>&quot;</li>
+<li>&quot;<a href="https://www.googleapis.com/auth/drive.metadata.readonly" target="_blank" rel="noopener noreferrer">https://www.googleapis.com/auth/drive.metadata.readonly</a>&quot;</li>
+</ul>
+<p>email:
+password: env<!-- -->:GMAIL_PASSWORD<!-- -->
+email: env<!-- -->:GMAIL_EMAIL</p>
+<p>You may specify .env variables using <code>env:</code> as a prefix for your secret information.</p>
+<p>In our example above, the firestore <code>clientJson</code> attribute is a <a href="https://firebase.google.com/support/guides/service-accounts" target="_blank" rel="noopener noreferrer">Firebase service account file</a>, the drive <code>clientJson</code> is from the <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer">Cloud Console</a>, and the <code>password</code> attribute in the email config is for an <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer">app password</a>.</p>
+<p>Once this information is provided, the entire <strong>OAuth Process</strong> will automatically be handled on your behalf when using any associated library, regardless if it&#x27;s used in the CLI or API. Please refer to our notes on <a href="/docs/security/authentication.md">security</a> for more information on the Outh2 process when using google.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="step-2-configure-your-llm-tools">Step 2: Configure Your LLM Tools<a href="#step-2-configure-your-llm-tools" class="hash-link" aria-label="Direct link to Step 2: Configure Your LLM Tools" title="Direct link to Step 2: Configure Your LLM Tools">​</a></h3>
+<p>Once you have your data-connectors set up, config your training and deployment information.</p>
+<p>Training on Hugging Face and hosting the weights on Hugging Face hubs:</p>
+<p>langdrive.yaml</p>
+<p>huggingface:
+hfToken: env<!-- -->:HUGGINGFACE_API_KEY<!-- -->
+deployToHf: false</p>
+<p>Heres how you could specify the model you want to train, and where to host it:</p>
+<p>huggingface:
+hfToken: env<!-- -->:HUGGINGFACE_API_KEY<!-- -->
+baseModel: vilsonrodrigues/falcon-7b-instruct-sharded
+trainedModel: karpathic/falcon-7b-instruct-tuned
+deployToHf: true</p>
+<p>Simple enough, huh? Here comes the final step.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="step-3-connecting-your-data-to-your-llm">Step 3: Connecting Your Data to Your LLM<a href="#step-3-connecting-your-data-to-your-llm" class="hash-link" aria-label="Direct link to Step 3: Connecting Your Data to Your LLM" title="Direct link to Step 3: Connecting Your Data to Your LLM">​</a></h3>
+<p>To connect data to your LLM tool, we will need to create a new YAML entry <code>train</code>.</p>
+<p>Here we set the labels of data we want to train on. In the case of a CSV, a most simple example, we can use the <code>path</code> value to specify it&#x27;s location.</p>
+<p>If the csv has an &#x27;input&#x27; and &#x27;output&#x27; column, all you need to do is specify the path.</p>
+<p>langdrive.yaml</p>
+<p>train:
+path: ../shared.csv</p>
+<p>But just in case, you can set the columns too.</p>
+<p>train:
+path: ../shared.csv
+inputValue: inputColumnName        - Attribute to extract from path
+outpuValue: outputColumnName</p>
+<p>You can even specify which datasets to use; they must have equal length entries, however.</p>
+<p>train:
+input:
+path: ../input.csv
+value: inputColumnName
+output:
+path: ../output.csv
+value: outputColumnName</p>
+<p>Now lets show how to query data from one of those third-party services we configured earlier.</p>
+<p>To do this, set a <code>service</code> and <code>query</code> within the <code>train</code> entry. Begin by setting the name of a data-connector as the <code>service</code> and one of its methods (and its args) as the <code>query</code> value. Users are encouraged to explore the service documentation to find available methods and the parameters they take. Once the service, method, and parameters are known.</p>
+<p>train:
+service: gdrive
+query:
+getCsvByName:
+filename: midjourney_prompt.csv
+mimeType: text/csv
+directory: false
+directoryId: false
+input:
+value: input
+output:
+value: output</p>
+<p>In the example we use the <code>getCsvByName</code> method from Langdrive&#x27;s gdrive class, passing arguements as specified in the Langdrive <a href="/docs/api/gdrive.md">GDrive</a> docs. <code>filename</code> is the filename to retrieve data from. <code>mimeType</code> and <code>directory</code>/<code>directoryId</code> can optionally be used to speed up the file search.</p>
+<p><strong>Note:</strong> Much like <code>path</code> parameter in the examples above, the <code>service</code> and <code>query</code> attributes can be place at the root of the train entry, or nested within an <code>input</code> and <code>output</code> child entry.</p>
+<p>Lets take a look at another example.</p>
+<p>train:
+service: firestore
+query:
+filterCollectionWithMultipleWhereClauseWithLimit:
+collection: chat-state<br>
+<!-- -->filterKey: []
+filterData: []
+operation: []
+limit: 5
+input:
+value: chat.0.content             - retrieved nested Json Objects data
+output:
+value: chat.1.content</p>
+<p>In the example, we use the <code>filterCollectionWithMultipleWhereClauseWithLimit</code> method from Langdrive&#x27;s Firestore class, passing arguements as specified in the Langdrive <a href="/docs/api/firestore.md">Firestore</a> docs. <code>collection</code> is the firestore collection name to retrieve data from, (limited to the first 5 entries). <code>filterKey</code> and <code>filterData</code> are not specified in this example but contain the field name/key to filter. The <code>operation</code> value specifies the firebstore query operator to use (For example, <code>==</code>, <code>&gt;=</code>, <code>&lt;=</code> ).</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="gettings-started-with-api">Gettings Started with API:<a href="#gettings-started-with-api" class="hash-link" aria-label="Direct link to Gettings Started with API:" title="Direct link to Gettings Started with API:">​</a></h2>
+<p>Import Langdrive in your next project</p>
+<p>import langdrive</p>
+<p>or</p>
+<script type="module"> import langdrive from <a href="https://cdn.jsdelivr.net/npm/langdrive@1.0.9/+esm" target="_blank" rel="noopener noreferrer">https://cdn.jsdelivr.net/npm/langdrive@1.0.9/+esm</a> </script>
+<p>and for select classes: [gdrive]</p>
+<script src="https://cdn.jsdelivr.net/npm/langdrive@1.0.9/main.min.js"></script>
+<p>Our classes can be exposed in the typical manner. For more information on any one class, please refer to it&#x27;s corresponding documentation.</p>
+<p>Coming Soon: Deploy self-hosted cloud based training infrastructure on AWS, Google Cloud Platform, Heroku, or Hugging Face. Code is currently being used internally and is under development prior to general release - code avaialbe in-repo under <code>/src/train</code>.</p>
+<p>If you would like to interact directly directly with our training endpoint you can call our hosted training image directly via the langdrive API.</p>
+<p>Endpoint: <code>POST https://api.langdrive.ai/train</code></p>
+<p>You can test the quality of one of these models by visit the Langdrive <a href="https://addy-ai.com/products/langdrive#playground" target="_blank" rel="noopener noreferrer">Playground</a></p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="request-body">Request Body<a href="#request-body" class="hash-link" aria-label="Direct link to Request Body" title="Direct link to Request Body">​</a></h3>
+<p>The request accepts the following data in JSON format.</p>
+<div class="codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   &quot;baseModel&quot;: &quot;string&quot;,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   &quot;hfToken&quot;: &quot;string&quot;,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   &quot;deployToHf&quot;: &quot;Boolean&quot;,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  &quot;trainingData&quot;: &quot;Array&quot;,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   &quot;hfModelPath&quot;: &quot;string&quot;,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
+<p><code>baseModel</code>: The original model to train. This can be one of our supported models, listed below, or a Hugging Face model</p>
+<ul>
+<li>Type: String</li>
+<li>Required: Yes</li>
+</ul>
+<p><code>hfToken</code>: Your Hugging Face token with write permissions. Learn how to create a Hugging Face token <a href="https://huggingface.co/docs/hub/security-tokens" target="_blank" rel="noopener noreferrer">here</a>.</p>
+<ul>
+<li>Type: String</li>
+<li>Required: Yes</li>
+</ul>
+<p><code>deployToHf</code>: A boolean representing whether or not to deploy the model to Hugging Face after training</p>
+<ul>
+<li>Type: Boolean</li>
+<li>Required: Yes</li>
+</ul>
+<p><code>trainingData</code>: This is an array of objects. Each object must have two attributes: input and output. The input attribute represents the user’s input and output attribute represents the model’s output.</p>
+<ul>
+<li>Type: Array</li>
+<li>Required: Yes</li>
+</ul>
+<p><code>hfModelPath</code>: The hugging face model repository to deploy the model to after training is complete. This path must exist before being used</p>
+<ul>
+<li>Type: String</li>
+<li>Required: No</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="response-body">Response Body<a href="#response-body" class="hash-link" aria-label="Direct link to Response Body" title="Direct link to Response Body">​</a></h3>
+<p>The request returns the following data in JSON format.</p>
+<div class="codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">HTTP/1.1 200</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Content-type: application/json</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   &quot;success&quot;: &quot;true&quot;,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="model-training">Model Training<a href="#model-training" class="hash-link" aria-label="Direct link to Model Training" title="Direct link to Model Training">​</a></h2>
+<p>We plan to expand the number of available models for training. at the moment only sharded models work as using PEFT is how these models are trained.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="models-support-matrix">Models Support Matrix<a href="#models-support-matrix" class="hash-link" aria-label="Direct link to Models Support Matrix" title="Direct link to Models Support Matrix">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="causal-language-modeling">Causal Language Modeling<a href="#causal-language-modeling" class="hash-link" aria-label="Direct link to Causal Language Modeling" title="Direct link to Causal Language Modeling">​</a></h4>
+<table><thead><tr><th>Model</th><th>Supported</th></tr></thead><tbody><tr><td>Falcon-7b-sharded</td><td>✅</td></tr><tr><td>GPT-2</td><td>Comming Soon</td></tr><tr><td>Bloom</td><td>Comming Soon</td></tr><tr><td>OPT</td><td>Comming Soon</td></tr><tr><td>LLaMA</td><td>Comming Soon</td></tr><tr><td>ChatGLM</td><td>Comming Soon</td></tr></tbody></table>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="model-type-support">Model Type Support<a href="#model-type-support" class="hash-link" aria-label="Direct link to Model Type Support" title="Direct link to Model Type Support">​</a></h4>
+<table><thead><tr><th>Model Type</th><th>Support</th></tr></thead><tbody><tr><td>Conditional Generation</td><td>✅</td></tr><tr><td>Conditional Generation</td><td>✅</td></tr><tr><td>Sequence Classification</td><td>✅</td></tr><tr><td>Token Classification</td><td>✅</td></tr><tr><td>Text-to-Image Generation</td><td></td></tr><tr><td>Image Classification</td><td></td></tr><tr><td>Image to text (Multi-modal models)</td><td></td></tr><tr><td>Semantic Segmentation</td><td></td></tr></tbody></table></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="theme-doc-footer-edit-meta-row row"><div class="col"><a href="https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/getting-started.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_vwxv"></div></div></footer></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--next" href="/docs/overview/intro"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Introduction</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#using-the-cli" class="table-of-contents__link toc-highlight">Using the CLI</a></li><li><a href="#getting-started-with-yaml" class="table-of-contents__link toc-highlight">Getting Started with YAML</a><ul><li><a href="#step-1-configure-your-data-connectors" class="table-of-contents__link toc-highlight">Step 1: Configure Your Data Connectors</a></li><li><a href="#step-2-configure-your-llm-tools" class="table-of-contents__link toc-highlight">Step 2: Configure Your LLM Tools</a></li><li><a href="#step-3-connecting-your-data-to-your-llm" class="table-of-contents__link toc-highlight">Step 3: Connecting Your Data to Your LLM</a></li></ul></li><li><a href="#gettings-started-with-api" class="table-of-contents__link toc-highlight">Gettings Started with API:</a><ul><li><a href="#request-body" class="table-of-contents__link toc-highlight">Request Body</a></li><li><a href="#response-body" class="table-of-contents__link toc-highlight">Response Body</a></li></ul></li><li><a href="#model-training" class="table-of-contents__link toc-highlight">Model Training</a><ul><li><a href="#models-support-matrix" class="table-of-contents__link toc-highlight">Models Support Matrix</a></li></ul></li></ul></div></div></div></div></main></div></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2023 Addy-AI. Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>

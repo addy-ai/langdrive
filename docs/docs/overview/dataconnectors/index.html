@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-overview/dataconnectors" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.0.1">
+<title data-rh="true">Data Connectors | Langdrive Documents</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://addy-ai.com/static/media/logo.8f4a17f3b5148a7b4e66.png"><meta data-rh="true" name="twitter:image" content="https://addy-ai.com/static/media/logo.8f4a17f3b5148a7b4e66.png"><meta data-rh="true" property="og:url" content="https://docs.langdrive.ai/docs/overview/dataconnectors"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Data Connectors | Langdrive Documents"><meta data-rh="true" name="description" content="Welcome to the Data Connectors Overview! This document offers a detailed guide on the functionalities and capabilities of several Node.js classes, designed to enhance your development experience."><meta data-rh="true" property="og:description" content="Welcome to the Data Connectors Overview! This document offers a detailed guide on the functionalities and capabilities of several Node.js classes, designed to enhance your development experience."><link data-rh="true" rel="icon" href="https://addy-ai.com/favicon.ico"><link data-rh="true" rel="canonical" href="https://docs.langdrive.ai/docs/overview/dataconnectors"><link data-rh="true" rel="alternate" href="https://docs.langdrive.ai/docs/overview/dataconnectors" hreflang="en"><link data-rh="true" rel="alternate" href="https://docs.langdrive.ai/docs/overview/dataconnectors" hreflang="x-default"><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Langdrive Documents RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Langdrive Documents Atom Feed"><link rel="stylesheet" href="/assets/css/styles.f107caf2.css">
+<script src="/assets/js/runtime~main.a9221edf.js" defer="defer"></script>
+<script src="/assets/js/main.e8135eaa.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return localStorage.getItem("theme")}catch(t){}}();t(null!==e?e:"light")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/"><div class="navbar__logo"><img src="https://avatars.githubusercontent.com/u/122666693?s=48&amp;v=4" alt="Langdrive Logo" class="themedComponent_mlkZ themedComponent--light_NVdE"><img src="https://avatars.githubusercontent.com/u/122666693?s=48&amp;v=4" alt="Langdrive Logo" class="themedComponent_mlkZ themedComponent--dark_xIcU"></div><b class="navbar__title text--truncate">Langdrive</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/docs/getting-started">Getting Started</a><a class="navbar__item navbar__link" sidebarid="apiSidebar" href="/docs/overview/intro">Docs</a><a class="navbar__item navbar__link" sidebarid="apiSidebar" href="/docs/api/cli">API</a></div><div class="navbar__items navbar__items--right"><a class="navbar__item navbar__link" href="/blog">Blog</a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="Switch between dark and light mode (currently light mode)" aria-label="Switch between dark and light mode (currently light mode)" aria-live="polite"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/docs/getting-started">Getting Started</a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" aria-expanded="true" href="/docs/overview/intro">Overview</a></div><ul style="display:block;overflow:visible;height:auto" class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/overview/intro">Introduction</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/docs/overview/dataconnectors">Data Connectors</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/overview/llmtools">LLM Tools</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/overview/faq">FAQ</a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" aria-expanded="false" href="/docs/api/yaml">API</a></div></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/docs/overview/contributors">Contributing</a></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs" itemscope="" itemtype="https://schema.org/BreadcrumbList"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item"><span class="breadcrumbs__link">Overview</span><meta itemprop="position" content="1"></li><li itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem" class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link" itemprop="name">Data Connectors</span><meta itemprop="position" content="2"></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><h1>Data Connectors</h1>
+<p>Welcome to the Data Connectors Overview! This document offers a detailed guide on the functionalities and capabilities of several Node.js classes, designed to enhance your development experience.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="firestore-class-overview">Firestore Class Overview<a href="#firestore-class-overview" class="hash-link" aria-label="Direct link to Firestore Class Overview" title="Direct link to Firestore Class Overview">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="class-firestore">Class: <code>Firestore</code><a href="#class-firestore" class="hash-link" aria-label="Direct link to class-firestore" title="Direct link to class-firestore">​</a></h3>
+<p>The <code>Firestore</code> class in Node.js is designed for robust interaction with Firebase Firestore. It supports various operations like querying, adding, updating, and deleting documents in your Firestore database.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="constructor">Constructor<a href="#constructor" class="hash-link" aria-label="Direct link to Constructor" title="Direct link to Constructor">​</a></h4>
+<ul>
+<li><strong>Parameters</strong>:<!-- -->
+<ul>
+<li><code>props</code> (Object): Contains the Firestore database instance.</li>
+</ul>
+</li>
+<li><strong>Description</strong>:<!-- -->
+<ul>
+<li>Initializes the Firestore class with a database instance.</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="key-methods">Key Methods<a href="#key-methods" class="hash-link" aria-label="Direct link to Key Methods" title="Direct link to Key Methods">​</a></h4>
+<ul>
+<li><strong><code>filterCollectionWithWhereClause(...)</code></strong>: Filters a collection using a where clause.</li>
+<li><strong><code>addDocumentToCollection(...)</code></strong>: Adds a new document to a specified collection.</li>
+<li><strong><code>updateDocument(...)</code></strong>: Updates an existing document in a collection.</li>
+<li><strong><code>deleteDocumentFromCollection(...)</code></strong>: Deletes a document from a collection.</li>
+<li><strong><code>getAllDocumentsInCollection(...)</code></strong>: Retrieves all documents from a specified collection.</li>
+</ul>
+<hr>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="emailretriever-class-overview">EmailRetriever Class Overview<a href="#emailretriever-class-overview" class="hash-link" aria-label="Direct link to EmailRetriever Class Overview" title="Direct link to EmailRetriever Class Overview">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="class-emailretriever">Class: <code>EmailRetriever</code><a href="#class-emailretriever" class="hash-link" aria-label="Direct link to class-emailretriever" title="Direct link to class-emailretriever">​</a></h3>
+<p>The <code>EmailRetriever</code> class in Node.js is tailored for retrieving emails from different email clients using SMTP configurations. It provides a streamlined approach to email retrieval.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="constructor-1">Constructor<a href="#constructor-1" class="hash-link" aria-label="Direct link to Constructor" title="Direct link to Constructor">​</a></h4>
+<ul>
+<li><strong>Parameters</strong>:<!-- -->
+<ul>
+<li><code>emailAddress</code> (String): The email account&#x27;s address.</li>
+<li><code>emailPassword</code> (String): The email account&#x27;s password.</li>
+<li><code>emailClient</code> (String): The email client hosting the account.</li>
+<li><code>verbose</code> (Boolean): Enables verbose error logging.</li>
+</ul>
+</li>
+<li><strong>Description</strong>:<!-- -->
+<ul>
+<li>Initializes the <code>EmailRetriever</code> with email credentials and client.</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="key-methods-1">Key Methods<a href="#key-methods-1" class="hash-link" aria-label="Direct link to Key Methods" title="Direct link to Key Methods">​</a></h4>
+<ul>
+<li><strong><code>getEmailsInFolder(...)</code></strong>: Retrieves emails from a specific folder in the email account.</li>
+<li><strong><code>validateSMTPConfig()</code></strong>: Validates the SMTP configuration for the email client.</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="additional-information">Additional Information<a href="#additional-information" class="hash-link" aria-label="Direct link to Additional Information" title="Direct link to Additional Information">​</a></h4>
+<ul>
+<li><strong>SMTP Configuration</strong>: Uses predefined SMTP settings for supported email clients.</li>
+<li><strong>Error Handling</strong>: Robust error management, especially for unsupported email clients.</li>
+<li><strong>External API Integration</strong>: Utilizes external APIs for email retrieval.</li>
+</ul>
+<hr>
+<h1>DriveUtils</h1>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="class-driveutils">Class: <code>DriveUtils</code><a href="#class-driveutils" class="hash-link" aria-label="Direct link to class-driveutils" title="Direct link to class-driveutils">​</a></h2>
+<p>The <code>DriveUtils</code> class in Node.js is designed to interface with Google Drive. It handles authentication, file listing, information retrieval, and file operations using Google APIs.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="constructor-2">Constructor<a href="#constructor-2" class="hash-link" aria-label="Direct link to Constructor" title="Direct link to Constructor">​</a></h3>
+<ul>
+<li><strong>Parameters</strong>: <code>props</code> (Object) containing various configuration options.</li>
+<li><strong>Description</strong>:<!-- -->
+<ul>
+<li>Initializes the class with properties such as <code>client_id</code>, <code>client_secret</code>, <code>scopes</code>, and <code>keyFilePath</code>.</li>
+<li>Handles authentication for different application types (server, desktop, web).</li>
+</ul>
+</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="key-methods-2">Key Methods<a href="#key-methods-2" class="hash-link" aria-label="Direct link to Key Methods" title="Direct link to Key Methods">​</a></h3>
+<ul>
+<li><strong><code>getDrive()</code></strong>: Initializes and retrieves the Google Drive instance.</li>
+<li><strong><code>listFiles(props)</code></strong>: Lists files in Google Drive based on properties like directory, mime type, etc.</li>
+<li><strong><code>listDirectories(props)</code></strong>: Lists all directories or directories within a specific directory.</li>
+<li><strong><code>getFileInfo(props)</code></strong>: Retrieves information about a specific file based on provided criteria.</li>
+<li><strong><code>getFileById(props)</code></strong>: Retrieves a file by its ID.</li>
+<li><strong><code>getFileByName(props)</code></strong>: Retrieves a file by its name.</li>
+<li><strong><code>createFile(props)</code></strong>: Creates a file in Google Drive.</li>
+<li><strong><code>createAndOrGetContent(props)</code></strong>: Creates or retrieves content based on a given path and other criteria.</li>
+<li><strong><code>updateFile(props)</code></strong>: Updates a file in Google Drive.</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="static-methods">Static Methods<a href="#static-methods" class="hash-link" aria-label="Direct link to Static Methods" title="Direct link to Static Methods">​</a></h3>
+<ul>
+<li><strong><code>getAuthUrl(config)</code></strong>: Generates a Google authentication URL for obtaining access tokens.</li>
+<li><strong><code>handleAuthCallback(config)</code></strong>: Handles the authentication callback from Google to get access tokens.</li>
+<li><strong><code>checkAndRefresh(config)</code></strong>: Checks and refreshes the access token if it is expired.</li>
+<li><strong><code>refreshToken(config)</code></strong>: Refreshes the access token.</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="comments-and-additional-information">Comments and Additional Information<a href="#comments-and-additional-information" class="hash-link" aria-label="Direct link to Comments and Additional Information" title="Direct link to Comments and Additional Information">​</a></h2>
+<ul>
+<li>The class provides various static and instance methods for handling Google Drive operations.</li>
+<li>It supports different types of applications like server, desktop, and web.</li>
+<li>The methods are comprehensive, covering from authentication to</li>
+</ul></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="theme-doc-footer-edit-meta-row row"><div class="col"><a href="https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/overview/dataconnectors.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_vwxv"></div></div></footer></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/overview/intro"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Introduction</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/overview/llmtools"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">LLM Tools</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#firestore-class-overview" class="table-of-contents__link toc-highlight">Firestore Class Overview</a><ul><li><a href="#class-firestore" class="table-of-contents__link toc-highlight">Class: <code>Firestore</code></a></li></ul></li><li><a href="#emailretriever-class-overview" class="table-of-contents__link toc-highlight">EmailRetriever Class Overview</a><ul><li><a href="#class-emailretriever" class="table-of-contents__link toc-highlight">Class: <code>EmailRetriever</code></a></li></ul></li><li><a href="#class-driveutils" class="table-of-contents__link toc-highlight">Class: <code>DriveUtils</code></a><ul><li><a href="#constructor-2" class="table-of-contents__link toc-highlight">Constructor</a></li><li><a href="#key-methods-2" class="table-of-contents__link toc-highlight">Key Methods</a></li><li><a href="#static-methods" class="table-of-contents__link toc-highlight">Static Methods</a></li></ul></li><li><a href="#comments-and-additional-information" class="table-of-contents__link toc-highlight">Comments and Additional Information</a></li></ul></div></div></div></div></main></div></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2023 Addy-AI. Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>
