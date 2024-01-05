@@ -1,159 +1,185 @@
-import { HfInference } from '@huggingface/inference';
-import { createRepo, uploadFile, deleteFiles} from "@huggingface/hub";
+// uploadFile
+const { deleteFiles, createRepo, deleteRepo, listSpaces, uploadFilesWithProgress } = require("@huggingface/hub");
+var fs = require('fs').promises;
+var path = require('path');
+const axios = require('axios');
 
 class HuggingFace {
-    // Looks like the access token is all we need
-    constructor(accessToken, defaultOptions) {
-        this.accessToken = accessToken;
-        this.defaultOptions = defaultOptions;
-
-        const inference = new HfInference(this.accessToken);
-        this.inference = inference;
+    constructor(accessToken) {
+        this.credentials = { accessToken };
     }
+    
+    // repoFullName = 'username/repoName'
+    // directoryPath = Folder containing docker training service. Default: Autotrain-advanced. 
+    // isPrivate = Default: false
+    // hardware -  Default: 't4-medium'
+    // secrets = A list of env variables the trainer will recieve. eg: { key: 'key1', value: 'val1'}], Default: []
+    
+    async createOrUpdateSpace(repoFullName, directoryPath = false, isPrivate = false, hardware = 't4-medium', secrets = []) {
+        try { 
+            const username = repoFullName.split('/')[0]; 
+            let existingSpaces = await this.listSpaces(username); 
+            console.log('Spaces check: ', { existingSpaces }); 
+            let spaceExists = existingSpaces.some(space => space.name === repoFullName); 
+            if (spaceExists) {  
+                console.log('Deleting: ', { repoFullName });
+                await this.deleteSpace(repoFullName); 
+            } 
+            existingSpaces = await this.listSpaces(username); 
+            spaceExists = existingSpaces.some(space => space.name === repoFullName); 
+            if (!spaceExists) { 
+                var files = await this.getFiles(directoryPath || path.join(__dirname, 'train/image/') );
+                console.log('Creating: ', repoFullName, 'With Files: ', {files}) 
+                await createRepo({
+                    repo: { name: repoFullName, type: "space" }, 
+                    credentials: this.credentials,
+                    private: isPrivate,
+                    sdk: "docker", // Required for space 
+                    hardware: hardware,
+                    files,
+                }); 
+                console.log(`Space '${repoFullName}' created.`); 
+                this.upgradeSpace(repoFullName, hardware); 
+                const defaults = {
+                    "PROJECT_NAME": 'my_llm',
+                    "MODEL_NAME": 'abhishek/llama-2-7b-hf-small-shards',
+                    "PUSH_TO_HUB": false,
+                    "HF_TOKEN": this.credentials.accessToken,
+                    "REPO_ID": repoFullName
+                }; 
+                secrets.forEach(secret => {
+                    // Override default value if key exists in secrets
+                    if (defaults.hasOwnProperty(secret.key)) {
+                        defaults[secret.key] = secret.value;
+                    }
 
-    /**
-     * 
-     *  @desc deleteFiles uploadFile createRepo 
-     *    - check if the account and or api key is valid
-     *    https://huggingface.co/docs/api-inference/quicktour
-     *    https://huggingface.co/docs/hub/security-tokens 
-     *    // Attempt to use the token with an inference call 
-     *    - check if the account and or api key is valid
-     *    https://huggingface.co/docs/api-inference/quicktour
-     *    https://huggingface.co/docs/hub/security-tokens
-    */ 
-    async tokenIsValid() {
-        console.log("HuggingFace:tokenIsValid:Start");
+                    // Set the secret, regardless of whether it was in defaults or not
+                    this.setSecret(repoFullName, secret.key, secret.value);
+                });
+            } 
+        } catch (error) {
+            console.error('Error in createOrUpdateSpace:', error);
+            throw error;
+        }
+    }
+    
+    async setSecret(repoFullName, secretKey, secretValue) {
+        const endpoint = 'https://huggingface.co';
+        const headers = { 'Authorization': `Bearer ${this.credentials.accessToken}`};
+        const payload = {
+            key: secretKey, 
+            value: secretValue, 
+        };
         try {
-            let models = await this.inference.listModels(); 
-            console.log(models)
-            return true
-        } 
-        catch (error) {
-            console.error("HuggingFace:tokenIsValid:Error", error);
-            return false
+          const response = await axios.post(`${endpoint}/api/spaces/${repoFullName}/secrets`, payload, { headers });
+          console.log('secret request response:', response.data);
+        } catch (error) {
+          console.error('Error requesting new secret:', error.response ? error.response.data : error);
         }
     }
 
-    /**
-     * 
-     * @desc deleteFiles uploadFile createRepo 
-     * - check if a hub exists
-     * https://huggingface.co/docs/datasets-server/valid
-     * https://huggingface.co/docs/huggingface_hub/v0.10.0.rc0/en/package_reference/hf_api#:~:text=Hugging%20Face%20Hub%20API,the%20root%20of%20the%20package
-     * 
-    */ 
-    async hubExists() {
-        console.log("HuggingFace:hubExists:Start");
+    async upgradeSpace(repoFullName, hardware) {
+        const endpoint = 'https://huggingface.co';
+        const headers = { 'Authorization': `Bearer ${this.credentials.accessToken}`};
+        const payload = { 
+            flavor: hardware
+        };
         try {
-            let models = await this.inference.listModels(); 
-            console.log(models)
-            return true
-        } 
-        catch (error) {
-            console.error("HuggingFace:hubExists:Error", error);
-            return false
+          const response = await axios.post(`${endpoint}/api/spaces/${repoFullName}/hardware`, payload, { headers });
+          console.log('Hardware request response:', response.data);
+        } catch (error) {
+          console.error('Error requesting new hardware:', error.response ? error.response.data : error);
         }
     }
 
-
-
-    /**
-     * @desc Calls a question answer model on hugging face
-     * @param {String} model 
-     * @param {String} inputs 
-     * @returns ?
-     */
-    async questionAnswering(model, inputs) {
-        return await this.inference.questionAnswer({
-            "model": model,
-            "inputs": inputs,
-        });
-    }
-
-    /**
-     * @desc - Create a repository / folder in hugging face hubs
-     * @param {String} repoPath - The path to the repo
-     * @param {String} type - The type of repo. This is useful for "models"
-     * @returns 
-     */
-    async createRepo(repoPath, type) {
-        if (type == "model") {
-            return await createRepo({
-                repo: {type: type, name: repoPath},
-                credentials: {accessToken: this.accessToken}
-              });
-        } else {
-            return await createRepo({
-                repo: repoPath, // or {type: "model", name: "my-user/nlp-test"},
-                credentials: {accessToken: this.accessToken}
-              });
-        }
-        
-    }
-
-    /**
-     * @desc Upload a file, like a model to hugging face hub
-     * @param {String} repoPath 
-     * @param {String} filePath 
-     * @param {Blob} blob 
-     * @returns 
-     */
-    async uploadFile(repoPath, filePath, blob) {
-        return await uploadFile({
-            repo: repoPath,
-            credentials: {accessToken: this.accessToken},
-            // Can work with native File in browsers
-            file: {
-              path: filePath,  // Eg. "pytorch_model.bin",
-              content: blob
+    async getFiles(directoryPath, rootPath = directoryPath) {
+        console.log('directory path: ', {directoryPath})
+        const entries = await fs.readdir(directoryPath, { withFileTypes: true });
+        const files = await Promise.all(entries.map((entry) => {
+            const fullPath = path.join(directoryPath, entry.name);
+            let relativePath = path.relative(rootPath, fullPath);
+            relativePath = relativePath.replace(/\\/g, '/'); // linux path
+    
+            if (entry.isDirectory()) {
+                return this.getFiles(fullPath, rootPath);
+            } else {
+                return fs.readFile(fullPath).then((content) => ({
+                    path: relativePath,
+                    content: new Uint8Array(content),
+                }));
             }
-          });
+        }));
+    
+        // Flatten the array and remove any possible empty slots
+        return Array.prototype.concat(...files);
     }
- 
-    /**
-     * @desc Delete files in hugging face hub
-     * @param {String} type - Space | 
-     * @param {String} name - The path to the repo or space eg. my-user/my-space
-     * @param {Array} path - An array of strings representing the file paths to delete
-     * @returns 
-     */
-    async deleteFiles(type, name, paths) {
-        return await deleteFiles({
-            repo: {type: type, name: name}, // or "spaces/my-user/my-space"
-            credentials: {accessToken: this.accessToken},
-            paths: paths
-          });
+    
+    async uploadDirectory(repoFullName, directoryPath) {
+        // Read all files in the directory
+        var filenames = await fs.readdir(directoryPath);
+      
+        // Map each filename to a File object
+        var files = await Promise.all(filenames.map(async function(filename) {
+          var filePath = path.join(directoryPath, filename);
+          var content = await fs.readFile(filePath);
+          return { path: filePath, content };
+        }));
+      
+        // Call uploadFilesWithProgress with necessary parameters
+        for await (var event of uploadFilesWithProgress({
+            credentials: this.credentials,
+            repo: repoFullName,
+            files,
+            // commitTitle: `Add ${files.length} files`,
+            // hubUrl: '', // Your hubUrl here
+            // branch: '', // Your branch here
+            // isPullRequest: false, // Or true if it's a PR
+            // parentCommit: '', // Your parentCommit here
+            // useWebWorkers: false, // Or true if you want to use web workers
+        })) {
+          console.log('Upload progress:', event);
+        }
+      
+        console.log('Upload completed');
+    } 
+    
+    async listSpaces(owner) {
+        try {
+            // console.log('Listing spaces for owner:', owner);
+    
+            const spaces = [];
+            for await (const space of listSpaces({ search: { owner:owner }, credentials: this.credentials })) {
+                // console.log('Found space:', space.id);
+                spaces.push(space);
+            }
+            return spaces;
+        } catch (error) {
+            console.error('Error listing spaces:', error);
+            throw error;
+        }
     }
-        
+
+    async deleteSpace(repoName) {
+        try { 
+            const deleteParams = {
+                repo: { name: repoName, type: "space" },
+                credentials: this.credentials
+            };  
+            // console.log('Deleting space:', repoName);
+            await deleteRepo(deleteParams); 
+        } catch (error) {
+            console.error('Error deleting space:', error);
+            throw error;
+        }
+    }
+
 }
+
 module.exports = HuggingFace;
 
-/* 
-TODO: 
-- Create or update a model on the hub
-https://huggingface.co/docs/huggingface_hub/guides/model-cards
-https://huggingface.co/docs/hub/models-uploading
-
-- connect a model on the hub to an inference endpoint
-https://huggingface.co/docs/inference-endpoints/index#:~:text=%F0%9F%A4%97%20Inference%20Endpoints%20offers%20a,a%20Hugging%20Face%20Model%20Repository
-https://huggingface.co/inference-endpoints#:~:text=1,Choose%20your%20cloud
-https://moon-ci-docs.huggingface.co/docs/huggingface_hub/pr_1513/en/package_reference/inference_client#:~:text=The%20huggingface_hub%20library%20provides%20an,Hugging%20Face%E2%80%99s%20infrastructure%20for%20free
 
 
-- check to see if a spaces exists
-https://huggingface.co/docs/hub/main/spaces-overview
-https://huggingface.co/docs/huggingface_hub/main/guides/manage-spaces
-
-- update or create a space by uploading a dockerfile
-https://huggingface.co/docs/hub/spaces-sdks-docker-panel
-https://huggingface.co/docs/hub/spaces-sdks-docker
-
-- have that space use dedicated 16gb gpu's 
-https://huggingface.co/docs/huggingface_hub/main/guides/manage-spaces
-https://huggingface.co/docs/huggingface_hub/main/guides/manage-spaces
-
-- code to run the space as well as close it
-https://huggingface.co/docs/hub/main/spaces-overview
-https://huggingface.co/docs/hub/spaces
-*/
+//
+// api.request_space_hardware(repo_id=TRAINING_SPACE_ID, hardware=SpaceHardware.CPU_BASIC)
+// else: api.request_space_hardware(repo_id=TRAINING_SPACE_ID, hardware=SpaceHardware.T4_MEDIUM)
+//

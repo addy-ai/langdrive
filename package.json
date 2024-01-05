@@ -7,11 +7,11 @@
     "langdrive": "./main.js"
   },
   "scripts": {
-    "start": "nodemon ./src/start_server.js", 
+    "start": "nodemon ./src/start_server.js",
     "serveDocs": "cd markdown && npm run start",
     "serveDocsw": "cd markdown; npm run start",
-    "buildDocs": "rm ./docs/* -r && cd markdown && npm run build && mv build/* ../docs/ && cp CNAME ../docs/", 
-    "buildDocsw": "rm ./docs/* -r; cd markdown; npm run build; mv build/* ../docs/; cp CNAME ../docs/", 
+    "buildDocs": "rm ./docs/* -r && cd markdown && npm run build && mv build/* ../docs/ && cp CNAME ../docs/",
+    "buildDocsw": "rm ./docs/* -r; cd markdown; npm run build; mv build/* ../docs/; cp CNAME ../docs/",
     "version": "npm version patch",
     "testCli": "./tests/test_cli.bash",
     "testChatbot": "node ./src/server/test.mjs"
@@ -32,8 +32,10 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "faiss-node": "^0.2.3",
+    "fetch-blob": "^4.0.0",
     "firebase-admin": "^11.11.0",
     "firebase-functions": "^4.3.1",
+    "form-data": "^4.0.0",
     "googleapis": "^123.0.0",
     "js-yaml": "^4.1.0",
     "langchain": "^0.0.124",

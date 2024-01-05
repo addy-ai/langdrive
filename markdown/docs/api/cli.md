@@ -12,7 +12,8 @@ Here are your Args:
 - `hfToken`: An API key provided by Hugging Face with `write` permissions. Get one [here](https://huggingface.co/docs/hub/security-tokens).
 - `baseModel`: The original model to train. This can be one of the models in our supported models shown at the bottom of this page
 - `deploy`: Weather training weights should be hosted in a hosting service. Default False. 
-- `deployToHf`: Whether traiing weights should be stored in huggingface specifically. Either true | false
+- `deployToHf`: Whether traiing weights should be stored in huggingface specifically. default true
+- `isPrivate`: Whether created services should be publicly visible. default false
 - `hfModelPath`: The full path to your hugging face model repo where the model should be deployed. Format: hugging face username/model 
 - `inputValue`: The input value to extract from the data retrieved, default: 'input'
 - `outputValue`: The output value to extract from the data retrieved, default: 'output'

@@ -22,6 +22,8 @@ huggingface:
   baseModel: vilsonrodrigues/falcon-7b-instruct-sharded
   hfModelPath: karpathic/falcon-7b-instruct-tuned
   deployToHf: true 
+  hfTrainPath: karpathic/auto-trainer
+  isPrivate: true
 
 train: 
   input:
@@ -30,3 +32,20 @@ train:
   output:
     path: ./tests/midjourney_prompt.csv
   outputValue: output
+  settings:
+    PROJECT_NAME: my_test_llm
+    MODEL_NAME: abhishek/llama-2-7b-hf-small-shards
+    PUSH_TO_HUB: false
+    LEARNING_RATE: 2e-4
+    NUM_EPOCHS: 1
+    BATCH_SIZE: 1
+    BLOCK_SIZE: 1024
+    WARMUP_RATIO: 0.1
+    WEIGHT_DECAY: 0.01
+    GRADIENT_ACCUMULATION: 4
+    MIXED_PRECISION: fp16
+    PEFT: true
+    QUANTIZATION: int4
+    LORA_R: 16
+    LORA_ALPHA: 32
+    LORA_DROPOUT: 0.05

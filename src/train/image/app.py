@@ -1,11 +1,15 @@
+print('starting1')
 from flask import Flask, jsonify, request
 from request_controller import RequestController
+print('starting2')
 from train import LLMTrain
+print('starting3')
 from flask_cors import CORS
-
+print('starting4')
 import sys
 import os
 
+print('starting5')
 app = Flask(__name__)
 CORS(app)
 
@@ -18,6 +22,9 @@ defin = """
 """
 @app.route("/")
 def index():
+    
+    print('starting7')
+    return 'Hello, World!'
     try:
         response = {"response": True}
         return jsonify(response), 200
@@ -98,5 +105,9 @@ def download_folder(folder_path):
 
     return response
 
+
+print('starting5')
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+
+print('starting6')

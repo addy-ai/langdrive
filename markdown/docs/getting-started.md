@@ -26,6 +26,8 @@ The command `langdrive train` is used to train the LLM, please see how to config
 - `deploy`: Weather training weights should be hosted in a hosting service. Default False. 
 - `deployToHf`: Whether traiing weights should be stored in huggingface specifically. Either true | false
 - `hfModelPath`: The full path to your hugging face model repo where the model should be deployed. Format: hugging face username/model
+- `hfTrainPath`: The full path for training environment to be created. Format: hugging face username/spaces_name
+- `isPrivate`: Whether the training service and model should be publicly visible.
 - `csv`: Path to shared csv training data.
 - `path`: Path to shared training data.
 - `inputPath`: Path to input training data if not shared.

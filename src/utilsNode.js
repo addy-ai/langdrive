@@ -68,7 +68,9 @@ function mergeCliArgsAndYaml(args, config) {
       hfToken: args['hfToken'],
       ...(args['baseModel'] && { baseModel: args['baseModel'] }),
       ...(args['deployToHf'] && { deployToHf: args['deployToHf'] }),
-      ...(args['hfModelPath'] && { hfModelPath: args['hfModelPath'] })
+      ...(args['hfModelPath'] && { hfModelPath: args['hfModelPath'] }),
+      ...(args['hfTrainPath'] && { hfTrainPath: args['hfTrainPath'] }),
+      ...(args['isPrivate'] && { isPrivate: args['isPrivate'] })
     };
   } 
   if (args['deploy']) { config.train.deploy = true; }
@@ -77,6 +79,7 @@ function mergeCliArgsAndYaml(args, config) {
   if(args['inputValue']){ config.train.inputValue = args['inputValue']; }
   if(args['outputPath']){ config.train.outputPath = args['outputPath']; }
   if(args['inputPath']){ config.train.inputPath = args['inputPath']; }
+  if(args['trainPath']){ config.train.trainPath = args['trainPath']; }
   config.verbose = args['verbose'] ? config.verbose : false;
    
   // config.verbose && console.log(`mergeCliArgsAndYaml:config`, config);
@@ -113,7 +116,7 @@ async function train(config) {
   // console.log('trainConfig', Object.keys(trainConfig))
   let trainer = await Train.init(trainConfig); 
  
-  let trainOnThis = {...{deployToHf: config.train.deploy||false}, ...config.huggingface}
+  let trainOnThis = {...config.huggingface}
   console.log({config}, {trainer})
   let trainingResults = await trainer.trainModel(trainOnThis);
 

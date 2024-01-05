@@ -1,4 +1,6 @@
 # Import the necessary modules and set environment variables
+
+print('train1')
 import json
 import os
 from pprint import pprint
@@ -6,6 +8,7 @@ import bitsandbytes as bnb
 import torch
 import torch.nn as nn
 import transformers
+print('train2')
 from datasets import (
     load_dataset,
     Dataset

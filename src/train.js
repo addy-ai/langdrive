@@ -12,7 +12,7 @@
 */
 // import Papa from 'papaparse'; // CSV Parser
 
-const { type } = require('os');
+const { type } = require('os'); 
 
 class Train {
   constructor(props) {
@@ -34,6 +34,8 @@ class Train {
     this.outputService = props.outputService || o.service || props.service || false // !data & !path user input 
     this.outputQuery = props.outputQuery || o.query || props.query || false //
     this.outputValue = props.outputValue || o.value || 'output'
+    this.trainPath = props.trainPath || false
+    this.deploy = props.deploy || false
   }
 
   // Initialize the class
@@ -44,8 +46,8 @@ class Train {
     let { inp, out } = await trainer.prepareData();
     return trainer
   }
-
-  async trainModel(huggingfaceInfo) {
+  
+  async trainModel(additionalConfigInfo) { 
     if (this.verbose) { console.log('DriveTrain:trainModel()'); }
     /*
     X - Format ingested data from emails & firestore into JSON of {input,output}
@@ -56,7 +58,22 @@ class Train {
     ? - Reference the CSV file in training
     ? - Delete the training CSV after training is complete, 
     ? - do this in the fask api method
-    */
+    */ 
+
+    // Get the right training env. Create it if required.
+    let trainPath = huggingfaceInfo.hfTrainPath || this.trainPath
+    if(!trainPath.includes('http')){
+      // Create a new training huggingface repository
+      console.log('\nCreating or updating space...');
+      const HuggingFace = require('../src/huggingFace');
+      const hf = new HuggingFace(process.env.HUGGINGFACE_API_KEY); 
+      await hf.createOrUpdateSpace(trainPath, this.isPrivate || additionalConfigInfo.isPrivate);
+      trainPath = `https://${trainPath.replace('/','-')}.hf.space`; 
+    }
+    else{ 
+      trainpath = 'https://api.langdrive.ai/train' 
+    }
+    console.log('trainPath', trainPath) 
     // data = inp || this.data
     // console.log('Train:trainModel:huggingfaceInfo', huggingfaceInfo)
     // console.log('DriveTrain:trainModel()', this.data); 
@@ -64,17 +81,19 @@ class Train {
       "baseModel": huggingfaceInfo?.baseModel || "vilsonrodrigues/falcon-7b-instruct-sharded",
       "trainingData": this.data,
       "hfToken": huggingfaceInfo.hfToken,
-      "deployToHf": huggingfaceInfo.deployToHf,
+      "deployToHf": this.deploy || huggingfaceInfo.deployToHf,
       "hfModelPath": huggingfaceInfo.hfModelPath,                             // where to save the fine tuned model
     }
+    let trainingService = huggingfaceInfo?.trainingService || 'https://api.langdrive.ai/train'
     // console.log('Train:trainModel:sendThis', sendThis.trainingData) 
-    let model = await fetch('https://api.langdrive.ai/train', {
+    let model = await fetch(trainingService, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(sendThis)
     })
-    console.log('trainModel:sentthis:', {sendThis})
-
+    console.log('trainModel:sentthis:', {
+      sendThis
+    })
     return model
   }
 

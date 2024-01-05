@@ -1,3 +1,13 @@
+---
+title: Langdrive Docker Setup
+emoji: 🐳
+colorFrom: purple
+colorTo: gray
+sdk: docker
+app_port: 7860
+suggested_hardware: 't4-medium'
+---
+
 # Training Abstraction
 Calls a Python process to run the training process
 
@@ -27,3 +37,7 @@ To make us-central1 the default region, Run:
 ```
 gcloud config set run/region us-central1
 ```
+
+https://huggingface.co/docs/hub/spaces-config-reference
+
+suggested_hardware : string :  (e.g. "cpu-upgrade", "t4-small", "t4-medium", "a10g-small", "a10g-large", "a10g-largex2", "a10g-largex4" or "a100-large").
