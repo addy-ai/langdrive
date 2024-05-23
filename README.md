@@ -35,6 +35,17 @@ Read the [docs](https://docs.LangDrive.ai) for more.
 
 -----
 
+## Train Your First LLM
+
+We've replicated one of our training images as a Google Colab Notebook. Here's what it does:
+- Finetune falcon-7b-instruct
+- Creates a Flask Webserver
+- Opens an Ngrok API endpoint so you can call the API
+
+Try it out <a href="https://colab.research.google.com/drive/13rb8rnjMS0agtRLXBta6LHaX2tcG2PV0?usp=sharing" target="_blank">here</a>
+
+-----
+
 ## Use cases
 
 LangDrive lets you builds amazing AI apps like:
