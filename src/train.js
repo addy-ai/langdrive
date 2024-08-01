@@ -99,44 +99,13 @@ class Train {
     return model
   }
 
-  async sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
   // Retrieve the data needed
   async prepareData() {
-    console.log("Preparing data...");
-    await this.sleep(1000);
-
-    // Write a beautiful terminal message logging training
-      // vilsonrodrigues/falcon-7b-instruct-sharded and loading animation
-    
-      
-      // after 10 seconds, stop animation
-    //   setTimeout(function () {
-    //       clearInterval(handle);
-    //       console.log("\nConnecting to http://127.0.0.1:5000")
-    //   }, 2000);
-
-      // start loading animation: logging training vilsonrodrigues/falcon-7b-instruct-sharded
-      const handle = loadAnimation("Finetuning vilsonrodrigues/falcon-7b-instruct-sharded");
-
-    await this.sleep(20000);
-    return
     if (this.verbose) console.log('DriveTrain:PrepareData()'); 
     let inp = this.input = await this.getData('input');
     let out = this.output = await this.getData('output'); 
 
     // console.log('DriveTrain:PrepareData:inp', inp, out)
-
-    /**
-     
-    langdrive train --csv $PWD/trainingData.csv
-                    --hfModelPath vilsonrodrigues/falcon-7b-instruct-sharded
-                    --hfToken $HF_TOKEN
-                    --deployToHf true
-                    
-     */
 
     // create a new array of objects with the input and output data
     let data = this.data = inp.map((input, i) => { return { input: inp[i], output: out[i] } })
@@ -244,21 +213,3 @@ module.exports = Train;
 // We dont have a service to work with local files atm.
 // for csvs set 'csv' as service (optionally,atm) and 'path' as path (required)
 // be explicitly clear that the cli args overwrite the yaml file.
-
-function loadAnimation(text) {
-
-    // frame sequence
-    const frames = ['\\', '|', '/', '-'];
-    let current = 0;
-
-    // return function that when called will move to the next frame
-    return setInterval(function() {
-        // print text + 'loading' animation
-        readline.clearLine(process.stdout, 0);
-        readline.cursorTo(process.stdout, 0);
-        process.stdout.write(text + ' ' + frames[current++]);
-        
-        // if it's at the end of frames array, loop back to start
-        current = current % frames.length;
-    }, 500); // interval between frames - 500ms
-}
