@@ -11,7 +11,7 @@ ssl._create_default_https_context = ssl.create_default_context()
 app = Flask(__name__)
 CORS(app)
 
-PORT = 8082
+PORT = 8083
 
 llmware_extractor_config = {
     "model_name": "slim-extract-tool",
