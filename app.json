@@ -1,0 +1,7 @@
+{
+  "name": "Langdrive Example",
+  "description": "A barebones Langdrive app using Express",
+  "repository": "https://github.com/addy-ai/langdrive",
+  "logo": "https://node-js-sample-1234567890ab.herokuapp.com/node.png",
+  "keywords": ["Langchain", "LLM", "Chatbot"]
+}

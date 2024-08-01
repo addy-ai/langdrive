@@ -1,0 +1,116 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Interface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    </link>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-800 text-white font-sans">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-gray-900 p-6">
+            <div class="flex items-center justify-between mb-6">
+                <button class="bg-blue-600 text-white p-2 rounded-md">
+                    <i class="fas fa-plus"></i> New chat
+                </button>
+                <button class="text-gray-400">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+            <div class="mb-6">
+                <div class="flex items-center p-2 bg-blue-800 rounded-md mb-2">
+                    <i class="fas fa-comment-alt text-blue-500 mr-2"></i>
+                    <span>Chatbot definition expl</span>
+                </div>
+            </div>
+            <div class="text-gray-400">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-trash-alt mr-2"></i>
+                    <span>Clear conversations</span>
+                </div>
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-sun mr-2"></i>
+                    <span>Light mode</span>
+                </div>
+                <div class="flex items-center mb-2">
+                    <i class="fab fa-discord mr-2"></i>
+                    <span>OpenAI Discord</span>
+                </div>
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-sync-alt mr-2"></i>
+                    <span>Updates & FAQ</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    <span>Log out</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="flex-1 flex flex-col p-6" style="justify-content: space-between;">
+            <div id="chat-history">
+                <div class="chat-message">
+                    <div class="flex items-center justify-between mb-6">
+                        <h1 class="text-xl font-semibold user-prompt">What is a Chatbot?</h1>
+                        <div class="text-gray-400">
+                            <button class="mr-2">
+                                <i class="fas fa-print"></i>
+                            </button>
+                            <button>
+                                <i class="fas fa-expand-arrows-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-gray-700 p-6 rounded-md mb-6 flex-1 ai-response">
+                        <p>A chatbot is a computer program that simulates human conversation through voice commands or
+                            text
+                            chats or both. It can be integrated with various messaging platforms like Facebook
+                            Messenger,
+                            WhatsApp, WeChat, etc. and can be used for a variety of purposes, such as customer service,
+                            entertainment, and e-commerce.</p>
+                    </div>
+                    <div class="flex justify-end mb-6">
+                        <button class="bg-blue-600 text-white p-2 rounded-md">
+                            <i class="fas fa-sync-alt"></i> Regenerate response
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Input box with send button -->
+            <div>
+
+
+                <div class="mb-6 flex">
+                    <input id="message-input" type="text" placeholder="Type your message here..."
+                        class="w-full p-4 bg-gray-900 rounded-l-md focus:outline-none placeholder-gray-500">
+                    <button id="send-button" class="bg-blue-600 text-white px-4 rounded-r-md">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+
+                <div class="text-gray-400 text-xs mb-6">
+                    <p>NOT ChatGPT Jan 9 Version. Free Research Preview. Our goal is to make AI systems more natural and
+                        safe to
+                        interact with. Your feedback will help us improve.</p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <script src="chatbot.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+{
+  "name": "langdrive",
+  "version": "1.01.00",
+  "description": "",
+  "main": "main.js",
+  "bin": {
+    "langdrive": "./main.js"
+  },
+  "scripts": {
+    "start": "nodemon ./src/start_server.js",
+    "serveDocs": "cd markdown && npm run start",
+    "serveDocsw": "cd markdown; npm run start",
+    "buildDocs": "rm ./docs/* -r && cd markdown && npm run build && mv build/* ../docs/ && cp CNAME ../docs/",
+    "buildDocsw": "rm ./docs/* -r; cd markdown; npm run build; mv build/* ../docs/; cp CNAME ../docs/",
+    "version": "npm version patch",
+    "testCli": "./tests/test_cli.bash",
+    "testChatbot": "node ./src/server/test.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/local-auth": "^3.0.0",
+    "@huggingface/agents": "^0.0.5",
+    "@huggingface/hub": "^0.11.4",
+    "@huggingface/inference": "^1.8.0",
+    "axios": "^1.4.0",
+    "connect-sqlite3": "^0.9.13",
+    "cors": "^2.8.5",
+    "docusaurus": "^1.14.7",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "faiss-node": "^0.2.3",
+    "fetch-blob": "^4.0.0",
+    "firebase-admin": "^11.11.0",
+    "firebase-functions": "^4.3.1",
+    "form-data": "^4.0.0",
+    "googleapis": "^123.0.0",
+    "js-yaml": "^4.1.0",
+    "langchain": "^0.0.124",
+    "nodemon": "^3.0.1",
+    "openai": "^4.20.0",
+    "papaparse": "^5.4.1",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-oauth2-refresh": "^2.2.0",
+    "querystring": "^0.2.1"
+  },
+  "devDependencies": {
+    "faiss-node": "^0.2.3",
+    "mkdocs": "^0.0.1"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src/"
+    ],
+    "ext": "js,jsx,ts,tsx,html,css",
+    "exec": "make pages"
+  }
+}

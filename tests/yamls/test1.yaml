@@ -1,0 +1,38 @@
+verbose: true
+
+firestore: 
+  clientJson: "secrets/firebase_service_client.json"
+  databaseURL: "env:FIREBASE_DATABASE_URL"
+
+gdrive: 
+  appType: "desktop"
+  keyFilePath: "secrets/google_desktop_client.json"
+  tokenFilePath: "secrets/google_desktop_token.json"
+  temp: 'getFileByName - filename, mimeType, directory, directoryId'
+  scopes: 
+    - "https://www.googleapis.com/auth/drive"
+    - "https://www.googleapis.com/auth/drive.metadata.readonly"
+    
+email:
+  password: env:GMAIL_PASSWORD
+  email: env:GMAIL_EMAIL
+
+huggingface:
+  hfToken: env:HUGGINGFACE_API_KEY
+  baseModel: vilsonrodrigues/falcon-7b-instruct-sharded
+  hfModelPath: karpathic/falcon-7b-instruct-tuned
+  deployToHf: true  
+  
+train:
+  service: 'firestore' 
+  query:
+    filterCollectionWithMultipleWhereClauseWithLimit:
+        collection: "chat-state"                
+        filterKey: []
+        filterData: []
+        operation: []
+        limit: 5
+  input:
+    value: "chat.0.content"
+  output:
+    value: "chat.1.content"

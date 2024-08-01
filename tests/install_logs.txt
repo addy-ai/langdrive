@@ -1,0 +1,443 @@
+Collecting autotrain-advanced
+  Downloading autotrain_advanced-0.6.79-py3-none-any.whl.metadata (10 kB)
+Collecting albumentations==1.3.1 (from autotrain-advanced)
+  Downloading albumentations-1.3.1-py3-none-any.whl.metadata (34 kB)
+Collecting codecarbon==2.2.3 (from autotrain-advanced)
+  Downloading codecarbon-2.2.3-py3-none-any.whl.metadata (6.5 kB)
+Collecting datasets~=2.14.0 (from datasets[vision]~=2.14.0->autotrain-advanced)
+  Downloading datasets-2.14.7-py3-none-any.whl.metadata (19 kB)
+Collecting evaluate==0.3.0 (from autotrain-advanced)
+  Downloading evaluate-0.3.0-py3-none-any.whl (72 kB)
+     ---------------------------------------- 0.0/72.9 kB ? eta -:--:--     ---------------------------------------- 72.9/72.9 kB 3.9 MB/s eta 0:00:00
+Collecting ipadic==1.0.0 (from autotrain-advanced)
+  Downloading ipadic-1.0.0.tar.gz (13.4 MB)
+     ---------------------------------------- 0.0/13.4 MB ? eta -:--:--     --- ------------------------------------ 1.0/13.4 MB 31.4 MB/s eta 0:00:01     --------- ------------------------------ 3.2/13.4 MB 33.6 MB/s eta 0:00:01     --------------- ------------------------ 5.3/13.4 MB 37.6 MB/s eta 0:00:01     -------------------- ------------------- 6.8/13.4 MB 39.6 MB/s eta 0:00:01     ------------------------------ -------- 10.4/13.4 MB 46.7 MB/s eta 0:00:01     --------------------------------------  13.2/13.4 MB 50.1 MB/s eta 0:00:01     --------------------------------------  13.4/13.4 MB 50.4 MB/s eta 0:00:01     --------------------------------------- 13.4/13.4 MB 40.9 MB/s eta 0:00:00
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting jiwer==3.0.2 (from autotrain-advanced)
+  Downloading jiwer-3.0.2-py3-none-any.whl.metadata (2.6 kB)
+Collecting joblib==1.3.1 (from autotrain-advanced)
+  Downloading joblib-1.3.1-py3-none-any.whl.metadata (5.4 kB)
+Collecting loguru==0.7.0 (from autotrain-advanced)
+  Downloading loguru-0.7.0-py3-none-any.whl (59 kB)
+     ---------------------------------------- 0.0/60.0 kB ? eta -:--:--     ---------------------------------------- 60.0/60.0 kB 3.1 MB/s eta 0:00:00
+Requirement already satisfied: pandas>=1.4 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from autotrain-advanced) (2.0.0)
+Collecting nltk==3.8.1 (from autotrain-advanced)
+  Downloading nltk-3.8.1-py3-none-any.whl (1.5 MB)
+     ---------------------------------------- 0.0/1.5 MB ? eta -:--:--     ---------------------------------------  1.5/1.5 MB 99.7 MB/s eta 0:00:01     ---------------------------------------- 1.5/1.5 MB 48.4 MB/s eta 0:00:00
+Collecting optuna==3.3.0 (from autotrain-advanced)
+  Downloading optuna-3.3.0-py3-none-any.whl.metadata (17 kB)
+Collecting Pillow==10.0.0 (from autotrain-advanced)
+  Downloading Pillow-10.0.0-cp311-cp311-win_amd64.whl.metadata (9.6 kB)
+Collecting protobuf==4.23.4 (from autotrain-advanced)
+  Downloading protobuf-4.23.4-cp310-abi3-win_amd64.whl.metadata (540 bytes)
+Collecting sacremoses==0.0.53 (from autotrain-advanced)
+  Downloading sacremoses-0.0.53.tar.gz (880 kB)
+     ---------------------------------------- 0.0/880.6 kB ? eta -:--:--     ------------------------------------- 880.6/880.6 kB 28.1 MB/s eta 0:00:00
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting scikit-learn==1.3.0 (from autotrain-advanced)
+  Downloading scikit_learn-1.3.0-cp311-cp311-win_amd64.whl.metadata (11 kB)
+Collecting sentencepiece==0.1.99 (from autotrain-advanced)
+  Using cached sentencepiece-0.1.99-cp311-cp311-win_amd64.whl (977 kB)
+Requirement already satisfied: tqdm==4.65.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from autotrain-advanced) (4.65.0)
+Collecting werkzeug==2.3.6 (from autotrain-advanced)
+  Downloading Werkzeug-2.3.6-py3-none-any.whl.metadata (4.1 kB)
+Collecting xgboost==1.7.6 (from autotrain-advanced)
+  Downloading xgboost-1.7.6-py3-none-win_amd64.whl.metadata (1.9 kB)
+Collecting huggingface-hub>=0.16.4 (from autotrain-advanced)
+  Downloading huggingface_hub-0.20.1-py3-none-any.whl.metadata (12 kB)
+Collecting requests==2.31.0 (from autotrain-advanced)
+  Downloading requests-2.31.0-py3-none-any.whl.metadata (4.6 kB)
+Collecting einops==0.6.1 (from autotrain-advanced)
+  Downloading einops-0.6.1-py3-none-any.whl (42 kB)
+     ---------------------------------------- 0.0/42.2 kB ? eta -:--:--     ---------------------------------------- 42.2/42.2 kB 2.1 MB/s eta 0:00:00
+Collecting invisible-watermark==0.2.0 (from autotrain-advanced)
+  Downloading invisible_watermark-0.2.0-py3-none-any.whl.metadata (8.2 kB)
+Requirement already satisfied: packaging==23.1 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from autotrain-advanced) (23.1)
+Collecting tensorboard (from autotrain-advanced)
+  Downloading tensorboard-2.15.1-py3-none-any.whl.metadata (1.7 kB)
+Collecting peft==0.7.1 (from autotrain-advanced)
+  Downloading peft-0.7.1-py3-none-any.whl.metadata (25 kB)
+Collecting trl==0.7.4 (from autotrain-advanced)
+  Downloading trl-0.7.4-py3-none-any.whl.metadata (10 kB)
+Collecting tiktoken==0.5.1 (from autotrain-advanced)
+  Downloading tiktoken-0.5.1-cp311-cp311-win_amd64.whl.metadata (6.8 kB)
+Collecting transformers==4.36.1 (from autotrain-advanced)
+  Downloading transformers-4.36.1-py3-none-any.whl.metadata (126 kB)
+     ---------------------------------------- 0.0/126.8 kB ? eta -:--:--     -------------------------------------- 126.8/126.8 kB 7.3 MB/s eta 0:00:00
+Collecting accelerate==0.25.0 (from autotrain-advanced)
+  Downloading accelerate-0.25.0-py3-none-any.whl.metadata (18 kB)
+Collecting diffusers==0.21.4 (from autotrain-advanced)
+  Downloading diffusers-0.21.4-py3-none-any.whl.metadata (18 kB)
+Collecting bitsandbytes==0.41.0 (from autotrain-advanced)
+  Downloading bitsandbytes-0.41.0-py3-none-any.whl.metadata (9.8 kB)
+Collecting rouge-score==0.1.2 (from autotrain-advanced)
+  Downloading rouge_score-0.1.2.tar.gz (17 kB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting py7zr==0.20.6 (from autotrain-advanced)
+  Downloading py7zr-0.20.6-py3-none-any.whl.metadata (16 kB)
+Collecting fastapi==0.104.1 (from autotrain-advanced)
+  Downloading fastapi-0.104.1-py3-none-any.whl.metadata (24 kB)
+Collecting uvicorn==0.22.0 (from autotrain-advanced)
+  Downloading uvicorn-0.22.0-py3-none-any.whl (58 kB)
+     ---------------------------------------- 0.0/58.3 kB ? eta -:--:--     ---------------------------------------- 58.3/58.3 kB 3.0 MB/s eta 0:00:00
+Collecting python-multipart==0.0.6 (from autotrain-advanced)
+  Downloading python_multipart-0.0.6-py3-none-any.whl (45 kB)
+     ---------------------------------------- 0.0/45.7 kB ? eta -:--:--     ---------------------------------------- 45.7/45.7 kB ? eta 0:00:00
+Collecting gradio==3.41.0 (from autotrain-advanced)
+  Downloading gradio-3.41.0-py3-none-any.whl.metadata (17 kB)
+Requirement already satisfied: pydantic==2.4.2 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from autotrain-advanced) (2.4.2)
+Collecting hf-transfer (from autotrain-advanced)
+  Downloading hf_transfer-0.1.4-cp311-none-win_amd64.whl.metadata (1.6 kB)
+Collecting pyngrok==7.0.3 (from autotrain-advanced)
+  Downloading pyngrok-7.0.3-py3-none-any.whl.metadata (6.2 kB)
+Requirement already satisfied: numpy>=1.17 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from accelerate==0.25.0->autotrain-advanced) (1.24.2)
+Requirement already satisfied: psutil in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from accelerate==0.25.0->autotrain-advanced) (5.9.5)
+Requirement already satisfied: pyyaml in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from accelerate==0.25.0->autotrain-advanced) (6.0.1)
+Requirement already satisfied: torch>=1.10.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from accelerate==0.25.0->autotrain-advanced) (2.1.0)
+Collecting safetensors>=0.3.1 (from accelerate==0.25.0->autotrain-advanced)
+  Downloading safetensors-0.4.1-cp311-none-win_amd64.whl.metadata (3.8 kB)
+Requirement already satisfied: scipy>=1.1.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from albumentations==1.3.1->autotrain-advanced) (1.10.1)
+Collecting scikit-image>=0.16.1 (from albumentations==1.3.1->autotrain-advanced)
+  Downloading scikit_image-0.22.0-cp311-cp311-win_amd64.whl.metadata (13 kB)
+Collecting qudida>=0.0.4 (from albumentations==1.3.1->autotrain-advanced)
+  Downloading qudida-0.0.4-py3-none-any.whl (3.5 kB)
+Collecting opencv-python-headless>=4.1.1 (from albumentations==1.3.1->autotrain-advanced)
+  Downloading opencv_python_headless-4.8.1.78-cp37-abi3-win_amd64.whl.metadata (20 kB)
+Requirement already satisfied: arrow in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from codecarbon==2.2.3->autotrain-advanced) (1.2.3)
+Collecting pynvml (from codecarbon==2.2.3->autotrain-advanced)
+  Downloading pynvml-11.5.0-py3-none-any.whl (53 kB)
+     ---------------------------------------- 0.0/53.1 kB ? eta -:--:--     ---------------------------------------- 53.1/53.1 kB 2.7 MB/s eta 0:00:00
+Collecting py-cpuinfo (from codecarbon==2.2.3->autotrain-advanced)
+  Downloading py_cpuinfo-9.0.0-py3-none-any.whl (22 kB)
+Collecting fuzzywuzzy (from codecarbon==2.2.3->autotrain-advanced)
+  Downloading fuzzywuzzy-0.18.0-py2.py3-none-any.whl (18 kB)
+Requirement already satisfied: click in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from codecarbon==2.2.3->autotrain-advanced) (8.1.3)
+Requirement already satisfied: filelock in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from diffusers==0.21.4->autotrain-advanced) (3.13.1)
+Collecting importlib-metadata (from diffusers==0.21.4->autotrain-advanced)
+  Downloading importlib_metadata-7.0.1-py3-none-any.whl.metadata (4.9 kB)
+Requirement already satisfied: regex!=2019.12.17 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from diffusers==0.21.4->autotrain-advanced) (2023.3.23)
+Collecting dill (from evaluate==0.3.0->autotrain-advanced)
+  Downloading dill-0.3.7-py3-none-any.whl.metadata (9.9 kB)
+Collecting xxhash (from evaluate==0.3.0->autotrain-advanced)
+  Downloading xxhash-3.4.1-cp311-cp311-win_amd64.whl.metadata (12 kB)
+Collecting multiprocess (from evaluate==0.3.0->autotrain-advanced)
+  Downloading multiprocess-0.70.15-py311-none-any.whl.metadata (7.2 kB)
+Requirement already satisfied: fsspec>=2021.05.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from fsspec[http]>=2021.05.0->evaluate==0.3.0->autotrain-advanced) (2023.10.0)
+Collecting responses<0.19 (from evaluate==0.3.0->autotrain-advanced)
+  Downloading responses-0.18.0-py3-none-any.whl (38 kB)
+Requirement already satisfied: anyio<4.0.0,>=3.7.1 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from fastapi==0.104.1->autotrain-advanced) (3.7.1)
+Collecting starlette<0.28.0,>=0.27.0 (from fastapi==0.104.1->autotrain-advanced)
+  Downloading starlette-0.27.0-py3-none-any.whl.metadata (5.8 kB)
+Requirement already satisfied: typing-extensions>=4.8.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from fastapi==0.104.1->autotrain-advanced) (4.8.0)
+Collecting aiofiles<24.0,>=22.0 (from gradio==3.41.0->autotrain-advanced)
+  Downloading aiofiles-23.2.1-py3-none-any.whl.metadata (9.7 kB)
+Requirement already satisfied: altair<6.0,>=4.2.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from gradio==3.41.0->autotrain-advanced) (5.1.1)
+Collecting ffmpy (from gradio==3.41.0->autotrain-advanced)
+  Downloading ffmpy-0.3.1.tar.gz (5.5 kB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting gradio-client==0.5.0 (from gradio==3.41.0->autotrain-advanced)
+  Downloading gradio_client-0.5.0-py3-none-any.whl.metadata (7.1 kB)
+Requirement already satisfied: httpx in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from gradio==3.41.0->autotrain-advanced) (0.25.1)
+Collecting importlib-resources<7.0,>=1.3 (from gradio==3.41.0->autotrain-advanced)
+  Downloading importlib_resources-6.1.1-py3-none-any.whl.metadata (4.1 kB)
+Requirement already satisfied: jinja2<4.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from gradio==3.41.0->autotrain-advanced) (3.1.2)
+Requirement already satisfied: markupsafe~=2.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from gradio==3.41.0->autotrain-advanced) (2.1.2)
+Requirement already satisfied: matplotlib~=3.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from gradio==3.41.0->autotrain-advanced) (3.7.1)
+Collecting orjson~=3.0 (from gradio==3.41.0->autotrain-advanced)
+  Downloading orjson-3.9.10-cp311-none-win_amd64.whl.metadata (50 kB)
+     ---------------------------------------- 0.0/50.5 kB ? eta -:--:--     ---------------------------------------- 50.5/50.5 kB 2.5 MB/s eta 0:00:00
+Collecting pydub (from gradio==3.41.0->autotrain-advanced)
+  Downloading pydub-0.25.1-py2.py3-none-any.whl (32 kB)
+Collecting semantic-version~=2.0 (from gradio==3.41.0->autotrain-advanced)
+  Downloading semantic_version-2.10.0-py2.py3-none-any.whl (15 kB)
+Collecting websockets<12.0,>=10.0 (from gradio==3.41.0->autotrain-advanced)
+  Downloading websockets-11.0.3-cp311-cp311-win_amd64.whl (124 kB)
+     ---------------------------------------- 0.0/124.7 kB ? eta -:--:--     -------------------------------------- 124.7/124.7 kB 7.2 MB/s eta 0:00:00
+Collecting PyWavelets>=1.1.1 (from invisible-watermark==0.2.0->autotrain-advanced)
+  Downloading pywavelets-1.5.0-cp311-cp311-win_amd64.whl.metadata (9.0 kB)
+Collecting opencv-python>=4.1.0.25 (from invisible-watermark==0.2.0->autotrain-advanced)
+  Downloading opencv_python-4.8.1.78-cp37-abi3-win_amd64.whl.metadata (20 kB)
+Collecting rapidfuzz==2.13.7 (from jiwer==3.0.2->autotrain-advanced)
+  Downloading rapidfuzz-2.13.7-cp311-cp311-win_amd64.whl (1.0 MB)
+     ---------------------------------------- 0.0/1.0 MB ? eta -:--:--     ---------------------------------------- 1.0/1.0 MB 33.1 MB/s eta 0:00:00
+Requirement already satisfied: colorama>=0.3.4 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from loguru==0.7.0->autotrain-advanced) (0.4.6)
+Collecting win32-setctime>=1.0.0 (from loguru==0.7.0->autotrain-advanced)
+  Downloading win32_setctime-1.1.0-py3-none-any.whl (3.6 kB)
+Collecting alembic>=1.5.0 (from optuna==3.3.0->autotrain-advanced)
+  Downloading alembic-1.13.1-py3-none-any.whl.metadata (7.4 kB)
+Collecting cmaes>=0.10.0 (from optuna==3.3.0->autotrain-advanced)
+  Downloading cmaes-0.10.0-py3-none-any.whl.metadata (19 kB)
+Collecting colorlog (from optuna==3.3.0->autotrain-advanced)
+  Downloading colorlog-6.8.0-py3-none-any.whl.metadata (10 kB)
+Collecting sqlalchemy>=1.3.0 (from optuna==3.3.0->autotrain-advanced)
+  Downloading SQLAlchemy-2.0.23-cp311-cp311-win_amd64.whl.metadata (9.8 kB)
+Collecting texttable (from py7zr==0.20.6->autotrain-advanced)
+  Downloading texttable-1.7.0-py2.py3-none-any.whl.metadata (9.8 kB)
+Collecting pycryptodomex>=3.6.6 (from py7zr==0.20.6->autotrain-advanced)
+  Downloading pycryptodomex-3.19.0-cp35-abi3-win_amd64.whl.metadata (3.4 kB)
+Collecting pyzstd>=0.14.4 (from py7zr==0.20.6->autotrain-advanced)
+  Downloading pyzstd-0.15.9-cp311-cp311-win_amd64.whl.metadata (7.6 kB)
+Collecting pyppmd<1.1.0,>=0.18.1 (from py7zr==0.20.6->autotrain-advanced)
+  Downloading pyppmd-1.0.0-cp311-cp311-win_amd64.whl (46 kB)
+     ---------------------------------------- 0.0/46.1 kB ? eta -:--:--     ---------------------------------------- 46.1/46.1 kB 2.4 MB/s eta 0:00:00
+Collecting pybcj>=0.6.0 (from py7zr==0.20.6->autotrain-advanced)
+  Downloading pybcj-1.0.2-cp311-cp311-win_amd64.whl.metadata (4.1 kB)
+Collecting multivolumefile>=0.2.3 (from py7zr==0.20.6->autotrain-advanced)
+  Downloading multivolumefile-0.2.3-py3-none-any.whl (17 kB)
+Collecting brotli>=1.0.9 (from py7zr==0.20.6->autotrain-advanced)
+  Downloading Brotli-1.1.0-cp311-cp311-win_amd64.whl.metadata (5.6 kB)
+Collecting inflate64>=0.3.1 (from py7zr==0.20.6->autotrain-advanced)
+  Downloading inflate64-1.0.0-cp311-cp311-win_amd64.whl.metadata (4.1 kB)
+Requirement already satisfied: annotated-types>=0.4.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from pydantic==2.4.2->autotrain-advanced) (0.6.0)
+Requirement already satisfied: pydantic-core==2.10.1 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from pydantic==2.4.2->autotrain-advanced) (2.10.1)
+Requirement already satisfied: charset-normalizer<4,>=2 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from requests==2.31.0->autotrain-advanced) (3.1.0)
+Requirement already satisfied: idna<4,>=2.5 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from requests==2.31.0->autotrain-advanced) (3.4)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from requests==2.31.0->autotrain-advanced) (1.26.15)
+Requirement already satisfied: certifi>=2017.4.17 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from requests==2.31.0->autotrain-advanced) (2022.12.7)
+Collecting absl-py (from rouge-score==0.1.2->autotrain-advanced)
+  Downloading absl_py-2.0.0-py3-none-any.whl.metadata (2.3 kB)
+Requirement already satisfied: six>=1.14.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from rouge-score==0.1.2->autotrain-advanced) (1.16.0)
+Requirement already satisfied: threadpoolctl>=2.0.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from scikit-learn==1.3.0->autotrain-advanced) (3.2.0)
+Collecting tokenizers<0.19,>=0.14 (from transformers==4.36.1->autotrain-advanced)
+  Downloading tokenizers-0.15.0-cp311-none-win_amd64.whl.metadata (6.8 kB)
+Collecting tyro>=0.5.11 (from trl==0.7.4->autotrain-advanced)
+  Downloading tyro-0.6.1-py3-none-any.whl.metadata (7.7 kB)
+Requirement already satisfied: h11>=0.8 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from uvicorn==0.22.0->autotrain-advanced) (0.14.0)
+Collecting pyarrow>=8.0.0 (from datasets~=2.14.0->datasets[vision]~=2.14.0->autotrain-advanced)
+  Downloading pyarrow-14.0.2-cp311-cp311-win_amd64.whl.metadata (3.1 kB)
+Collecting pyarrow-hotfix (from datasets~=2.14.0->datasets[vision]~=2.14.0->autotrain-advanced)
+  Downloading pyarrow_hotfix-0.6-py3-none-any.whl.metadata (3.6 kB)
+Requirement already satisfied: aiohttp in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from datasets~=2.14.0->datasets[vision]~=2.14.0->autotrain-advanced) (3.8.4)
+Requirement already satisfied: python-dateutil>=2.8.2 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from pandas>=1.4->autotrain-advanced) (2.8.2)
+Requirement already satisfied: pytz>=2020.1 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from pandas>=1.4->autotrain-advanced) (2023.3)
+Requirement already satisfied: tzdata>=2022.1 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from pandas>=1.4->autotrain-advanced) (2023.3)
+Requirement already satisfied: grpcio>=1.48.2 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from tensorboard->autotrain-advanced) (1.54.2)
+Requirement already satisfied: google-auth<3,>=1.6.3 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from tensorboard->autotrain-advanced) (2.20.0)
+Collecting google-auth-oauthlib<2,>=0.5 (from tensorboard->autotrain-advanced)
+  Downloading google_auth_oauthlib-1.2.0-py2.py3-none-any.whl.metadata (2.7 kB)
+Collecting markdown>=2.6.8 (from tensorboard->autotrain-advanced)
+  Downloading Markdown-3.5.1-py3-none-any.whl.metadata (7.1 kB)
+Requirement already satisfied: setuptools>=41.0.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from tensorboard->autotrain-advanced) (68.2.2)
+Collecting tensorboard-data-server<0.8.0,>=0.7.0 (from tensorboard->autotrain-advanced)
+  Downloading tensorboard_data_server-0.7.2-py3-none-any.whl.metadata (1.1 kB)
+Collecting Mako (from alembic>=1.5.0->optuna==3.3.0->autotrain-advanced)
+  Downloading Mako-1.3.0-py3-none-any.whl.metadata (2.9 kB)
+Requirement already satisfied: jsonschema>=3.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from altair<6.0,>=4.2.0->gradio==3.41.0->autotrain-advanced) (4.19.0)
+Requirement already satisfied: toolz in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from altair<6.0,>=4.2.0->gradio==3.41.0->autotrain-advanced) (0.12.0)
+Requirement already satisfied: sniffio>=1.1 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from anyio<4.0.0,>=3.7.1->fastapi==0.104.1->autotrain-advanced) (1.3.0)
+Requirement already satisfied: attrs>=17.3.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from aiohttp->datasets~=2.14.0->datasets[vision]~=2.14.0->autotrain-advanced) (23.1.0)
+Requirement already satisfied: multidict<7.0,>=4.5 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from aiohttp->datasets~=2.14.0->datasets[vision]~=2.14.0->autotrain-advanced) (6.0.4)
+Requirement already satisfied: async-timeout<5.0,>=4.0.0a3 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from aiohttp->datasets~=2.14.0->datasets[vision]~=2.14.0->autotrain-advanced) (4.0.2)
+Requirement already satisfied: yarl<2.0,>=1.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from aiohttp->datasets~=2.14.0->datasets[vision]~=2.14.0->autotrain-advanced) (1.8.2)
+Requirement already satisfied: frozenlist>=1.1.1 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from aiohttp->datasets~=2.14.0->datasets[vision]~=2.14.0->autotrain-advanced) (1.3.3)
+Requirement already satisfied: aiosignal>=1.1.2 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from aiohttp->datasets~=2.14.0->datasets[vision]~=2.14.0->autotrain-advanced) (1.3.1)
+Requirement already satisfied: cachetools<6.0,>=2.0.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from google-auth<3,>=1.6.3->tensorboard->autotrain-advanced) (5.3.1)
+Requirement already satisfied: pyasn1-modules>=0.2.1 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from google-auth<3,>=1.6.3->tensorboard->autotrain-advanced) (0.3.0)
+Requirement already satisfied: rsa<5,>=3.1.4 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from google-auth<3,>=1.6.3->tensorboard->autotrain-advanced) (4.9)
+Collecting requests-oauthlib>=0.7.0 (from google-auth-oauthlib<2,>=0.5->tensorboard->autotrain-advanced)
+  Downloading requests_oauthlib-1.3.1-py2.py3-none-any.whl (23 kB)
+Requirement already satisfied: contourpy>=1.0.1 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from matplotlib~=3.0->gradio==3.41.0->autotrain-advanced) (1.0.7)
+Requirement already satisfied: cycler>=0.10 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from matplotlib~=3.0->gradio==3.41.0->autotrain-advanced) (0.11.0)
+Requirement already satisfied: fonttools>=4.22.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from matplotlib~=3.0->gradio==3.41.0->autotrain-advanced) (4.39.3)
+Requirement already satisfied: kiwisolver>=1.0.1 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from matplotlib~=3.0->gradio==3.41.0->autotrain-advanced) (1.4.4)
+Requirement already satisfied: pyparsing>=2.3.1 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from matplotlib~=3.0->gradio==3.41.0->autotrain-advanced) (3.0.9)
+Requirement already satisfied: networkx>=2.8 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from scikit-image>=0.16.1->albumentations==1.3.1->autotrain-advanced) (3.2.1)
+Collecting imageio>=2.27 (from scikit-image>=0.16.1->albumentations==1.3.1->autotrain-advanced)
+  Downloading imageio-2.33.1-py3-none-any.whl.metadata (4.9 kB)
+Collecting tifffile>=2022.8.12 (from scikit-image>=0.16.1->albumentations==1.3.1->autotrain-advanced)
+  Downloading tifffile-2023.12.9-py3-none-any.whl.metadata (31 kB)
+Collecting lazy_loader>=0.3 (from scikit-image>=0.16.1->albumentations==1.3.1->autotrain-advanced)
+  Downloading lazy_loader-0.3-py3-none-any.whl.metadata (4.3 kB)
+Collecting greenlet!=0.4.17 (from sqlalchemy>=1.3.0->optuna==3.3.0->autotrain-advanced)
+  Downloading greenlet-3.0.3-cp311-cp311-win_amd64.whl.metadata (3.9 kB)
+Requirement already satisfied: sympy in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from torch>=1.10.0->accelerate==0.25.0->autotrain-advanced) (1.12)
+Collecting docstring-parser>=0.14.1 (from tyro>=0.5.11->trl==0.7.4->autotrain-advanced)
+  Downloading docstring_parser-0.15-py3-none-any.whl (36 kB)
+Collecting rich>=11.1.0 (from tyro>=0.5.11->trl==0.7.4->autotrain-advanced)
+  Downloading rich-13.7.0-py3-none-any.whl.metadata (18 kB)
+Collecting shtab>=1.5.6 (from tyro>=0.5.11->trl==0.7.4->autotrain-advanced)
+  Downloading shtab-1.6.5-py3-none-any.whl.metadata (7.3 kB)
+Requirement already satisfied: httpcore in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from httpx->gradio==3.41.0->autotrain-advanced) (1.0.1)
+Collecting zipp>=0.5 (from importlib-metadata->diffusers==0.21.4->autotrain-advanced)
+  Downloading zipp-3.17.0-py3-none-any.whl.metadata (3.7 kB)
+Requirement already satisfied: jsonschema-specifications>=2023.03.6 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from jsonschema>=3.0->altair<6.0,>=4.2.0->gradio==3.41.0->autotrain-advanced) (2023.7.1)
+Requirement already satisfied: referencing>=0.28.4 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from jsonschema>=3.0->altair<6.0,>=4.2.0->gradio==3.41.0->autotrain-advanced) (0.30.2)
+Requirement already satisfied: rpds-py>=0.7.1 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from jsonschema>=3.0->altair<6.0,>=4.2.0->gradio==3.41.0->autotrain-advanced) (0.10.2)
+Requirement already satisfied: pyasn1<0.6.0,>=0.4.6 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from pyasn1-modules>=0.2.1->google-auth<3,>=1.6.3->tensorboard->autotrain-advanced) (0.5.0)
+Collecting oauthlib>=3.0.0 (from requests-oauthlib>=0.7.0->google-auth-oauthlib<2,>=0.5->tensorboard->autotrain-advanced)
+  Downloading oauthlib-3.2.2-py3-none-any.whl (151 kB)
+     ---------------------------------------- 0.0/151.7 kB ? eta -:--:--     -------------------------------------- 151.7/151.7 kB 9.4 MB/s eta 0:00:00
+Collecting markdown-it-py>=2.2.0 (from rich>=11.1.0->tyro>=0.5.11->trl==0.7.4->autotrain-advanced)
+  Downloading markdown_it_py-3.0.0-py3-none-any.whl.metadata (6.9 kB)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from rich>=11.1.0->tyro>=0.5.11->trl==0.7.4->autotrain-advanced) (2.16.1)
+Requirement already satisfied: mpmath>=0.19 in c:\users\charl\appdata\local\packages\pythonsoftwarefoundation.python.3.11_qbz5n2kfra8p0\localcache\local-packages\python311\site-packages (from sympy->torch>=1.10.0->accelerate==0.25.0->autotrain-advanced) (1.3.0)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=11.1.0->tyro>=0.5.11->trl==0.7.4->autotrain-advanced)
+  Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading autotrain_advanced-0.6.79-py3-none-any.whl (213 kB)
+   ---------------------------------------- 0.0/213.0 kB ? eta -:--:--   --------------------------------------- 213.0/213.0 kB 12.7 MB/s eta 0:00:00
+Downloading accelerate-0.25.0-py3-none-any.whl (265 kB)
+   ---------------------------------------- 0.0/265.7 kB ? eta -:--:--   ---------------------------------------- 265.7/265.7 kB ? eta 0:00:00
+Downloading albumentations-1.3.1-py3-none-any.whl (125 kB)
+   ---------------------------------------- 0.0/125.7 kB ? eta -:--:--   ---------------------------------------- 125.7/125.7 kB 7.2 MB/s eta 0:00:00
+Downloading bitsandbytes-0.41.0-py3-none-any.whl (92.6 MB)
+   ---------------------------------------- 0.0/92.6 MB ? eta -:--:--    --------------------------------------- 1.9/92.6 MB 62.1 MB/s eta 0:00:02   - -------------------------------------- 3.9/92.6 MB 50.4 MB/s eta 0:00:02   -- ------------------------------------- 6.6/92.6 MB 52.6 MB/s eta 0:00:02   --- ------------------------------------ 8.5/92.6 MB 49.4 MB/s eta 0:00:02   ---- ----------------------------------- 10.9/92.6 MB 50.4 MB/s eta 0:00:02   ----- ---------------------------------- 13.3/92.6 MB 50.1 MB/s eta 0:00:02   ------ --------------------------------- 15.1/92.6 MB 50.4 MB/s eta 0:00:02   ------- -------------------------------- 17.3/92.6 MB 46.9 MB/s eta 0:00:02   ------- -------------------------------- 18.2/92.6 MB 46.7 MB/s eta 0:00:02   -------- ------------------------------- 20.8/92.6 MB 43.7 MB/s eta 0:00:02   --------- ------------------------------ 22.9/92.6 MB 46.9 MB/s eta 0:00:02   ---------- ----------------------------- 25.3/92.6 MB 46.7 MB/s eta 0:00:02   ----------- ---------------------------- 27.2/92.6 MB 46.9 MB/s eta 0:00:02   ------------ --------------------------- 29.7/92.6 MB 54.7 MB/s eta 0:00:02   -------------- ------------------------- 32.4/92.6 MB 54.7 MB/s eta 0:00:02   -------------- ------------------------- 34.4/92.6 MB 54.7 MB/s eta 0:00:02   ---------------- ----------------------- 37.2/92.6 MB 59.5 MB/s eta 0:00:01   ---------------- ----------------------- 39.0/92.6 MB 59.5 MB/s eta 0:00:01   ----------------- ---------------------- 41.3/92.6 MB 50.4 MB/s eta 0:00:02   ------------------- -------------------- 44.2/92.6 MB 50.1 MB/s eta 0:00:01   -------------------- ------------------- 46.6/92.6 MB 54.4 MB/s eta 0:00:01   --------------------- ------------------ 49.7/92.6 MB 59.5 MB/s eta 0:00:01   ---------------------- ----------------- 52.2/92.6 MB 54.7 MB/s eta 0:00:01   ----------------------- ---------------- 54.2/92.6 MB 59.5 MB/s eta 0:00:01   ------------------------ --------------- 57.4/92.6 MB 59.5 MB/s eta 0:00:01   ------------------------- -------------- 59.2/92.6 MB 59.5 MB/s eta 0:00:01   -------------------------- ------------- 62.2/92.6 MB 59.8 MB/s eta 0:00:01   --------------------------- ------------ 64.4/92.6 MB 54.7 MB/s eta 0:00:01   ---------------------------- ----------- 66.0/92.6 MB 54.7 MB/s eta 0:00:01   ----------------------------- ---------- 67.6/92.6 MB 43.5 MB/s eta 0:00:01   ----------------------------- ---------- 68.7/92.6 MB 38.6 MB/s eta 0:00:01   ------------------------------ --------- 70.0/92.6 MB 34.4 MB/s eta 0:00:01   ------------------------------- -------- 72.0/92.6 MB 32.7 MB/s eta 0:00:01   -------------------------------- ------- 74.5/92.6 MB 32.7 MB/s eta 0:00:01   -------------------------------- ------- 75.8/92.6 MB 32.7 MB/s eta 0:00:01   --------------------------------- ------ 78.6/92.6 MB 40.9 MB/s eta 0:00:01   ----------------------------------- ---- 81.3/92.6 MB 54.4 MB/s eta 0:00:01   ------------------------------------ --- 84.8/92.6 MB 59.5 MB/s eta 0:00:01   -------------------------------------- - 88.1/92.6 MB 73.1 MB/s eta 0:00:01   ---------------------------------------  90.9/92.6 MB 59.5 MB/s eta 0:00:01   ---------------------------------------  92.6/92.6 MB 65.6 MB/s eta 0:00:01   ---------------------------------------  92.6/92.6 MB 65.6 MB/s eta 0:00:01   ---------------------------------------  92.6/92.6 MB 65.6 MB/s eta 0:00:01   ---------------------------------------  92.6/92.6 MB 65.6 MB/s eta 0:00:01   ---------------------------------------  92.6/92.6 MB 65.6 MB/s eta 0:00:01   ---------------------------------------  92.6/92.6 MB 65.6 MB/s eta 0:00:01   ---------------------------------------- 92.6/92.6 MB 24.2 MB/s eta 0:00:00
+Downloading codecarbon-2.2.3-py3-none-any.whl (174 kB)
+   ---------------------------------------- 0.0/174.1 kB ? eta -:--:--   --------------------------------------- 174.1/174.1 kB 10.9 MB/s eta 0:00:00
+Downloading diffusers-0.21.4-py3-none-any.whl (1.5 MB)
+   ---------------------------------------- 0.0/1.5 MB ? eta -:--:--   ---------------------------------------  1.5/1.5 MB 46.1 MB/s eta 0:00:01   ---------------------------------------- 1.5/1.5 MB 23.5 MB/s eta 0:00:00
+Downloading fastapi-0.104.1-py3-none-any.whl (92 kB)
+   ---------------------------------------- 0.0/92.9 kB ? eta -:--:--   ---------------------------------------- 92.9/92.9 kB 5.5 MB/s eta 0:00:00
+Downloading gradio-3.41.0-py3-none-any.whl (20.1 MB)
+   ---------------------------------------- 0.0/20.1 MB ? eta -:--:--   - -------------------------------------- 0.9/20.1 MB 19.6 MB/s eta 0:00:01   ------ --------------------------------- 3.3/20.1 MB 35.2 MB/s eta 0:00:01   ------------ --------------------------- 6.0/20.1 MB 42.8 MB/s eta 0:00:01   --------------- ------------------------ 7.6/20.1 MB 44.2 MB/s eta 0:00:01   ------------------- -------------------- 10.0/20.1 MB 45.4 MB/s eta 0:00:01   ------------------------ --------------- 12.1/20.1 MB 50.4 MB/s eta 0:00:01   -------------------------- ------------- 13.4/20.1 MB 43.7 MB/s eta 0:00:01   ------------------------------ --------- 15.3/20.1 MB 43.5 MB/s eta 0:00:01   ------------------------------------ --- 18.2/20.1 MB 46.7 MB/s eta 0:00:01   ---------------------------------------  20.1/20.1 MB 50.4 MB/s eta 0:00:01   ---------------------------------------- 20.1/20.1 MB 40.9 MB/s eta 0:00:00
+Downloading invisible_watermark-0.2.0-py3-none-any.whl (1.6 MB)
+   ---------------------------------------- 0.0/1.6 MB ? eta -:--:--   ---------------------------------------- 1.6/1.6 MB 52.4 MB/s eta 0:00:00
+Downloading jiwer-3.0.2-py3-none-any.whl (21 kB)
+Downloading joblib-1.3.1-py3-none-any.whl (301 kB)
+   ---------------------------------------- 0.0/302.0 kB ? eta -:--:--   --------------------------------------- 302.0/302.0 kB 18.2 MB/s eta 0:00:00
+Downloading optuna-3.3.0-py3-none-any.whl (404 kB)
+   ---------------------------------------- 0.0/404.2 kB ? eta -:--:--   --------------------------------------- 404.2/404.2 kB 24.6 MB/s eta 0:00:00
+Downloading peft-0.7.1-py3-none-any.whl (168 kB)
+   ---------------------------------------- 0.0/168.3 kB ? eta -:--:--   ---------------------------------------- 168.3/168.3 kB 9.9 MB/s eta 0:00:00
+Downloading Pillow-10.0.0-cp311-cp311-win_amd64.whl (2.5 MB)
+   ---------------------------------------- 0.0/2.5 MB ? eta -:--:--   ---------------------------------------  2.5/2.5 MB 53.2 MB/s eta 0:00:01   ---------------------------------------- 2.5/2.5 MB 40.4 MB/s eta 0:00:00
+Downloading protobuf-4.23.4-cp310-abi3-win_amd64.whl (422 kB)
+   ---------------------------------------- 0.0/422.5 kB ? eta -:--:--   --------------------------------------- 422.5/422.5 kB 25.8 MB/s eta 0:00:00
+Downloading py7zr-0.20.6-py3-none-any.whl (66 kB)
+   ---------------------------------------- 0.0/66.7 kB ? eta -:--:--   ---------------------------------------- 66.7/66.7 kB 3.5 MB/s eta 0:00:00
+Downloading pyngrok-7.0.3-py3-none-any.whl (21 kB)
+Downloading requests-2.31.0-py3-none-any.whl (62 kB)
+   ---------------------------------------- 0.0/62.6 kB ? eta -:--:--   ---------------------------------------- 62.6/62.6 kB ? eta 0:00:00
+Downloading scikit_learn-1.3.0-cp311-cp311-win_amd64.whl (9.2 MB)
+   ---------------------------------------- 0.0/9.2 MB ? eta -:--:--   ----------- ---------------------------- 2.7/9.2 MB 86.2 MB/s eta 0:00:01   ----------------------- ---------------- 5.4/9.2 MB 56.9 MB/s eta 0:00:01   --------------------------------- ------ 7.7/9.2 MB 61.4 MB/s eta 0:00:01   ---------------------------------------  9.2/9.2 MB 58.8 MB/s eta 0:00:01   ---------------------------------------- 9.2/9.2 MB 48.8 MB/s eta 0:00:00
+Downloading tiktoken-0.5.1-cp311-cp311-win_amd64.whl (759 kB)
+   ---------------------------------------- 0.0/759.8 kB ? eta -:--:--   --------------------------------------- 759.8/759.8 kB 50.0 MB/s eta 0:00:00
+Downloading transformers-4.36.1-py3-none-any.whl (8.3 MB)
+   ---------------------------------------- 0.0/8.3 MB ? eta -:--:--   ----------- ---------------------------- 2.4/8.3 MB 76.0 MB/s eta 0:00:01   ----------------------- ---------------- 4.9/8.3 MB 53.1 MB/s eta 0:00:01   ----------------------------------- ---- 7.3/8.3 MB 52.0 MB/s eta 0:00:01   ---------------------------------------  8.3/8.3 MB 52.9 MB/s eta 0:00:01   ---------------------------------------- 8.3/8.3 MB 40.7 MB/s eta 0:00:00
+Downloading trl-0.7.4-py3-none-any.whl (133 kB)
+   ---------------------------------------- 0.0/133.9 kB ? eta -:--:--   ---------------------------------------- 133.9/133.9 kB ? eta 0:00:00
+Downloading Werkzeug-2.3.6-py3-none-any.whl (242 kB)
+   ---------------------------------------- 0.0/242.5 kB ? eta -:--:--   ---------------------------------------- 242.5/242.5 kB ? eta 0:00:00
+Downloading xgboost-1.7.6-py3-none-win_amd64.whl (70.9 MB)
+   ---------------------------------------- 0.0/70.9 MB ? eta -:--:--   - -------------------------------------- 1.8/70.9 MB 58.1 MB/s eta 0:00:02   -- ------------------------------------- 3.7/70.9 MB 47.9 MB/s eta 0:00:02   --- ------------------------------------ 5.9/70.9 MB 42.0 MB/s eta 0:00:02   ---- ----------------------------------- 8.4/70.9 MB 48.7 MB/s eta 0:00:02   ----- ---------------------------------- 10.6/70.9 MB 43.5 MB/s eta 0:00:02   ------- -------------------------------- 13.1/70.9 MB 50.4 MB/s eta 0:00:02   -------- ------------------------------- 15.2/70.9 MB 50.4 MB/s eta 0:00:02   --------- ------------------------------ 17.6/70.9 MB 50.4 MB/s eta 0:00:02   ----------- ---------------------------- 20.1/70.9 MB 54.7 MB/s eta 0:00:01   ------------ --------------------------- 22.1/70.9 MB 54.7 MB/s eta 0:00:01   -------------- ------------------------- 25.1/70.9 MB 50.4 MB/s eta 0:00:01   --------------- ------------------------ 26.9/70.9 MB 50.4 MB/s eta 0:00:01   ---------------- ----------------------- 29.3/70.9 MB 46.7 MB/s eta 0:00:01   ------------------ --------------------- 32.0/70.9 MB 54.4 MB/s eta 0:00:01   ------------------- -------------------- 34.8/70.9 MB 50.4 MB/s eta 0:00:01   --------------------- ------------------ 37.4/70.9 MB 59.5 MB/s eta 0:00:01   ---------------------- ----------------- 40.1/70.9 MB 59.5 MB/s eta 0:00:01   ----------------------- ---------------- 42.2/70.9 MB 50.4 MB/s eta 0:00:01   ------------------------- -------------- 44.7/70.9 MB 54.7 MB/s eta 0:00:01   -------------------------- ------------- 46.8/70.9 MB 54.7 MB/s eta 0:00:01   --------------------------- ------------ 49.0/70.9 MB 54.4 MB/s eta 0:00:01   ---------------------------- ----------- 50.9/70.9 MB 50.4 MB/s eta 0:00:01   ------------------------------ --------- 53.9/70.9 MB 54.4 MB/s eta 0:00:01   ------------------------------- -------- 55.7/70.9 MB 50.1 MB/s eta 0:00:01   -------------------------------- ------- 57.5/70.9 MB 50.4 MB/s eta 0:00:01   --------------------------------- ------ 59.7/70.9 MB 46.9 MB/s eta 0:00:01   ----------------------------------- ---- 62.3/70.9 MB 46.7 MB/s eta 0:00:01   ------------------------------------ --- 64.5/70.9 MB 46.7 MB/s eta 0:00:01   -------------------------------------- - 67.6/70.9 MB 50.4 MB/s eta 0:00:01   ---------------------------------------  70.2/70.9 MB 50.4 MB/s eta 0:00:01   ---------------------------------------  70.9/70.9 MB 54.7 MB/s eta 0:00:01   ---------------------------------------  70.9/70.9 MB 54.7 MB/s eta 0:00:01   ---------------------------------------  70.9/70.9 MB 54.7 MB/s eta 0:00:01   ---------------------------------------  70.9/70.9 MB 54.7 MB/s eta 0:00:01   ---------------------------------------- 70.9/70.9 MB 28.5 MB/s eta 0:00:00
+Downloading gradio_client-0.5.0-py3-none-any.whl (298 kB)
+   ---------------------------------------- 0.0/298.2 kB ? eta -:--:--   --------------------------------------- 298.2/298.2 kB 18.0 MB/s eta 0:00:00
+Downloading datasets-2.14.7-py3-none-any.whl (520 kB)
+   ---------------------------------------- 0.0/520.4 kB ? eta -:--:--   --------------------------------------- 520.4/520.4 kB 31.9 MB/s eta 0:00:00
+Downloading huggingface_hub-0.20.1-py3-none-any.whl (330 kB)
+   ---------------------------------------- 0.0/330.1 kB ? eta -:--:--   --------------------------------------- 330.1/330.1 kB 20.0 MB/s eta 0:00:00
+Downloading hf_transfer-0.1.4-cp311-none-win_amd64.whl (1.3 MB)
+   ---------------------------------------- 0.0/1.3 MB ? eta -:--:--   ---------------------------------------- 1.3/1.3 MB 42.4 MB/s eta 0:00:00
+Downloading tensorboard-2.15.1-py3-none-any.whl (5.5 MB)
+   ---------------------------------------- 0.0/5.5 MB ? eta -:--:--   --------------- ------------------------ 2.1/5.5 MB 68.4 MB/s eta 0:00:01   ---------------------------------- ----- 4.7/5.5 MB 50.9 MB/s eta 0:00:01   ---------------------------------------- 5.5/5.5 MB 44.2 MB/s eta 0:00:00
+Downloading absl_py-2.0.0-py3-none-any.whl (130 kB)
+   ---------------------------------------- 0.0/130.2 kB ? eta -:--:--   ---------------------------------------- 130.2/130.2 kB ? eta 0:00:00
+Downloading aiofiles-23.2.1-py3-none-any.whl (15 kB)
+Downloading alembic-1.13.1-py3-none-any.whl (233 kB)
+   ---------------------------------------- 0.0/233.4 kB ? eta -:--:--   --------------------------------------- 233.4/233.4 kB 14.9 MB/s eta 0:00:00
+Downloading Brotli-1.1.0-cp311-cp311-win_amd64.whl (357 kB)
+   ---------------------------------------- 0.0/357.3 kB ? eta -:--:--   ---------------------------------------- 357.3/357.3 kB ? eta 0:00:00
+Downloading cmaes-0.10.0-py3-none-any.whl (29 kB)
+Downloading dill-0.3.7-py3-none-any.whl (115 kB)
+   ---------------------------------------- 0.0/115.3 kB ? eta -:--:--   ---------------------------------------- 115.3/115.3 kB ? eta 0:00:00
+Downloading google_auth_oauthlib-1.2.0-py2.py3-none-any.whl (24 kB)
+Downloading importlib_resources-6.1.1-py3-none-any.whl (33 kB)
+Downloading inflate64-1.0.0-cp311-cp311-win_amd64.whl (35 kB)
+Downloading Markdown-3.5.1-py3-none-any.whl (102 kB)
+   ---------------------------------------- 0.0/102.2 kB ? eta -:--:--   ---------------------------------------- 102.2/102.2 kB 5.7 MB/s eta 0:00:00
+Downloading opencv_python-4.8.1.78-cp37-abi3-win_amd64.whl (38.1 MB)
+   ---------------------------------------- 0.0/38.1 MB ? eta -:--:--   -- ------------------------------------- 2.3/38.1 MB 72.7 MB/s eta 0:00:01   ----- ---------------------------------- 5.2/38.1 MB 66.2 MB/s eta 0:00:01   -------- ------------------------------- 8.0/38.1 MB 56.4 MB/s eta 0:00:01   ----------- ---------------------------- 10.5/38.1 MB 59.5 MB/s eta 0:00:01   ------------- -------------------------- 13.0/38.1 MB 59.5 MB/s eta 0:00:01   ---------------- ----------------------- 15.7/38.1 MB 59.5 MB/s eta 0:00:01   ------------------ --------------------- 17.9/38.1 MB 54.4 MB/s eta 0:00:01   --------------------- ------------------ 20.5/38.1 MB 54.7 MB/s eta 0:00:01   ------------------------ --------------- 23.3/38.1 MB 54.7 MB/s eta 0:00:01   --------------------------- ------------ 25.9/38.1 MB 59.5 MB/s eta 0:00:01   ----------------------------- ---------- 28.4/38.1 MB 54.7 MB/s eta 0:00:01   -------------------------------- ------- 30.9/38.1 MB 54.4 MB/s eta 0:00:01   ----------------------------------- ---- 33.4/38.1 MB 54.4 MB/s eta 0:00:01   ------------------------------------- -- 36.0/38.1 MB 54.7 MB/s eta 0:00:01   ---------------------------------------  37.8/38.1 MB 50.4 MB/s eta 0:00:01   ---------------------------------------  38.1/38.1 MB 50.1 MB/s eta 0:00:01   ---------------------------------------  38.1/38.1 MB 50.1 MB/s eta 0:00:01   ---------------------------------------- 38.1/38.1 MB 32.7 MB/s eta 0:00:00
+Downloading opencv_python_headless-4.8.1.78-cp37-abi3-win_amd64.whl (38.0 MB)
+   ---------------------------------------- 0.0/38.0 MB ? eta -:--:--   -- ------------------------------------- 2.4/38.0 MB 76.0 MB/s eta 0:00:01   ----- ---------------------------------- 5.0/38.0 MB 63.9 MB/s eta 0:00:01   ------- -------------------------------- 7.1/38.0 MB 56.4 MB/s eta 0:00:01   ---------- ----------------------------- 9.6/38.0 MB 55.9 MB/s eta 0:00:01   ------------ --------------------------- 11.6/38.0 MB 50.4 MB/s eta 0:00:01   -------------- ------------------------- 14.0/38.0 MB 50.4 MB/s eta 0:00:01   ----------------- ---------------------- 16.6/38.0 MB 50.4 MB/s eta 0:00:01   ------------------- -------------------- 18.9/38.0 MB 54.4 MB/s eta 0:00:01   ---------------------- ----------------- 20.9/38.0 MB 54.7 MB/s eta 0:00:01   ------------------------ --------------- 22.9/38.0 MB 54.7 MB/s eta 0:00:01   -------------------------- ------------- 25.3/38.0 MB 54.4 MB/s eta 0:00:01   ---------------------------- ----------- 27.4/38.0 MB 54.7 MB/s eta 0:00:01   ------------------------------ --------- 29.1/38.0 MB 50.4 MB/s eta 0:00:01   -------------------------------- ------- 30.9/38.0 MB 46.7 MB/s eta 0:00:01   ----------------------------------- ---- 33.3/38.0 MB 46.7 MB/s eta 0:00:01   -------------------------------------- - 36.2/38.0 MB 46.7 MB/s eta 0:00:01   ---------------------------------------  38.0/38.0 MB 50.4 MB/s eta 0:00:01   ---------------------------------------  38.0/38.0 MB 50.4 MB/s eta 0:00:01   ---------------------------------------  38.0/38.0 MB 50.4 MB/s eta 0:00:01   ---------------------------------------  38.0/38.0 MB 50.4 MB/s eta 0:00:01   ---------------------------------------- 38.0/38.0 MB 26.2 MB/s eta 0:00:00
+Downloading orjson-3.9.10-cp311-none-win_amd64.whl (135 kB)
+   ---------------------------------------- 0.0/135.0 kB ? eta -:--:--   ---------------------------------------- 135.0/135.0 kB 8.3 MB/s eta 0:00:00
+Downloading pyarrow-14.0.2-cp311-cp311-win_amd64.whl (24.6 MB)
+   ---------------------------------------- 0.0/24.6 MB ? eta -:--:--   ---- ----------------------------------- 2.6/24.6 MB 82.9 MB/s eta 0:00:01   -------- ------------------------------- 5.0/24.6 MB 64.5 MB/s eta 0:00:01   ----------- ---------------------------- 7.1/24.6 MB 56.5 MB/s eta 0:00:01   ---------------- ----------------------- 9.9/24.6 MB 63.5 MB/s eta 0:00:01   ------------------- -------------------- 12.2/24.6 MB 54.7 MB/s eta 0:00:01   ------------------------ --------------- 15.1/24.6 MB 54.7 MB/s eta 0:00:01   ---------------------------- ----------- 17.3/24.6 MB 59.8 MB/s eta 0:00:01   -------------------------------- ------- 19.7/24.6 MB 54.7 MB/s eta 0:00:01   ----------------------------------- ---- 22.1/24.6 MB 54.4 MB/s eta 0:00:01   ---------------------------------------  24.6/24.6 MB 54.7 MB/s eta 0:00:01   ---------------------------------------  24.6/24.6 MB 54.7 MB/s eta 0:00:01   ---------------------------------------- 24.6/24.6 MB 40.9 MB/s eta 0:00:00
+Downloading pybcj-1.0.2-cp311-cp311-win_amd64.whl (24 kB)
+Downloading pycryptodomex-3.19.0-cp35-abi3-win_amd64.whl (1.7 MB)
+   ---------------------------------------- 0.0/1.7 MB ? eta -:--:--   ---------------------------------------- 1.7/1.7 MB 54.2 MB/s eta 0:00:00
+Downloading pywavelets-1.5.0-cp311-cp311-win_amd64.whl (4.3 MB)
+   ---------------------------------------- 0.0/4.3 MB ? eta -:--:--   ---------------------------- ----------- 3.1/4.3 MB 65.4 MB/s eta 0:00:01   ---------------------------------------- 4.3/4.3 MB 45.2 MB/s eta 0:00:00
+Downloading pyzstd-0.15.9-cp311-cp311-win_amd64.whl (245 kB)
+   ---------------------------------------- 0.0/245.3 kB ? eta -:--:--   --------------------------------------- 245.3/245.3 kB 14.7 MB/s eta 0:00:00
+Downloading safetensors-0.4.1-cp311-none-win_amd64.whl (277 kB)
+   ---------------------------------------- 0.0/277.5 kB ? eta -:--:--   --------------------------------------- 277.5/277.5 kB 17.8 MB/s eta 0:00:00
+Downloading scikit_image-0.22.0-cp311-cp311-win_amd64.whl (24.5 MB)
+   ---------------------------------------- 0.0/24.5 MB ? eta -:--:--   --- ------------------------------------ 2.4/24.5 MB 77.6 MB/s eta 0:00:01   -------- ------------------------------- 5.4/24.5 MB 69.2 MB/s eta 0:00:01   ------------ --------------------------- 7.6/24.5 MB 69.3 MB/s eta 0:00:01   ----------------- ---------------------- 10.5/24.5 MB 65.6 MB/s eta 0:00:01   --------------------- ------------------ 13.4/24.5 MB 65.6 MB/s eta 0:00:01   ------------------------- -------------- 15.3/24.5 MB 54.4 MB/s eta 0:00:01   ----------------------------- ---------- 18.2/24.5 MB 59.5 MB/s eta 0:00:01   -------------------------------- ------- 20.0/24.5 MB 54.7 MB/s eta 0:00:01   ------------------------------------ --- 22.1/24.5 MB 54.4 MB/s eta 0:00:01   ---------------------------------------  24.3/24.5 MB 50.1 MB/s eta 0:00:01   ---------------------------------------  24.5/24.5 MB 46.7 MB/s eta 0:00:01   ---------------------------------------  24.5/24.5 MB 46.7 MB/s eta 0:00:01   ---------------------------------------- 24.5/24.5 MB 34.4 MB/s eta 0:00:00
+Downloading SQLAlchemy-2.0.23-cp311-cp311-win_amd64.whl (2.1 MB)
+   ---------------------------------------- 0.0/2.1 MB ? eta -:--:--   ---------------------------------------  2.1/2.1 MB 66.1 MB/s eta 0:00:01   ---------------------------------------- 2.1/2.1 MB 43.6 MB/s eta 0:00:00
+Downloading starlette-0.27.0-py3-none-any.whl (66 kB)
+   ---------------------------------------- 0.0/67.0 kB ? eta -:--:--   ---------------------------------------- 67.0/67.0 kB 3.5 MB/s eta 0:00:00
+Downloading tensorboard_data_server-0.7.2-py3-none-any.whl (2.4 kB)
+Downloading tokenizers-0.15.0-cp311-none-win_amd64.whl (2.2 MB)
+   ---------------------------------------- 0.0/2.2 MB ? eta -:--:--   ---------------------------------------  2.2/2.2 MB 69.4 MB/s eta 0:00:01   ---------------------------------------- 2.2/2.2 MB 35.3 MB/s eta 0:00:00
+Downloading tyro-0.6.1-py3-none-any.whl (78 kB)
+   ---------------------------------------- 0.0/78.5 kB ? eta -:--:--   ---------------------------------------- 78.5/78.5 kB ? eta 0:00:00
+Downloading colorlog-6.8.0-py3-none-any.whl (11 kB)
+Downloading importlib_metadata-7.0.1-py3-none-any.whl (23 kB)
+Downloading multiprocess-0.70.15-py311-none-any.whl (135 kB)
+   ---------------------------------------- 0.0/135.4 kB ? eta -:--:--   ---------------------------------------- 135.4/135.4 kB ? eta 0:00:00
+Downloading pyarrow_hotfix-0.6-py3-none-any.whl (7.9 kB)
+Downloading texttable-1.7.0-py2.py3-none-any.whl (10 kB)
+Downloading xxhash-3.4.1-cp311-cp311-win_amd64.whl (29 kB)
+Downloading greenlet-3.0.3-cp311-cp311-win_amd64.whl (292 kB)
+   ---------------------------------------- 0.0/292.8 kB ? eta -:--:--   --------------------------------------- 292.8/292.8 kB 17.7 MB/s eta 0:00:00
+Downloading imageio-2.33.1-py3-none-any.whl (313 kB)
+   ---------------------------------------- 0.0/313.3 kB ? eta -:--:--   --------------------------------------- 313.3/313.3 kB 20.2 MB/s eta 0:00:00
+Downloading lazy_loader-0.3-py3-none-any.whl (9.1 kB)
+Downloading rich-13.7.0-py3-none-any.whl (240 kB)
+   ---------------------------------------- 0.0/240.6 kB ? eta -:--:--   --------------------------------------- 240.6/240.6 kB 15.4 MB/s eta 0:00:00
+Downloading shtab-1.6.5-py3-none-any.whl (13 kB)
+Downloading tifffile-2023.12.9-py3-none-any.whl (223 kB)
+   ---------------------------------------- 0.0/223.6 kB ? eta -:--:--   ---------------------------------------- 223.6/223.6 kB ? eta 0:00:00
+Downloading zipp-3.17.0-py3-none-any.whl (7.4 kB)
+Downloading Mako-1.3.0-py3-none-any.whl (78 kB)
+   ---------------------------------------- 0.0/78.6 kB ? eta -:--:--   ---------------------------------------- 78.6/78.6 kB 4.6 MB/s eta 0:00:00
+Downloading markdown_it_py-3.0.0-py3-none-any.whl (87 kB)
+   ---------------------------------------- 0.0/87.5 kB ? eta -:--:--   ---------------------------------------- 87.5/87.5 kB 4.8 MB/s eta 0:00:00
+Building wheels for collected packages: ipadic, rouge-score, sacremoses, ffmpy
+  Building wheel for ipadic (pyproject.toml): started
+  Building wheel for ipadic (pyproject.toml): finished with status 'done'
+  Created wheel for ipadic: filename=ipadic-1.0.0-py3-none-any.whl size=13556720 sha256=4fd20bbcb6c4fbb8cfc6e4a5891b2e4094f386ae17cb16c9ecd1af1c26b11013
+  Stored in directory: c:\users\charl\appdata\local\pip\cache\wheels\44\56\37\f543963822b85260c9f948df8fac8c20169c80dc71b24dc407
+  Building wheel for rouge-score (pyproject.toml): started
+  Building wheel for rouge-score (pyproject.toml): finished with status 'done'
+  Created wheel for rouge-score: filename=rouge_score-0.1.2-py3-none-any.whl size=24970 sha256=62413bbc17282a092210cd013354facf474f76e140676bcd32456be45986faca
+  Stored in directory: c:\users\charl\appdata\local\pip\cache\wheels\1e\19\43\8a442dc83660ca25e163e1bd1f89919284ab0d0c1475475148
+  Building wheel for sacremoses (pyproject.toml): started
+  Building wheel for sacremoses (pyproject.toml): finished with status 'done'
+  Created wheel for sacremoses: filename=sacremoses-0.0.53-py3-none-any.whl size=895251 sha256=3363b13cc7025778438bf7034083709544e968607a15b6b428f586487f05590d
+  Stored in directory: c:\users\charl\appdata\local\pip\cache\wheels\11\75\c6\a82d827a00df823caf211262900d2c024f5b3a775b82b45230
+  Building wheel for ffmpy (pyproject.toml): started
+  Building wheel for ffmpy (pyproject.toml): finished with status 'done'
+  Created wheel for ffmpy: filename=ffmpy-0.3.1-py3-none-any.whl size=5602 sha256=7b567664fb1d52941aef756075654028eca876282482757c4841550a8c533b1a
+  Stored in directory: c:\users\charl\appdata\local\pip\cache\wheels\99\3b\84\22ac1eab7a10222ac6bbc3f7e69b04f3980db328978c533a3f
+Successfully built ipadic rouge-score sacremoses ffmpy
+Installing collected packages: texttable, sentencepiece, pydub, py-cpuinfo, ipadic, fuzzywuzzy, ffmpy, brotli, bitsandbytes, zipp, xxhash, win32-setctime, werkzeug, websockets, tifffile, tensorboard-data-server, shtab, semantic-version, safetensors, requests, rapidfuzz, pyzstd, PyWavelets, python-multipart, pyppmd, pynvml, pyngrok, pycryptodomex, pybcj, pyarrow-hotfix, pyarrow, protobuf, Pillow, orjson, opencv-python-headless, opencv-python, oauthlib, multivolumefile, mdurl, markdown, Mako, lazy_loader, joblib, inflate64, importlib-resources, hf-transfer, greenlet, einops, docstring-parser, dill, colorlog, cmaes, aiofiles, absl-py, xgboost, uvicorn, tiktoken, starlette, sqlalchemy, scikit-learn, sacremoses, responses, requests-oauthlib, py7zr, nltk, multiprocess, markdown-it-py, loguru, jiwer, importlib-metadata, imageio, huggingface-hub, tokenizers, scikit-image, rouge-score, rich, qudida, invisible-watermark, gradio-client, google-auth-oauthlib, fastapi, diffusers, codecarbon, alembic, accelerate, tyro, transformers, tensorboard, optuna, datasets, albumentations, trl, peft, gradio, evaluate, autotrain-advanced
+  Attempting uninstall: werkzeug
+    Found existing installation: Werkzeug 2.2.3
+    Uninstalling Werkzeug-2.2.3:
+      Successfully uninstalled Werkzeug-2.2.3
+  Attempting uninstall: requests
+    Found existing installation: requests 2.28.2
+    Uninstalling requests-2.28.2:
+      Successfully uninstalled requests-2.28.2
