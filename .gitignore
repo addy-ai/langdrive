@@ -147,12 +147,5 @@ dist
 gcloud/
 
 src/train/.venv/
-src/.DS_Store
-.DS_Store
-docs/.DS_Store
-docs/assets/.DS_Store
-docs/blog/.DS_Store
-docs/docs/.DS_Store
-src/train/.DS_Store
-tests/.DS_Store
-tests/example/.DS_Store
+**/.DS_Store
+
