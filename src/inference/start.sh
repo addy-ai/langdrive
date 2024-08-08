@@ -4,4 +4,4 @@
 source ./venv/bin/activate # Activate the virtual environment
 
 # Start the inference server
-python3 -m app
+nohup python3 -m app
